@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 // import "./App.css";
 
 function App() {
@@ -13,15 +13,7 @@ function App() {
     setPaused(!isPaused);
   };
   const handleRepeat = () => {
-    setRepeat((current) => {
-      if (current === "1") {
-        setRepeat("2");
-      } else if (current === "2") {
-        setRepeat("3");
-      } else if (current === "3") {
-        return "1";
-      }
-    });
+    setRepeat(isRepeat === "1" ? "2" : isRepeat === "2" ? "3" : "1");
   };
   return (
     <section className="background bg-orange-200 h-screen w-screen flex justify-center items-center relative m-0">
@@ -51,12 +43,20 @@ function App() {
             </button>
           </div>
           <div className="song-buttons-actions m-0 h-[20%] w-[100%] flex justify-center items-center gap-[20px]">
-            <button>
-              <img
-                src="../ASSETS/shuffle-icon.png"
-                alt="suffle-icon"
-                className="h-[25px] object-cover invert hover:scale-105"
-              ></img>
+            <button onClick={handleSuffle}>
+              {isSuffle === false ? (
+                <img
+                  src="../ASSETS/shuffle-icon.png"
+                  alt="suffle-icon"
+                  className="h-[25px] object-cover invert hover:scale-105 opacity-50"
+                ></img>
+              ) : (
+                <img
+                  src="../ASSETS/shuffle-icon.png"
+                  alt="suffle-icon"
+                  className="h-[25px] object-cover invert hover:scale-105"
+                ></img>
+              )}
             </button>
             <button>
               <img
@@ -65,12 +65,20 @@ function App() {
                 className="h-[25px] object-cover invert hover:scale-105"
               ></img>
             </button>
-            <button>
-              <img
-                src="../ASSETS/play-icon.png"
-                alt="play-icon"
-                className="h-[30px] object-cover invert hover:scale-105"
-              ></img>
+            <button onClick={handlePaused}>
+              {isPaused === false ? (
+                <img
+                  src="../ASSETS/play-icon.png"
+                  alt="play-icon"
+                  className="h-[30px] object-cover invert hover:scale-105"
+                ></img>
+              ) : (
+                <img
+                  src="../ASSETS/pause-icon.png"
+                  alt="pause-icon"
+                  className="h-[30px] object-cover invert hover:scale-105"
+                ></img>
+              )}
             </button>
             <button>
               <img
@@ -97,7 +105,7 @@ function App() {
               {isRepeat === "3" && (
                 <img
                   src="../ASSETS/repeat-1-icon.png"
-                  alt="repeat-icon"
+                  alt="repeat-1-icon"
                   className="h-[25px] object-cover invert hover:scale-105"
                 ></img>
               )}
