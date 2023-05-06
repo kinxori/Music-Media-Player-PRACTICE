@@ -2,10 +2,27 @@ import { useState, useEffect } from "react";
 // import "./App.css";
 
 function App() {
-  const [isSuffle, setSuffle] = useState(null);
-  const [isPaused, setPaused] = useState(null);
-  const [isRepeat, setRepeat] = useState(null);
+  const [isSuffle, setSuffle] = useState(false);
+  const [isPaused, setPaused] = useState(false);
+  const [isRepeat, setRepeat] = useState("1");
 
+  const handleSuffle = () => {
+    setSuffle(!isSuffle);
+  };
+  const handlePaused = () => {
+    setPaused(!isPaused);
+  };
+  const handleRepeat = () => {
+    setRepeat((current) => {
+      if (current === "1") {
+        setRepeat("2");
+      } else if (current === "2") {
+        setRepeat("3");
+      } else if (current === "3") {
+        return "1";
+      }
+    });
+  };
   return (
     <section className="background bg-orange-200 h-screen w-screen flex justify-center items-center relative m-0">
       <div className="media-player h-[350px] w-[700px] bg-zinc-900 flex justify-evenly items-center relative  m-0 py-[20px] px-[0px] rounded-[20px] drop-shadow-[0px_0px_15px_rgba(0,0,0,.5)]">
@@ -62,12 +79,28 @@ function App() {
                 className="h-[25px] object-cover invert hover:scale-105"
               ></img>
             </button>
-            <button>
-              <img
-                src="../ASSETS/repeat-icon.png"
-                alt="repeat-icon"
-                className="h-[25px] object-cover invert hover:scale-105"
-              ></img>
+            <button onClick={handleRepeat}>
+              {isRepeat === "1" && (
+                <img
+                  src="../ASSETS/repeat-icon.png"
+                  alt="repeat-icon"
+                  className="h-[25px] object-cover invert hover:scale-105 opacity-50"
+                ></img>
+              )}
+              {isRepeat === "2" && (
+                <img
+                  src="../ASSETS/repeat-icon.png"
+                  alt="repeat-icon"
+                  className="h-[25px] object-cover invert hover:scale-105"
+                ></img>
+              )}
+              {isRepeat === "3" && (
+                <img
+                  src="../ASSETS/repeat-1-icon.png"
+                  alt="repeat-icon"
+                  className="h-[25px] object-cover invert hover:scale-105"
+                ></img>
+              )}
             </button>
           </div>
         </div>
