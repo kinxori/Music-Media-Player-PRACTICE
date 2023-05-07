@@ -1,10 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import "./App.css";
 
+const data = [
+  {
+    id: "1",
+    song: "idk",
+    artist: "idk",
+    src: "/",
+    genre: "idk",
+  },
+];
 function App() {
+  useEffect(() => {
+    const getData = async () => {
+      const response = await fetch("https://api.discogs.com/releases/249504");
+      const data = await response.json();
+      setData(data);
+    };
+    getData();
+  }, []);
+
   const [isSuffle, setSuffle] = useState(false);
   const [isPaused, setPaused] = useState(false);
   const [isRepeat, setRepeat] = useState("1");
+  const [isData, setData] = useState([{}]);
+
+  console.log(isData);
 
   const handleSuffle = () => {
     setSuffle(!isSuffle);
