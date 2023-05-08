@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import img1 from "./../ASSETS/cover-imgs/cover-img-song-1.jpg";
 import img2 from "./../ASSETS/cover-imgs/cover-img-song-2.jpg";
 import img3 from "./../ASSETS/cover-imgs/cover-img-song-3.jpg";
@@ -59,7 +59,32 @@ function App() {
   const [isSuffle, setSuffle] = useState(false);
   const [isPaused, setPaused] = useState(false);
   const [isRepeat, setRepeat] = useState("1");
-  const [isSong, setSong] = useState({});
+  const [isSong, setSong] = useState({
+    id: "",
+    song: "",
+    artist: "",
+    src: "",
+    cover: "",
+  });
+
+  useEffect(() => {
+    setSong(data[0]);
+    const defaultPlaylist = () => {
+      const index = 0;
+      const nextIndex = index === data.length - 1 ? 0 : index + 1;
+      const nextSong = data[nextIndex];
+      setSong(nextSong);
+      setTimeout(defaultPlaylist, nextSong.src.length * 1000);
+    };
+  }, [data]);
+
+  const formatTotalTime = (length: number) => {
+    const minutes = Math.floor(length / 60);
+    const seconds = length % 60;
+    return `${minutes.toString().padStart(2, "0")}:${seconds
+      .toString()
+      .padStart(2, "0")}`;
+  };
 
   const handleSuffle = () => {
     setSuffle(!isSuffle);
@@ -73,25 +98,29 @@ function App() {
   return (
     <section className="background bg-orange-200 h-screen w-screen flex justify-center items-center relative m-0">
       <div className="media-player h-[350px] w-[700px] bg-zinc-900 flex justify-evenly items-center relative  m-0 py-[20px] px-[0px] rounded-[20px] drop-shadow-[0px_0px_15px_rgba(0,0,0,.5)]">
-        <div className="song-cover-img w-[40%] h-[100%] object-cover bg-zinc-600 m-0 rounded-[20px]">
-          <img src="" alt="song-cover" />
+        <div className="song-cover-img w-[40%] object-cover bg-zinc-600 m-0 rounded-[20px] overflow-hidden">
+          <img src={isSong.cover} alt="song-cover" />
         </div>
         <div className="song-content bg-zinc-600 w-[50%] h-[100%] m-0 flex justify-center items-center flex-col">
           <div className="song-copy m-0  h-[65%] w-[100%]">
             <button className="song-copy h-min w-min ml-auto flex">
               <i className="fa-solid fa-music my-[10px] mx-[10px] text-[30px] hover:scale-105"></i>
             </button>
-            <h2 className="text-[30px] font-bold mt-[20px] px-[20px]">Song</h2>
-            <h3 className="text-[18px] italic px-[20px]">artist</h3>
+            <h2 className="text-[30px] font-bold mt-[20px] px-[20px]">
+              {isSong.song}
+            </h2>
+            <h3 className="text-[18px] italic px-[20px]">{isSong.artist}</h3>
           </div>
           <div className="song-range m-0 h-[15%] w-[100%] flex justify-center items-center">
             <button className="h-min w-min flex">
               <i className="fa-regular fa-thumbs-down mx-[15px] text-[20px] hover:scale-105"></i>
               {/* <i class="fa-solid fa-thumbs-down"></i> */}
             </button>
-            <span className="mx-[10px] text-[12px]">00:00</span>
+            <span className="mx-[10px] text-[12px]">{isSong.src.length}</span>
             <input type="range"></input>
-            <span className="mx-[10px] text-[12px]">00:00</span>
+            <span className="mx-[10px] text-[12px]">
+              {formatTotalTime(isSong.src.length)}
+            </span>
             <button>
               <i className="fa-regular fa-thumbs-up mx-[15px] text-[20px] hover:scale-105"></i>
               {/* <i class="fa-solid fa-thumbs-up"></i> */}
