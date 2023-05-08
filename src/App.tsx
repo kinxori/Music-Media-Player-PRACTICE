@@ -59,16 +59,23 @@ function App() {
   const [isSuffle, setSuffle] = useState(false);
   const [isPaused, setPaused] = useState(false);
   const [isRepeat, setRepeat] = useState("1");
-  const [isSong, setSong] = useState({
+  const [isSong, setSong] = useState<Song>({
     id: "",
     song: "",
     artist: "",
-    src: "",
-    cover: "",
+    src: HTMLAudioElement,
+    cover: HTMLPictureElement,
   });
+  interface Song {
+    id: string;
+    song: string;
+    artist: string;
+    src: HTMLAudioElement;
+    cover: HTMLPictureElement;
+  }
 
   useEffect(() => {
-    setSong(data[0]);
+    setSong(data[5]);
     const defaultPlaylist = () => {
       const index = 0;
       const nextIndex = index === data.length - 1 ? 0 : index + 1;
@@ -78,9 +85,9 @@ function App() {
     };
   }, [data]);
 
-  const formatTotalTime = (length: number) => {
-    const minutes = Math.floor(length / 60);
-    const seconds = length % 60;
+  const formatTotalTime = (duration: number) => {
+    const minutes = Math.floor(duration / 60);
+    const seconds = duration % 60;
     return `${minutes.toString().padStart(2, "0")}:${seconds
       .toString()
       .padStart(2, "0")}`;
@@ -101,7 +108,7 @@ function App() {
         <div className="song-cover-img w-[40%] object-cover bg-zinc-600 m-0 rounded-[20px] overflow-hidden">
           <img src={isSong.cover} alt="song-cover" />
         </div>
-        <div className="song-content bg-zinc-600 w-[50%] h-[100%] m-0 flex justify-center items-center flex-col">
+        <div className="song-content w-[50%] h-[100%] m-0 flex justify-center items-center flex-col">
           <div className="song-copy m-0  h-[65%] w-[100%]">
             <button className="song-copy h-min w-min ml-auto flex">
               <i className="fa-solid fa-music my-[10px] mx-[10px] text-[30px] hover:scale-105"></i>
@@ -116,7 +123,7 @@ function App() {
               <i className="fa-regular fa-thumbs-down mx-[15px] text-[20px] hover:scale-105"></i>
               {/* <i class="fa-solid fa-thumbs-down"></i> */}
             </button>
-            <span className="mx-[10px] text-[12px]">{isSong.src.length}</span>
+            <span className="mx-[10px] text-[12px]">{isSong.src.duration}</span>
             <input type="range"></input>
             <span className="mx-[10px] text-[12px]">
               {formatTotalTime(isSong.src.length)}
