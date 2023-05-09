@@ -61,6 +61,9 @@ function App() {
   const [isRepeat, setRepeat] = useState("1");
   const [isTotalTime, setTotalTime] = useState("");
   const [isRestTime, setRestTime] = useState("");
+  const [isLiked, setLiked] = useState(false);
+  const [isDisliked, setDisliked] = useState(false);
+
   const [isSong, setSong] = useState({
     id: "",
     song: "",
@@ -113,6 +116,12 @@ function App() {
   const handleRepeat = () => {
     setRepeat(isRepeat === "1" ? "2" : isRepeat === "2" ? "3" : "1");
   };
+  const handleLiked = () => {
+    setLiked(!isLiked);
+  };
+  const handleDisliked = () => {
+    setDisliked(!isDisliked);
+  };
   return (
     <section className="background bg-orange-200 h-screen w-screen flex justify-center items-center relative m-0">
       <div className="media-player h-[350px] w-[700px] bg-zinc-900 flex justify-evenly items-center relative  m-0 py-[20px] px-[0px] rounded-[20px] drop-shadow-[0px_0px_15px_rgba(0,0,0,.5)]">
@@ -129,19 +138,28 @@ function App() {
             </h2>
             <h3 className="text-[18px] italic px-[20px]">{isSong.artist}</h3>
             <div className="like-buttons w-[100%] flex gap-[20px] mt-[20px] px-[20px]">
-              <button className="h-min w-min">
-                <i className="fa-regular fa-thumbs-down text-[20px] hover:scale-105"></i>
-                {/* <i class="fa-solid fa-thumbs-down"></i> */}
+              <button className="h-min w-min" onClick={handleDisliked}>
+                {isDisliked === false ? (
+                  <i className="fa-regular fa-thumbs-down text-[20px] hover:scale-105"></i>
+                ) : (
+                  <i className="fa-solid fa-thumbs-down text-[20px] hover:scale-105"></i>
+                )}
               </button>
-              <button className="h-min w-min ">
-                <i className="fa-regular fa-thumbs-up  text-[20px] hover:scale-105"></i>
-                {/* <i class="fa-solid fa-thumbs-up"></i> */}
+              <button className="h-min w-min " onClick={handleLiked}>
+                {isLiked === false ? (
+                  <i className="fa-regular fa-thumbs-up  text-[20px] hover:scale-105"></i>
+                ) : (
+                  <i className="fa-solid fa-thumbs-up text-[20px] hover:scale-105"></i>
+                )}
               </button>
             </div>
           </div>
           <div className="song-range w-[85%]  h-[auto] flex flex-col justify-center items-center ">
-            <input type="range" className="w-[100%] "></input>
-            <div className="w-[100%] flex ">
+            <input
+              type="range"
+              className=" w-full h-0.5 bg-grey rounded outline-none accent-white"
+            ></input>
+            <div className="w-[100%] flex mt-[6px]">
               <span className=" text-[10px] w-[min] flex  mr-[auto] ">
                 {isRestTime}
               </span>
