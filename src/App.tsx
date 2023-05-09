@@ -60,6 +60,7 @@ function App() {
   const [isPaused, setPaused] = useState(false);
   const [isRepeat, setRepeat] = useState("1");
   const [isTotalTime, setTotalTime] = useState("");
+  const [isRestTime, setRestTime] = useState("");
   const [isSong, setSong] = useState({
     id: "",
     song: "",
@@ -88,6 +89,18 @@ function App() {
         .toString()
         .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
       setTotalTime(formattedTotalTime);
+    });
+  }, [isSong.src]);
+  useEffect(() => {
+    const toAudio = new Audio(isSong.src);
+    toAudio.addEventListener("loadedmetadata", () => {
+      const rest = toAudio.duration - toAudio.currentTime;
+      const minutes = Math.floor(rest / 60);
+      const seconds = Math.floor(rest % 60);
+      const formattedTotalTime = `${minutes
+        .toString()
+        .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+      setRestTime(formattedTotalTime);
     });
   }, [isSong.src]);
 
@@ -121,7 +134,7 @@ function App() {
               <i className="fa-regular fa-thumbs-down mx-[15px] text-[20px] hover:scale-105"></i>
               {/* <i class="fa-solid fa-thumbs-down"></i> */}
             </button>
-            <span className="mx-[10px] text-[12px]">{isSong.song}</span>
+            <span className="mx-[10px] text-[12px]">{isRestTime}</span>
             <input type="range"></input>
             <span className="mx-[10px] text-[12px]">{isTotalTime}</span>
             <button>
