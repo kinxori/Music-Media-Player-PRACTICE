@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import img1 from "./../ASSETS/cover-imgs/cover-img-song-1.jpg";
 import img2 from "./../ASSETS/cover-imgs/cover-img-song-2.jpg";
 import img3 from "./../ASSETS/cover-imgs/cover-img-song-3.jpg";
@@ -59,23 +59,17 @@ function App() {
   const [isSuffle, setSuffle] = useState(false);
   const [isPaused, setPaused] = useState(false);
   const [isRepeat, setRepeat] = useState("1");
-  const [isSong, setSong] = useState<Song>({
+  const [isTotalTime, setTotalTime] = useState("");
+  const [isSong, setSong] = useState({
     id: "",
     song: "",
     artist: "",
-    src: HTMLAudioElement,
-    cover: HTMLPictureElement,
+    src: "",
+    cover: "",
   });
-  interface Song {
-    id: string;
-    song: string;
-    artist: string;
-    src: HTMLAudioElement;
-    cover: HTMLPictureElement;
-  }
 
   useEffect(() => {
-    setSong(data[5]);
+    setSong(data[1]);
     const defaultPlaylist = () => {
       const index = 0;
       const nextIndex = index === data.length - 1 ? 0 : index + 1;
@@ -85,13 +79,17 @@ function App() {
     };
   }, [data]);
 
-  const formatTotalTime = (duration: number) => {
-    const minutes = Math.floor(duration / 60);
-    const seconds = duration % 60;
-    return `${minutes.toString().padStart(2, "0")}:${seconds
-      .toString()
-      .padStart(2, "0")}`;
-  };
+  useEffect(() => {
+    const toAudio = new Audio(isSong.src);
+    toAudio.addEventListener("loadedmetadata", () => {
+      const minutes = Math.floor(toAudio.duration / 60);
+      const seconds = Math.floor(toAudio.duration % 60);
+      const formattedTotalTime = `${minutes
+        .toString()
+        .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+      setTotalTime(formattedTotalTime);
+    });
+  }, [isSong.src]);
 
   const handleSuffle = () => {
     setSuffle(!isSuffle);
@@ -123,11 +121,9 @@ function App() {
               <i className="fa-regular fa-thumbs-down mx-[15px] text-[20px] hover:scale-105"></i>
               {/* <i class="fa-solid fa-thumbs-down"></i> */}
             </button>
-            <span className="mx-[10px] text-[12px]">{isSong.src.duration}</span>
+            <span className="mx-[10px] text-[12px]">{isSong.song}</span>
             <input type="range"></input>
-            <span className="mx-[10px] text-[12px]">
-              {formatTotalTime(isSong.src.length)}
-            </span>
+            <span className="mx-[10px] text-[12px]">{isTotalTime}</span>
             <button>
               <i className="fa-regular fa-thumbs-up mx-[15px] text-[20px] hover:scale-105"></i>
               {/* <i class="fa-solid fa-thumbs-up"></i> */}
