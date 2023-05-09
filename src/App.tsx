@@ -94,7 +94,7 @@ function App() {
   useEffect(() => {
     const toAudio = new Audio(isSong.src);
     toAudio.addEventListener("loadedmetadata", () => {
-      const rest = toAudio.duration - toAudio.currentTime;
+      const rest = toAudio.currentTime;
       const minutes = Math.floor(rest / 60);
       const seconds = Math.floor(rest % 60);
       const formattedTotalTime = `${minutes
@@ -119,8 +119,8 @@ function App() {
         <div className="song-cover-img w-[40%] object-cover bg-zinc-600 m-0 rounded-[20px] overflow-hidden">
           <img src={isSong.cover} alt="song-cover" />
         </div>
-        <div className="song-content w-[50%] h-[100%] m-0 flex justify-center items-center flex-col">
-          <div className="song-copy m-0  h-[65%] w-[100%]">
+        <div className="song-content  w-[50%] h-[100%] m-0 flex justify-center items-center flex-col">
+          <div className="song-copy m-0  h-[80%] w-[100%]">
             <button className="song-copy h-min w-min ml-auto flex">
               <i className="fa-solid fa-music my-[10px] mx-[10px] text-[30px] hover:scale-105"></i>
             </button>
@@ -128,33 +128,41 @@ function App() {
               {isSong.song}
             </h2>
             <h3 className="text-[18px] italic px-[20px]">{isSong.artist}</h3>
+            <div className="like-buttons w-[100%] flex gap-[20px] mt-[20px] px-[20px]">
+              <button className="h-min w-min">
+                <i className="fa-regular fa-thumbs-down text-[20px] hover:scale-105"></i>
+                {/* <i class="fa-solid fa-thumbs-down"></i> */}
+              </button>
+              <button className="h-min w-min ">
+                <i className="fa-regular fa-thumbs-up  text-[20px] hover:scale-105"></i>
+                {/* <i class="fa-solid fa-thumbs-up"></i> */}
+              </button>
+            </div>
           </div>
-          <div className="song-range m-0 h-[15%] w-[100%] flex justify-center items-center">
-            <button className="h-min w-min flex">
-              <i className="fa-regular fa-thumbs-down mx-[15px] text-[20px] hover:scale-105"></i>
-              {/* <i class="fa-solid fa-thumbs-down"></i> */}
-            </button>
-            <span className="mx-[10px] text-[12px]">{isRestTime}</span>
-            <input type="range"></input>
-            <span className="mx-[10px] text-[12px]">{isTotalTime}</span>
-            <button>
-              <i className="fa-regular fa-thumbs-up mx-[15px] text-[20px] hover:scale-105"></i>
-              {/* <i class="fa-solid fa-thumbs-up"></i> */}
-            </button>
+          <div className="song-range w-[85%]  h-[auto] flex flex-col justify-center items-center ">
+            <input type="range" className="w-[100%] "></input>
+            <div className="w-[100%] flex ">
+              <span className=" text-[10px] w-[min] flex  mr-[auto] ">
+                {isRestTime}
+              </span>
+              <span className=" text-[10px]  w-[min] flex ml-[auto] ">
+                {isTotalTime}
+              </span>
+            </div>
           </div>
-          <div className="song-buttons-actions m-0 h-[20%] w-[100%] flex justify-center items-center gap-[20px]">
+          <div className="song-buttons-actions m-0 h-[20%] w-[100%] flex justify-center items-center gap-[40px]">
             <button onClick={handleSuffle}>
               {isSuffle === false ? (
                 <img
                   src="../ASSETS/shuffle-icon.png"
                   alt="suffle-icon"
-                  className="h-[25px] object-cover invert hover:scale-105 opacity-50"
+                  className="h-[20px] object-cover invert hover:scale-105 opacity-50"
                 ></img>
               ) : (
                 <img
                   src="../ASSETS/shuffle-icon.png"
                   alt="suffle-icon"
-                  className="h-[25px] object-cover invert hover:scale-105"
+                  className="h-[20px] object-cover invert hover:scale-105"
                 ></img>
               )}
             </button>
@@ -162,7 +170,7 @@ function App() {
               <img
                 src="../ASSETS/backward-icon.png"
                 alt="backward-icon"
-                className="h-[25px] object-cover invert hover:scale-105"
+                className="h-[20px] object-cover invert hover:scale-105"
               ></img>
             </button>
             <button onClick={handlePaused}>
@@ -170,13 +178,13 @@ function App() {
                 <img
                   src="../ASSETS/play-icon.png"
                   alt="play-icon"
-                  className="h-[30px] object-cover invert hover:scale-105"
+                  className="h-[25px] object-cover invert hover:scale-105"
                 ></img>
               ) : (
                 <img
                   src="../ASSETS/pause-icon.png"
                   alt="pause-icon"
-                  className="h-[30px] object-cover invert hover:scale-105"
+                  className="h-[25px] object-cover invert hover:scale-105"
                 ></img>
               )}
             </button>
@@ -184,7 +192,7 @@ function App() {
               <img
                 src="../ASSETS/forward-icon.png"
                 alt="forward-icon"
-                className="h-[25px] object-cover invert hover:scale-105"
+                className="h-[20px] object-cover invert hover:scale-105"
               ></img>
             </button>
             <button onClick={handleRepeat}>
@@ -192,21 +200,21 @@ function App() {
                 <img
                   src="../ASSETS/repeat-icon.png"
                   alt="repeat-icon"
-                  className="h-[25px] object-cover invert hover:scale-105 opacity-50"
+                  className="h-[20px] object-cover invert hover:scale-105 opacity-50"
                 ></img>
               )}
               {isRepeat === "2" && (
                 <img
                   src="../ASSETS/repeat-icon.png"
                   alt="repeat-icon"
-                  className="h-[25px] object-cover invert hover:scale-105"
+                  className="h-[20px] object-cover invert hover:scale-105"
                 ></img>
               )}
               {isRepeat === "3" && (
                 <img
                   src="../ASSETS/repeat-1-icon.png"
                   alt="repeat-1-icon"
-                  className="h-[25px] object-cover invert hover:scale-105"
+                  className="h-[20px] object-cover invert hover:scale-105"
                 ></img>
               )}
             </button>
