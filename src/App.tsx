@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import img1 from "./../ASSETS/cover-imgs/cover-img-song-1.jpg";
 import img2 from "./../ASSETS/cover-imgs/cover-img-song-2.jpg";
 import img3 from "./../ASSETS/cover-imgs/cover-img-song-3.jpg";
