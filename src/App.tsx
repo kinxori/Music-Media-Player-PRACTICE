@@ -53,6 +53,7 @@ const data = [
     id: "10", song: "Zone", artist: "Fvmeless", src: song10,  cover: img5
   },
 ];
+
 // prettier-ignore-end
 
 function App() {
@@ -63,7 +64,11 @@ function App() {
   const [isRestTime, setRestTime] = useState("");
   const [isLiked, setLiked] = useState(false);
   const [isDisliked, setDisliked] = useState(false);
-
+  const [isCurrentRange, setCurrentRange] = useState(0);
+  const [isMaxRange, setMaxRange] = useState(0);
+  const [isPlaylist, setPlaylist] = useState([
+    { id: "", song: "", artist: "", src: "", cover: "" },
+  ]);
   const [isSong, setSong] = useState({
     id: "",
     song: "",
@@ -73,15 +78,11 @@ function App() {
   });
 
   useEffect(() => {
-    setSong(data[1]);
-    const defaultPlaylist = () => {
-      const index = 0;
-      const nextIndex = index === data.length - 1 ? 0 : index + 1;
-      const nextSong = data[nextIndex];
-      setSong(nextSong);
-      setTimeout(defaultPlaylist, nextSong.src.length * 1000);
-    };
-  }, [data]);
+    setPlaylist(data);
+    if (isPlaylist.length > 0) {
+      setSong(isPlaylist[0]);
+    }
+  }, [data, isPlaylist]);
 
   useEffect(() => {
     const toAudio = new Audio(isSong.src);
@@ -94,6 +95,7 @@ function App() {
       setTotalTime(formattedTotalTime);
     });
   }, [isSong.src]);
+
   useEffect(() => {
     const toAudio = new Audio(isSong.src);
     toAudio.addEventListener("loadedmetadata", () => {
@@ -103,6 +105,8 @@ function App() {
       const formattedTotalTime = `${minutes
         .toString()
         .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+      const maxDuration = toAudio.duration;
+      setMaxRange(maxDuration);
       setRestTime(formattedTotalTime);
     });
   }, [isSong.src]);
@@ -122,6 +126,22 @@ function App() {
   const handleDisliked = () => {
     setDisliked(!isDisliked);
   };
+  const handleCurrentTimePosition = (event: any) => {
+    const time = event.target.value;
+    const audio = new Audio(isSong.src);
+    audio.currentTime = time;
+    setCurrentRange(time);
+    audio.addEventListener("loadedmetadata", () => {
+      const rest = audio.currentTime;
+      const minutes = Math.floor(rest / 60);
+      const seconds = Math.floor(rest % 60);
+      const formattedTotalTime = `${minutes
+        .toString()
+        .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+      setRestTime(formattedTotalTime);
+    });
+  };
+
   return (
     <section className="background bg-orange-200 h-screen w-screen flex justify-center items-center relative m-0">
       <div className="media-player h-[350px] w-[700px] bg-zinc-900 flex justify-evenly items-center relative  m-0 py-[20px] px-[0px] rounded-[20px] drop-shadow-[0px_0px_15px_rgba(0,0,0,.5)]">
@@ -158,6 +178,10 @@ function App() {
             <input
               type="range"
               className=" w-full h-0.5 bg-grey rounded outline-none accent-white"
+              min="0"
+              max={isMaxRange}
+              value={isCurrentRange}
+              onChange={handleCurrentTimePosition}
             ></input>
             <div className="w-[100%] flex mt-[6px]">
               <span className=" text-[10px] w-[min] flex  mr-[auto] ">
@@ -214,25 +238,29 @@ function App() {
               ></img>
             </button>
             <button onClick={handleRepeat}>
-              {isRepeat === "1" && (
+              {isRepeat === "1" ? (
                 <img
                   src="../ASSETS/repeat-icon.png"
                   alt="repeat-icon"
                   className="h-[20px] object-cover invert hover:scale-105 opacity-50"
                 ></img>
-              )}
-              {isRepeat === "2" && (
+              ) : isRepeat === "2" ? (
                 <img
                   src="../ASSETS/repeat-icon.png"
                   alt="repeat-icon"
                   className="h-[20px] object-cover invert hover:scale-105"
                 ></img>
-              )}
-              {isRepeat === "3" && (
+              ) : isRepeat === "3" ? (
                 <img
                   src="../ASSETS/repeat-1-icon.png"
                   alt="repeat-1-icon"
                   className="h-[20px] object-cover invert hover:scale-105"
+                ></img>
+              ) : (
+                <img
+                  src="../ASSETS/repeat-icon.png"
+                  alt="repeat-icon"
+                  className="h-[20px] object-cover invert hover:scale-105 opacity-50"
                 ></img>
               )}
             </button>
