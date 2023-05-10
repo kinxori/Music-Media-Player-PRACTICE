@@ -64,56 +64,55 @@ function App() {
   const [isDisliked, setDisliked] = useState(false);
   const [isPlaylist, setPlaylist] = useState(data);
   const [isSong, setSong] = useState(isPlaylist[0]);
+  const [isAudioExist, setAudioExist] = useState<any>(new Audio(isSong.src));
   const [isTotalTime, setTotalTime] = useState("");
   const [isRestTime, setRestTime] = useState("");
   const [isMaxRange, setMaxRange] = useState(0);
   const [isCurrentRange, setCurrentRange] = useState(0);
-  const [isAudioExist, setAudioExist] = useState<any>(undefined);
 
-  useEffect(() => {
-    const audio = new Audio(isSong.src);
-    audio.addEventListener("loadedmetadata", () => {
-      const totalMinutes = Math.floor(audio.duration / 60);
-      const totalSeconds = Math.floor(audio.duration % 60);
+  const audioTotalTime = () => {
+    isAudioExist.addEventListener("loadedmetadata", () => {
+      const totalMinutes = Math.floor(isAudioExist.duration / 60);
+      const totalSeconds = Math.floor(isAudioExist.duration % 60);
+      const maxDuration = isAudioExist.duration;
       const formattedTotalTime = `${totalMinutes
         .toString()
         .padStart(2, "0")}:${totalSeconds.toString().padStart(2, "0")}`;
       setTotalTime(formattedTotalTime);
+      setMaxRange(maxDuration);
     });
-  }, [isSong.src]);
+  };
+
+  const audioRestTime = () => {
+    const rest = isAudioExist.currentTime;
+    const restMinutes = Math.floor(rest / 60);
+    const restSeconds = Math.floor(rest % 60);
+    const formattedRestTime = `${restMinutes
+      .toString()
+      .padStart(2, "0")}:${restSeconds.toString().padStart(2, "0")}`;
+    setRestTime(formattedRestTime);
+    console.log(isAudioExist.duration, isAudioExist.currentTime);
+  };
 
   useEffect(() => {
-    const audio = new Audio(isSong.src);
-    audio.addEventListener("loadedmetadata", () => {
-      const rest = audio.currentTime;
-      const restMinutes = Math.floor(rest / 60);
-      const restSeconds = Math.floor(rest % 60);
-      const formattedRestTime = `${restMinutes
-        .toString()
-        .padStart(2, "0")}:${restSeconds.toString().padStart(2, "0")}`;
-      const maxDuration = audio.duration;
-      setRestTime(formattedRestTime);
-      setMaxRange(maxDuration);
-      setCurrentRange(rest);
-    });
-  }, [isSong.src, isAudioExist]);
+    audioTotalTime();
+    audioRestTime();
+  }, [isAudioExist.currentTime, isAudioExist.duration]);
+
+  const handleInputRange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const position = parseFloat(event.target.value);
+    isAudioExist.currentTime = position;
+    setCurrentRange(position);
+    audioRestTime();
+  };
 
   const handlePaused = () => {
-    if (!isAudioExist) {
-      const audio = new Audio(isSong.src);
-      console.log("222", audio);
-      setAudioExist(audio);
+    if (isAudioExist.paused) {
+      isAudioExist.play();
       setPausedBtn(!isPausedBtn);
-      audio.play();
     } else {
-      if (isAudioExist.paused) {
-        isAudioExist.play();
-        setPausedBtn(!isPausedBtn);
-        console.log("222", isAudioExist);
-      } else {
-        isAudioExist.pause();
-        setPausedBtn(!isPausedBtn);
-      }
+      isAudioExist.pause();
+      setPausedBtn(!isPausedBtn);
     }
   };
 
@@ -169,11 +168,12 @@ function App() {
             <input
               type="range"
               className=" w-full h-0.5 bg-grey rounded outline-none accent-white"
-              min="0"
+              min={0}
               max={isMaxRange}
               value={isCurrentRange}
+              onChange={handleInputRange}
             ></input>
-            <div className="w-[100%] flex mt-[6px]">
+            <div className="w-[100%] flex mt-[10px]">
               <span className=" text-[10px] w-[min] flex  mr-[auto] ">
                 {isRestTime}
               </span>
