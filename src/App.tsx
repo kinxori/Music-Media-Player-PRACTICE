@@ -83,6 +83,10 @@ function App() {
     });
   };
 
+  useEffect(() => {
+    audioTotalTime();
+  }, [isAudioExist.duration]);
+
   const audioRestTime = () => {
     const rest = isAudioExist.currentTime;
     const restMinutes = Math.floor(rest / 60);
@@ -91,13 +95,19 @@ function App() {
       .toString()
       .padStart(2, "0")}:${restSeconds.toString().padStart(2, "0")}`;
     setRestTime(formattedRestTime);
-    console.log(isAudioExist.duration, isAudioExist.currentTime);
+    console.log(isAudioExist.currentTime);
   };
 
   useEffect(() => {
-    audioTotalTime();
     audioRestTime();
-  }, [isAudioExist.currentTime, isAudioExist.duration]);
+    const handleTimeUpdate = () => {
+      audioRestTime();
+    };
+    isAudioExist.addEventListener("timeupdate", handleTimeUpdate);
+    return () => {
+      isAudioExist.removeEventListener("timeupdate", handleTimeUpdate);
+    };
+  }, [isAudioExist.currentTime]);
 
   const handleInputRange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const position = parseFloat(event.target.value);
