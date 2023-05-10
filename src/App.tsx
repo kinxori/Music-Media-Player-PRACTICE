@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import img1 from "./../ASSETS/cover-imgs/cover-img-song-1.jpg";
 import img2 from "./../ASSETS/cover-imgs/cover-img-song-2.jpg";
 import img3 from "./../ASSETS/cover-imgs/cover-img-song-3.jpg";
@@ -57,75 +57,81 @@ const data = [
 // prettier-ignore-end
 
 function App() {
-  const [isSuffle, setSuffle] = useState(false);
   const [isPaused, setPaused] = useState(false);
+  const [isSuffle, setSuffle] = useState(false);
   const [isRepeat, setRepeat] = useState("1");
-  const [isTotalTime, setTotalTime] = useState("");
-  const [isRestTime, setRestTime] = useState("");
   const [isLiked, setLiked] = useState(false);
   const [isDisliked, setDisliked] = useState(false);
-  const [isCurrentRange, setCurrentRange] = useState(0);
+  const [isPlaylist, setPlaylist] = useState(data);
+  const [isSong, setSong] = useState(isPlaylist[0]);
+  const [isTotalTime, setTotalTime] = useState("");
+  const [isRestTime, setRestTime] = useState("");
   const [isMaxRange, setMaxRange] = useState(0);
-  const [isPlaylist, setPlaylist] = useState([
-    { id: "", song: "", artist: "", src: "", cover: "" },
-  ]);
-  const [isSong, setSong] = useState({
-    id: "",
-    song: "",
-    artist: "",
-    src: "",
-    cover: "",
-  });
+  const [isCurrentRange, setCurrentRange] = useState(0);
+  const [isAudioExist, setAudioExist] = useState<any>(undefined);
 
   useEffect(() => {
-    setPlaylist(data);
-    if (isPlaylist.length > 0) {
-      setSong(isPlaylist[0]);
-    }
-  }, [data, isPlaylist]);
-
-  useEffect(() => {
-    const toAudio = new Audio(isSong.src);
-    toAudio.addEventListener("loadedmetadata", () => {
-      const minutes = Math.floor(toAudio.duration / 60);
-      const seconds = Math.floor(toAudio.duration % 60);
-      const formattedTotalTime = `${minutes
+    const audio = new Audio(isSong.src);
+    audio.addEventListener("loadedmetadata", () => {
+      const totalMinutes = Math.floor(audio.duration / 60);
+      const totalSeconds = Math.floor(audio.duration % 60);
+      const formattedTotalTime = `${totalMinutes
         .toString()
-        .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+        .padStart(2, "0")}:${totalSeconds.toString().padStart(2, "0")}`;
       setTotalTime(formattedTotalTime);
     });
   }, [isSong.src]);
 
   useEffect(() => {
-    const toAudio = new Audio(isSong.src);
-    toAudio.addEventListener("loadedmetadata", () => {
-      const rest = toAudio.currentTime;
-      const minutes = Math.floor(rest / 60);
-      const seconds = Math.floor(rest % 60);
-      const formattedTotalTime = `${minutes
+    const audio = new Audio(isSong.src);
+    audio.addEventListener("loadedmetadata", () => {
+      const maxDuration = audio.duration;
+      const rest = audio.currentTime;
+      const restMinutes = Math.floor(rest / 60);
+      const restSeconds = Math.floor(rest % 60);
+      const formattedRestTime = `${restMinutes
         .toString()
-        .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
-      const maxDuration = toAudio.duration;
+        .padStart(2, "0")}:${restSeconds.toString().padStart(2, "0")}`;
       setMaxRange(maxDuration);
-      setRestTime(formattedTotalTime);
+      setRestTime(formattedRestTime);
     });
   }, [isSong.src]);
+
+  const handlePaused = () => {
+    if (!isAudioExist) {
+      const audio = new Audio(isSong.src);
+      console.log("222", audio);
+      setAudioExist(audio);
+      setPaused(!isPaused);
+      audio.play();
+    } else {
+      if (isAudioExist.paused) {
+        isAudioExist.play();
+        setPaused(!isPaused);
+        console.log("222", isAudioExist);
+      } else {
+        isAudioExist.pause();
+        setPaused(!isPaused);
+      }
+    }
+  };
 
   const handleSuffle = () => {
     setSuffle(!isSuffle);
   };
-  const handlePaused = () => {
-    setPaused(!isPaused);
-  };
+
   const handleRepeat = () => {
     setRepeat(isRepeat === "1" ? "2" : isRepeat === "2" ? "3" : "1");
   };
+
   const handleLiked = () => {
     setLiked(!isLiked);
   };
+
   const handleDisliked = () => {
     setDisliked(!isDisliked);
   };
+
   const handleCurrentTimePosition = (event: any) => {
     const time = event.target.value;
     const audio = new Audio(isSong.src);
@@ -133,12 +139,12 @@ function App() {
     setCurrentRange(time);
     audio.addEventListener("loadedmetadata", () => {
       const rest = audio.currentTime;
-      const minutes = Math.floor(rest / 60);
-      const seconds = Math.floor(rest % 60);
-      const formattedTotalTime = `${minutes
+      const restMinutes = Math.floor(rest / 60);
+      const restSeconds = Math.floor(rest % 60);
+      const formattedRestTime = `${restMinutes
         .toString()
-        .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
-      setRestTime(formattedTotalTime);
+        .padStart(2, "0")}:${restSeconds.toString().padStart(2, "0")}`;
+      setRestTime(formattedRestTime);
     });
   };
 
