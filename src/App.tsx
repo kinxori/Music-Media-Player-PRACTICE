@@ -57,7 +57,7 @@ const data = [
 // prettier-ignore-end
 
 function App() {
-  const [isPaused, setPaused] = useState(false);
+  const [isPausedBtn, setPausedBtn] = useState(false);
   const [isSuffle, setSuffle] = useState(false);
   const [isRepeat, setRepeat] = useState("1");
   const [isLiked, setLiked] = useState(false);
@@ -85,33 +85,34 @@ function App() {
   useEffect(() => {
     const audio = new Audio(isSong.src);
     audio.addEventListener("loadedmetadata", () => {
-      const maxDuration = audio.duration;
       const rest = audio.currentTime;
       const restMinutes = Math.floor(rest / 60);
       const restSeconds = Math.floor(rest % 60);
       const formattedRestTime = `${restMinutes
         .toString()
         .padStart(2, "0")}:${restSeconds.toString().padStart(2, "0")}`;
-      setMaxRange(maxDuration);
+      const maxDuration = audio.duration;
       setRestTime(formattedRestTime);
+      setMaxRange(maxDuration);
+      setCurrentRange(rest);
     });
-  }, [isSong.src]);
+  }, [isSong.src, isAudioExist]);
 
   const handlePaused = () => {
     if (!isAudioExist) {
       const audio = new Audio(isSong.src);
       console.log("222", audio);
       setAudioExist(audio);
-      setPaused(!isPaused);
+      setPausedBtn(!isPausedBtn);
       audio.play();
     } else {
       if (isAudioExist.paused) {
         isAudioExist.play();
-        setPaused(!isPaused);
+        setPausedBtn(!isPausedBtn);
         console.log("222", isAudioExist);
       } else {
         isAudioExist.pause();
-        setPaused(!isPaused);
+        setPausedBtn(!isPausedBtn);
       }
     }
   };
@@ -130,22 +131,6 @@ function App() {
 
   const handleDisliked = () => {
     setDisliked(!isDisliked);
-  };
-
-  const handleCurrentTimePosition = (event: any) => {
-    const time = event.target.value;
-    const audio = new Audio(isSong.src);
-    audio.currentTime = time;
-    setCurrentRange(time);
-    audio.addEventListener("loadedmetadata", () => {
-      const rest = audio.currentTime;
-      const restMinutes = Math.floor(rest / 60);
-      const restSeconds = Math.floor(rest % 60);
-      const formattedRestTime = `${restMinutes
-        .toString()
-        .padStart(2, "0")}:${restSeconds.toString().padStart(2, "0")}`;
-      setRestTime(formattedRestTime);
-    });
   };
 
   return (
@@ -187,7 +172,6 @@ function App() {
               min="0"
               max={isMaxRange}
               value={isCurrentRange}
-              onChange={handleCurrentTimePosition}
             ></input>
             <div className="w-[100%] flex mt-[6px]">
               <span className=" text-[10px] w-[min] flex  mr-[auto] ">
@@ -222,7 +206,7 @@ function App() {
               ></img>
             </button>
             <button onClick={handlePaused}>
-              {isPaused === false ? (
+              {isPausedBtn === false ? (
                 <img
                   src="../ASSETS/play-icon.png"
                   alt="play-icon"
