@@ -63,8 +63,11 @@ function App() {
   const [isLiked, setLiked] = useState(false);
   const [isDisliked, setDisliked] = useState(false);
   const [isPlaylist, setPlaylist] = useState(data);
-  const [isSong, setSong] = useState(isPlaylist[1]);
-  const [isAudioExist, setAudioExist] = useState<any>(new Audio(isSong.src));
+  const [isSong, setSong] = useState(isPlaylist[0]);
+  const [isAudioExist, setAudioExist] = useState<any>(
+    new Audio(isPlaylist[0].src)
+  );
+  const [isNextSong, setNextSong] = useState(1);
   const [isTotalTime, setTotalTime] = useState("");
   const [isRestTime, setRestTime] = useState("00:00");
   const [isMaxRange, setMaxRange] = useState(0);
@@ -77,12 +80,10 @@ function App() {
     audio.addEventListener("loadedmetadata", () => {
       const totalMinutes = Math.floor(audio.duration / 60);
       const totalSeconds = Math.floor(audio.duration % 60);
-      const maxDuration = audio.duration;
       const formattedTotalTime = `${totalMinutes
         .toString()
         .padStart(2, "0")}:${totalSeconds.toString().padStart(2, "0")}`;
       setTotalTime(formattedTotalTime);
-      setMaxRange(maxDuration);
     });
   };
 
@@ -99,8 +100,16 @@ function App() {
     });
   };
 
+  const audioMaxTime = (audio: HTMLAudioElement) => {
+    audio.addEventListener("loadedmetadata", () => {
+      const maxDuration = audio.duration;
+      setMaxRange(maxDuration);
+    });
+  };
+
   useEffect(() => {
     audioTotalTime(isAudioExist);
+    audioMaxTime(isAudioExist);
   }, []);
 
   useEffect(() => {
@@ -124,17 +133,20 @@ function App() {
     }
   };
 
-  console.log(isAudioExist);
-
   const handleNextSong = () => {
-    if (isPlaylist.length > 1) {
-      setSong(isPlaylist[1 + 1]);
+    const idNumber = isNextSong + 1;
+    console.log("current", idNumber);
+
+    if (idNumber !== isPlaylist.length) {
+      const sumIndex = idNumber;
+      setNextSong(sumIndex);
+      setSong(isPlaylist[sumIndex]);
       setCurrentRange(0);
       setRestTime("00:00");
-      audioTotalTime(isAudioExist);
-      audioRestTime(isAudioExist);
-    } else {
-      null;
+      setAudioExist(new Audio(isPlaylist[sumIndex].src));
+      audioTotalTime(new Audio(isPlaylist[sumIndex].src));
+      audioRestTime(new Audio(isPlaylist[sumIndex].src));
+      console.log("summ", sumIndex);
     }
   };
 
