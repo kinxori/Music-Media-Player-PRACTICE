@@ -63,21 +63,21 @@ function App() {
   const [isLiked, setLiked] = useState(false);
   const [isDisliked, setDisliked] = useState(false);
   const [isPlaylist, setPlaylist] = useState(data);
-  const [isSong, setSong] = useState(isPlaylist[0]);
+  const [isSong, setSong] = useState(isPlaylist[1]);
   const [isAudioExist, setAudioExist] = useState<any>(new Audio(isSong.src));
   const [isTotalTime, setTotalTime] = useState("");
   const [isRestTime, setRestTime] = useState("00:00");
   const [isMaxRange, setMaxRange] = useState(0);
   const [isCurrentRange, setCurrentRange] = useState(0);
 
-  console.log("max", isMaxRange);
-  console.log("CurrentRange", isCurrentRange);
+  // console.log("max", isMaxRange);
+  // console.log("CurrentRange", isCurrentRange);
 
-  const audioTotalTime = () => {
-    isAudioExist.addEventListener("loadedmetadata", () => {
-      const totalMinutes = Math.floor(isAudioExist.duration / 60);
-      const totalSeconds = Math.floor(isAudioExist.duration % 60);
-      const maxDuration = isAudioExist.duration;
+  const audioTotalTime = (audio: HTMLAudioElement) => {
+    audio.addEventListener("loadedmetadata", () => {
+      const totalMinutes = Math.floor(audio.duration / 60);
+      const totalSeconds = Math.floor(audio.duration % 60);
+      const maxDuration = audio.duration;
       const formattedTotalTime = `${totalMinutes
         .toString()
         .padStart(2, "0")}:${totalSeconds.toString().padStart(2, "0")}`;
@@ -86,13 +86,9 @@ function App() {
     });
   };
 
-  useEffect(() => {
-    audioTotalTime();
-  }, [isAudioExist.duration]);
-
-  const audioRestTime = () => {
-    isAudioExist.addEventListener("timeupdate", () => {
-      const rest = isAudioExist.currentTime;
+  const audioRestTime = (audio: HTMLAudioElement) => {
+    audio.addEventListener("timeupdate", () => {
+      const rest = audio.currentTime;
       const restMinutes = Math.floor(rest / 60);
       const restSeconds = Math.floor(rest % 60);
       const formattedRestTime = `${restMinutes
@@ -102,15 +98,20 @@ function App() {
       setCurrentRange(rest);
     });
   };
+
   useEffect(() => {
-    audioRestTime();
-  }, [isAudioExist.currentTime]);
+    audioTotalTime(isAudioExist);
+  }, []);
+
+  useEffect(() => {
+    audioRestTime(isAudioExist);
+  }, []);
 
   const handleInputRange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const position = parseFloat(event.target.value);
     isAudioExist.currentTime = position;
     setCurrentRange(position);
-    audioRestTime();
+    audioRestTime(isAudioExist);
   };
 
   const handlePaused = () => {
@@ -120,6 +121,20 @@ function App() {
     } else {
       isAudioExist.pause();
       setPausedBtn(!isPausedBtn);
+    }
+  };
+
+  console.log(isAudioExist);
+
+  const handleNextSong = () => {
+    if (isPlaylist.length > 1) {
+      setSong(isPlaylist[1 + 1]);
+      setCurrentRange(0);
+      setRestTime("00:00");
+      audioTotalTime(isAudioExist);
+      audioRestTime(isAudioExist);
+    } else {
+      null;
     }
   };
 
@@ -232,6 +247,7 @@ function App() {
                 src="../ASSETS/forward-icon.png"
                 alt="forward-icon"
                 className="h-[20px] object-cover invert hover:scale-105"
+                onClick={handleNextSong}
               ></img>
             </button>
             <button onClick={handleRepeat}>
