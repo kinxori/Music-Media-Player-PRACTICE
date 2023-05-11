@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { data } from "./data.tsx";
 
 function App() {
-  const [isPausedBtn, setPausedBtn] = useState(false);
+  const [isPlaying, setPlaying] = useState(false);
   const [isSuffle, setSuffle] = useState(false);
   const [isLiked, setLiked] = useState(false);
   const [isDisliked, setDisliked] = useState(false);
@@ -20,10 +20,10 @@ function App() {
   // console.log("max", isMaxRange);
   // console.log("CurrentRange", isCurrentRange);
 
-  const setCurrentSongTotalTime = (audio: HTMLAudioElement) => {
-    audio.addEventListener("loadedmetadata", () => {
-      const totalMinutes = Math.floor(audio.duration / 60);
-      const totalSeconds = Math.floor(audio.duration % 60);
+  const setCurrentSongTotalTime = () => {
+    currentAudio.addEventListener("loadedmetadata", () => {
+      const totalMinutes = Math.floor(currentAudio.duration / 60);
+      const totalSeconds = Math.floor(currentAudio.duration % 60);
       const formattedTotalTime = `${totalMinutes
         .toString()
         .padStart(2, "0")}:${totalSeconds.toString().padStart(2, "0")}`;
@@ -31,9 +31,9 @@ function App() {
     });
   };
 
-  const setCurrentSongRestTime = (audio: HTMLAudioElement) => {
-    audio.addEventListener("timeupdate", () => {
-      const rest = audio.currentTime;
+  const setCurrentSongRestTime = () => {
+    currentAudio.addEventListener("timeupdate", () => {
+      const rest = currentAudio.currentTime;
       const restMinutes = Math.floor(rest / 60);
       const restSeconds = Math.floor(rest % 60);
       const formattedRestTime = `${restMinutes
@@ -44,63 +44,91 @@ function App() {
     });
   };
 
-  const setCurrentSongMaxTime = (audio: HTMLAudioElement) => {
-    audio.addEventListener("loadedmetadata", () => {
-      const maxDuration = audio.duration;
+  const setCurrentSongMaxTime = () => {
+    currentAudio.addEventListener("loadedmetadata", () => {
+      const maxDuration = currentAudio.duration;
       setMaxRange(maxDuration);
     });
   };
 
   useEffect(() => {
-    setCurrentSongTotalTime(currentAudio);
-    setCurrentSongMaxTime(currentAudio);
-    setCurrentSongRestTime(currentAudio);
+    setCurrentSongTotalTime();
+    setCurrentSongMaxTime();
+    setCurrentSongRestTime();
   }, [currentAudio]);
 
   const handleInputRange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const position = parseFloat(event.target.value);
     currentAudio.currentTime = position;
     setCurrentRange(position);
-    setCurrentSongRestTime(currentAudio);
+    setCurrentSongRestTime();
   };
 
-  const handlePaused = () => {
+  const handlePlayClick = () => {
     if (currentAudio.paused) {
       currentAudio.play();
-      setPausedBtn(!isPausedBtn);
+      setPlaying(!isPlaying);
     } else {
       currentAudio.pause();
-      setPausedBtn(!isPausedBtn);
+      setPlaying(!isPlaying);
     }
   };
 
-  const handleNextSong = () => {
+  const handleForwardClick = () => {
     const findIndex = currentPlaylist.indexOf(currentSong) + 1;
     if (findIndex !== currentPlaylist.length) {
+      // if (currentAudio.paused) {
       const sumIndex = findIndex;
-      setCurrentSong(currentPlaylist[sumIndex]);
       setCurrentRange(0);
       setRestTime("00:00");
+      setCurrentSong(currentPlaylist[sumIndex]);
       setCurrentAudio(new Audio(currentPlaylist[sumIndex].src));
-      setCurrentSongTotalTime(new Audio(currentPlaylist[sumIndex].src));
-      setCurrentSongRestTime(new Audio(currentPlaylist[sumIndex].src));
-      setCurrentSongMaxTime(new Audio(currentPlaylist[sumIndex].src));
+      setCurrentSongTotalTime();
+      setCurrentSongRestTime();
+      setCurrentSongMaxTime();
+      // }
+      // if (currentAudio.paused) {
+      //   currentAudio.play();
+      //   setPlaying(!isPlaying);
+      // }
+      // else {
+      //   currentAudio.pause();
+      //   const sumIndex = findIndex;
+      //   setCurrentRange(0);
+      //   setRestTime("00:00");
+      //   setCurrentSong(currentPlaylist[sumIndex]);
+      //   setCurrentAudio(new Audio(currentPlaylist[sumIndex].src));
+      //   setCurrentSongTotalTime();
+      //   setCurrentSongRestTime();
+      //   setCurrentSongMaxTime();
+      //   if (currentAudio.paused) {
+      //     currentAudio.onpause = () => {
+      //       currentAudio.play();
+      //     };
+      //   }
+      // }
     }
   };
+  useEffect(() => {
+    if (!currentAudio.paused) {
+      currentAudio.play();
+      setPlaying(true);
+    }
+  }, [currentAudio]);
 
-  const handleSuffle = () => {
+  const handleSuffleClick = () => {
     setSuffle(!isSuffle);
   };
 
-  const handleRepeat = () => {
+  const handleRepeatClick = () => {
     setRepeat(isRepeat === "1" ? "2" : isRepeat === "2" ? "3" : "1");
   };
 
-  const handleLiked = () => {
+  const handleLikedClick = () => {
     setLiked(!isLiked);
   };
 
-  const handleDisliked = () => {
+  const handleDislikedClick = () => {
     setDisliked(!isDisliked);
   };
 
@@ -122,14 +150,14 @@ function App() {
               {currentSong.artist}
             </h3>
             <div className="like-buttons w-[100%] flex gap-[20px] mt-[20px] px-[20px]">
-              <button className="h-min w-min" onClick={handleDisliked}>
+              <button className="h-min w-min" onClick={handleDislikedClick}>
                 {isDisliked === false ? (
                   <i className="fa-regular fa-thumbs-down text-[20px] hover:scale-105"></i>
                 ) : (
                   <i className="fa-solid fa-thumbs-down text-[20px] hover:scale-105"></i>
                 )}
               </button>
-              <button className="h-min w-min " onClick={handleLiked}>
+              <button className="h-min w-min " onClick={handleLikedClick}>
                 {isLiked === false ? (
                   <i className="fa-regular fa-thumbs-up  text-[20px] hover:scale-105"></i>
                 ) : (
@@ -157,7 +185,7 @@ function App() {
             </div>
           </div>
           <div className="song-buttons-actions m-0 h-[20%] w-[100%] flex justify-center items-center gap-[40px]">
-            <button onClick={handleSuffle}>
+            <button onClick={handleSuffleClick}>
               {isSuffle === false ? (
                 <img
                   src="../ASSETS/shuffle-icon.png"
@@ -179,8 +207,8 @@ function App() {
                 className="h-[20px] object-cover invert hover:scale-105"
               ></img>
             </button>
-            <button onClick={handlePaused}>
-              {isPausedBtn === false ? (
+            <button onClick={handlePlayClick}>
+              {isPlaying === false ? (
                 <img
                   src="../ASSETS/play-icon.png"
                   alt="play-icon"
@@ -199,10 +227,10 @@ function App() {
                 src="../ASSETS/forward-icon.png"
                 alt="forward-icon"
                 className="h-[20px] object-cover invert hover:scale-105"
-                onClick={handleNextSong}
+                onClick={handleForwardClick}
               ></img>
             </button>
-            <button onClick={handleRepeat}>
+            <button onClick={handleRepeatClick}>
               {isRepeat === "1" ? (
                 <img
                   src="../ASSETS/repeat-icon.png"
