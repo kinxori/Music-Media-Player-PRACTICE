@@ -73,41 +73,51 @@ function App() {
       setPlaying(!isPlaying);
     }
   };
+  console.log("c", currentSong);
+  console.log("c", currentAudio);
 
   const handleForwardClick = () => {
-    const findIndex = currentPlaylist.indexOf(currentSong) + 1;
-    if (findIndex !== currentPlaylist.length) {
+    const currentIndex = currentPlaylist.indexOf(currentSong);
+    if (currentIndex !== currentPlaylist.length - 1) {
       if (currentAudio.paused) {
-        const sumIndex = findIndex;
+        const indexUpdated = currentIndex + 1;
         setCurrentRange(0);
         setRestTime("00:00");
-        setCurrentSong(currentPlaylist[sumIndex]);
-        setCurrentAudio(new Audio(currentPlaylist[sumIndex].src));
+        setCurrentSong(currentPlaylist[indexUpdated]);
+        setCurrentAudio(new Audio(currentPlaylist[indexUpdated].src));
         setCurrentSongTotalTime();
         setCurrentSongRestTime();
         setCurrentSongMaxTime();
+        console.log("1", currentSong);
+        console.log("1", [indexUpdated]);
+
+        if (true) {
+          setCurrentRange(0);
+          setRestTime("00:00");
+          setCurrentSong(currentPlaylist[indexUpdated]);
+          setCurrentAudio(new Audio(currentPlaylist[indexUpdated].src));
+          setCurrentSongTotalTime();
+          setCurrentSongRestTime();
+          setCurrentSongMaxTime();
+          setPlaying(!isPlaying);
+          console.log("2", currentSong);
+          console.log("2", currentAudio);
+
+          currentAudio.pause();
+        }
       }
-      if (currentRangeNumber === 0) {
-        currentAudio.play();
-        setPlaying(!isPlaying);
-      }
-      // currentAudio.play();
-      // setPlaying(!isPlaying);
-      // else {
-      //   currentAudio.pause();
-      //   const sumIndex = findIndex;
-      //   setCurrentRange(0);
-      //   setRestTime("00:00");
-      //   setCurrentSong(currentPlaylist[sumIndex]);
-      //   setCurrentAudio(new Audio(currentPlaylist[sumIndex].src));
-      //   setCurrentSongTotalTime();
-      //   setCurrentSongRestTime();
-      //   setCurrentSongMaxTime();
-      //   if (currentAudio.paused) {
-      //     currentAudio.onpause = () => {
-      //       currentAudio.play();
-      //     };
-      //   }
+
+      // const sumIndex = sumIndex;
+      // setCurrentRange(0);
+      // setRestTime("00:00");
+      // setCurrentSong(currentPlaylist[sumIndex]);
+      // setCurrentAudio(new Audio(currentPlaylist[sumIndex].src));
+      // setCurrentSongTotalTime();
+      // setCurrentSongRestTime();
+      // setCurrentSongMaxTime();
+
+      // if (currentRangeNumber === 1) {
+      //   currentAudio.play();
       // }
     }
   };
