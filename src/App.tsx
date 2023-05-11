@@ -1,73 +1,17 @@
-import { ChangeEvent, useEffect, useState } from "react";
-import img1 from "./../ASSETS/cover-imgs/cover-img-song-1.jpg";
-import img2 from "./../ASSETS/cover-imgs/cover-img-song-2.jpg";
-import img3 from "./../ASSETS/cover-imgs/cover-img-song-3.jpg";
-import img4 from "./../ASSETS/cover-imgs/cover-img-song-4.jpg";
-import img5 from "./../ASSETS/cover-imgs/cover-img-song-5.jpg";
-import img6 from "./../ASSETS/cover-imgs/cover-img-song-6.jpg";
-import img7 from "./../ASSETS/cover-imgs/cover-img-song-7.jpg";
-import img8 from "./../ASSETS/cover-imgs/cover-img-song-8.jpg";
-import img9 from "./../ASSETS/cover-imgs/cover-img-song-9.jpg";
-import img10 from "./../ASSETS/cover-imgs/cover-img-song-10.jpg";
-import song1 from "./../ASSETS/songs/CustomMelody - Bad Guys.wav";
-import song2 from "./../ASSETS/songs/URL Melt - Unicorn Heads.mp3";
-import song3 from "./../ASSETS/songs/cyber by liquify Artlist.mp3";
-import song4 from "./../ASSETS/songs//cyber-runner by 2050 Artlist.mp3";
-import song5 from "./../ASSETS/songs/garage-sale by alex-zado Artlist.wav";
-import song6 from "./../ASSETS/songs/mon by brad-cane Artlist.mp3";
-import song7 from "./../ASSETS/songs/mythologica by ofrin Artlist.mp3";
-import song8 from "./../ASSETS/songs/rising-up by ofrin Artlist.mp3";
-import song9 from "./../ASSETS/songs/strength-men by lux-inspira Artlist.mp3";
-import song10 from "./../ASSETS/songs/zone by fvmeless Artlist.mp3";
-
-// prettier-ignore
-const data = [
-  {
-    id: "1", song: "Custom Melody", artist: "Bad Guys", src: song1,  cover: img7
-  },
-  {
-    id: "2", song: "URL Melt", artist: "Unicorn Heads", src: song2, cover: img3
-  },
-  {
-    id: "3", song: "Cyber", artist: "Liquify", src: song3, cover: img4
-  },
-  {
-    id: "4", song: "Cyber Runner", artist: "2050", src: song4, cover: img2
-  },
-  {
-    id: "5", song: "Garage Sale", artist: "Alex Zado", src: song5, cover: img10
-  },
-  {
-    id: "6", song: "Mon", artist: "Brad Cane", src:song6, cover: img6
-  },
-  {
-    id: "7", song: "Mythologica", artist: "Ofrin", src: song7, cover: img1  
-  },
-  {
-    id: "8", song: "Rising Up", artist: "Arlist", src: song8, cover: img9
-  },
-  {
-    id: "9", song: "Strenght Men", artist: "Lux Inspira", src: song9, cover: img8
-  },
-  {
-    id: "10", song: "Zone", artist: "Fvmeless", src: song10,  cover: img5
-  },
-];
-
-// prettier-ignore-end
+import { useEffect, useState } from "react";
+import { data } from "./data.tsx";
 
 function App() {
   const [isPausedBtn, setPausedBtn] = useState(false);
   const [isSuffle, setSuffle] = useState(false);
-  const [isRepeat, setRepeat] = useState("1");
   const [isLiked, setLiked] = useState(false);
   const [isDisliked, setDisliked] = useState(false);
-  const [isPlaylist, setPlaylist] = useState(data);
-  const [isSong, setSong] = useState(isPlaylist[0]);
-  const [isAudioExist, setAudioExist] = useState<any>(
-    new Audio(isPlaylist[0].src)
+  const [isRepeat, setRepeat] = useState("1");
+  const [currentPlaylist, setCurrentPlaylist] = useState(data);
+  const [currentSong, setCurrentSong] = useState(currentPlaylist[0]);
+  const [currentAudio, setCurrentAudio] = useState<any>(
+    new Audio(currentPlaylist[0].src)
   );
-  const [isNextSong, setNextSong] = useState(1);
   const [isTotalTime, setTotalTime] = useState("");
   const [isRestTime, setRestTime] = useState("00:00");
   const [isMaxRange, setMaxRange] = useState(0);
@@ -76,7 +20,7 @@ function App() {
   // console.log("max", isMaxRange);
   // console.log("CurrentRange", isCurrentRange);
 
-  const audioTotalTime = (audio: HTMLAudioElement) => {
+  const setCurrentSongTotalTime = (audio: HTMLAudioElement) => {
     audio.addEventListener("loadedmetadata", () => {
       const totalMinutes = Math.floor(audio.duration / 60);
       const totalSeconds = Math.floor(audio.duration % 60);
@@ -87,7 +31,7 @@ function App() {
     });
   };
 
-  const audioRestTime = (audio: HTMLAudioElement) => {
+  const setCurrentSongRestTime = (audio: HTMLAudioElement) => {
     audio.addEventListener("timeupdate", () => {
       const rest = audio.currentTime;
       const restMinutes = Math.floor(rest / 60);
@@ -100,7 +44,7 @@ function App() {
     });
   };
 
-  const audioMaxTime = (audio: HTMLAudioElement) => {
+  const setCurrentSongMaxTime = (audio: HTMLAudioElement) => {
     audio.addEventListener("loadedmetadata", () => {
       const maxDuration = audio.duration;
       setMaxRange(maxDuration);
@@ -108,45 +52,39 @@ function App() {
   };
 
   useEffect(() => {
-    audioTotalTime(isAudioExist);
-    audioMaxTime(isAudioExist);
-  }, []);
-
-  useEffect(() => {
-    audioRestTime(isAudioExist);
-  }, []);
+    setCurrentSongTotalTime(currentAudio);
+    setCurrentSongMaxTime(currentAudio);
+    setCurrentSongRestTime(currentAudio);
+  }, [currentAudio]);
 
   const handleInputRange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const position = parseFloat(event.target.value);
-    isAudioExist.currentTime = position;
+    currentAudio.currentTime = position;
     setCurrentRange(position);
-    audioRestTime(isAudioExist);
+    setCurrentSongRestTime(currentAudio);
   };
 
   const handlePaused = () => {
-    if (isAudioExist.paused) {
-      isAudioExist.play();
+    if (currentAudio.paused) {
+      currentAudio.play();
       setPausedBtn(!isPausedBtn);
     } else {
-      isAudioExist.pause();
+      currentAudio.pause();
       setPausedBtn(!isPausedBtn);
     }
   };
 
   const handleNextSong = () => {
-    const idNumber = isNextSong + 1;
-    console.log("current", idNumber);
-
-    if (idNumber !== isPlaylist.length) {
-      const sumIndex = idNumber;
-      setNextSong(sumIndex);
-      setSong(isPlaylist[sumIndex]);
+    const findIndex = currentPlaylist.indexOf(currentSong) + 1;
+    if (findIndex !== currentPlaylist.length) {
+      const sumIndex = findIndex;
+      setCurrentSong(currentPlaylist[sumIndex]);
       setCurrentRange(0);
       setRestTime("00:00");
-      setAudioExist(new Audio(isPlaylist[sumIndex].src));
-      audioTotalTime(new Audio(isPlaylist[sumIndex].src));
-      audioRestTime(new Audio(isPlaylist[sumIndex].src));
-      console.log("summ", sumIndex);
+      setCurrentAudio(new Audio(currentPlaylist[sumIndex].src));
+      setCurrentSongTotalTime(new Audio(currentPlaylist[sumIndex].src));
+      setCurrentSongRestTime(new Audio(currentPlaylist[sumIndex].src));
+      setCurrentSongMaxTime(new Audio(currentPlaylist[sumIndex].src));
     }
   };
 
@@ -170,7 +108,7 @@ function App() {
     <section className="background bg-orange-200 h-screen w-screen flex justify-center items-center relative m-0">
       <div className="media-player h-[350px] w-[700px] bg-zinc-900 flex justify-evenly items-center relative  m-0 py-[20px] px-[0px] rounded-[20px] drop-shadow-[0px_0px_15px_rgba(0,0,0,.5)]">
         <div className="song-cover-img w-[40%] object-cover bg-zinc-600 m-0 rounded-[20px] overflow-hidden">
-          <img src={isSong.cover} alt="song-cover" />
+          <img src={currentSong.cover} alt="song-cover" />
         </div>
         <div className="song-content  w-[50%] h-[100%] m-0 flex justify-center items-center flex-col">
           <div className="song-copy m-0  h-[80%] w-[100%]">
@@ -178,9 +116,11 @@ function App() {
               <i className="fa-solid fa-music my-[10px] mx-[10px] text-[30px] hover:scale-105"></i>
             </button>
             <h2 className="text-[30px] font-bold mt-[20px] px-[20px]">
-              {isSong.song}
+              {currentSong.song}
             </h2>
-            <h3 className="text-[18px] italic px-[20px]">{isSong.artist}</h3>
+            <h3 className="text-[18px] italic px-[20px]">
+              {currentSong.artist}
+            </h3>
             <div className="like-buttons w-[100%] flex gap-[20px] mt-[20px] px-[20px]">
               <button className="h-min w-min" onClick={handleDisliked}>
                 {isDisliked === false ? (
