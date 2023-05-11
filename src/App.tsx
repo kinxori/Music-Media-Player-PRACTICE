@@ -12,13 +12,13 @@ function App() {
   const [currentAudio, setCurrentAudio] = useState<any>(
     new Audio(currentPlaylist[0].src)
   );
-  const [isTotalTime, setTotalTime] = useState("");
-  const [isRestTime, setRestTime] = useState("00:00");
-  const [isMaxRange, setMaxRange] = useState(0);
-  const [isCurrentRange, setCurrentRange] = useState(0);
+  const [totalTimeString, setTotalTime] = useState("");
+  const [restTimeString, setRestTime] = useState("00:00");
+  const [maxRangeNumber, setMaxRange] = useState(0);
+  const [currentRangeNumber, setCurrentRange] = useState(0);
 
-  // console.log("max", isMaxRange);
-  // console.log("CurrentRange", isCurrentRange);
+  // console.log("max", maxRangeNumber);
+  // console.log("CurrentRange", currentRangeNumber);
 
   const setCurrentSongTotalTime = () => {
     currentAudio.addEventListener("loadedmetadata", () => {
@@ -77,20 +77,22 @@ function App() {
   const handleForwardClick = () => {
     const findIndex = currentPlaylist.indexOf(currentSong) + 1;
     if (findIndex !== currentPlaylist.length) {
-      // if (currentAudio.paused) {
-      const sumIndex = findIndex;
-      setCurrentRange(0);
-      setRestTime("00:00");
-      setCurrentSong(currentPlaylist[sumIndex]);
-      setCurrentAudio(new Audio(currentPlaylist[sumIndex].src));
-      setCurrentSongTotalTime();
-      setCurrentSongRestTime();
-      setCurrentSongMaxTime();
-      // }
-      // if (currentAudio.paused) {
-      //   currentAudio.play();
-      //   setPlaying(!isPlaying);
-      // }
+      if (currentAudio.paused) {
+        const sumIndex = findIndex;
+        setCurrentRange(0);
+        setRestTime("00:00");
+        setCurrentSong(currentPlaylist[sumIndex]);
+        setCurrentAudio(new Audio(currentPlaylist[sumIndex].src));
+        setCurrentSongTotalTime();
+        setCurrentSongRestTime();
+        setCurrentSongMaxTime();
+      }
+      if (currentRangeNumber === 0) {
+        currentAudio.play();
+        setPlaying(!isPlaying);
+      }
+      // currentAudio.play();
+      // setPlaying(!isPlaying);
       // else {
       //   currentAudio.pause();
       //   const sumIndex = findIndex;
@@ -109,12 +111,6 @@ function App() {
       // }
     }
   };
-  useEffect(() => {
-    if (!currentAudio.paused) {
-      currentAudio.play();
-      setPlaying(true);
-    }
-  }, [currentAudio]);
 
   const handleSuffleClick = () => {
     setSuffle(!isSuffle);
@@ -171,16 +167,16 @@ function App() {
               type="range"
               className=" w-full h-0.5 bg-grey rounded outline-none accent-white"
               min={0}
-              max={isMaxRange}
-              value={isCurrentRange}
+              max={maxRangeNumber}
+              value={currentRangeNumber}
               onChange={handleInputRange}
             ></input>
             <div className="w-[100%] flex mt-[10px]">
               <span className=" text-[10px] w-[min] flex  mr-[auto] ">
-                {isRestTime}
+                {restTimeString}
               </span>
               <span className=" text-[10px]  w-[min] flex ml-[auto] ">
-                {isTotalTime}
+                {totalTimeString}
               </span>
             </div>
           </div>
