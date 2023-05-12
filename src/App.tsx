@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { data } from "./data.tsx";
 
 function App() {
@@ -55,7 +55,7 @@ function App() {
     setCurrentSongTotalTime();
     setCurrentSongMaxTime();
     setCurrentSongRestTime();
-  }, [currentAudio]);
+  }, [currentAudio, currentAudio.duration, currentAudio.currentTime]);
 
   const handleInputRange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const position = parseFloat(event.target.value);
@@ -73,52 +73,77 @@ function App() {
       setPlaying(!isPlaying);
     }
   };
-  console.log("c", currentSong);
-  console.log("c", currentAudio);
+  // console.log("c", currentSong);
+  // console.log("c", currentAudio);
+
+  const setCurrentRefAudio = useRef<any>();
+  const setCurrentForwardIndex = useRef<any>();
+  const setCurrentSongIndex = useRef<any>();
+
+  const [index, setIndex] = useState(0);
 
   const handleForwardClick = () => {
     const currentIndex = currentPlaylist.indexOf(currentSong);
     if (currentIndex !== currentPlaylist.length - 1) {
-      if (currentAudio.paused) {
+      if (currentAudio.paused && setCurrentRefAudio.current === undefined) {
         const indexUpdated = currentIndex + 1;
         setCurrentRange(0);
         setRestTime("00:00");
         setCurrentSong(currentPlaylist[indexUpdated]);
-        setCurrentAudio(new Audio(currentPlaylist[indexUpdated].src));
+        setCurrentAudio(new Audio(currentSong.src));
         setCurrentSongTotalTime();
         setCurrentSongRestTime();
         setCurrentSongMaxTime();
-        console.log("1", currentSong);
-        console.log("1", [indexUpdated]);
-
-        if (true) {
-          setCurrentRange(0);
-          setRestTime("00:00");
-          setCurrentSong(currentPlaylist[indexUpdated]);
-          setCurrentAudio(new Audio(currentPlaylist[indexUpdated].src));
-          setCurrentSongTotalTime();
-          setCurrentSongRestTime();
-          setCurrentSongMaxTime();
-          setPlaying(!isPlaying);
-          console.log("2", currentSong);
-          console.log("2", currentAudio);
-
-          currentAudio.pause();
-        }
+        setCurrentRefAudio.current = new Audio(
+          currentPlaylist[indexUpdated].src
+        );
+        setPlaying(!isPlaying);
+        setCurrentRefAudio.current.play();
       }
+      if (!currentAudio.paused && setCurrentRefAudio.current === undefined) {
+        const indexUpdated = currentIndex + 1;
+        setCurrentRange(0);
+        setRestTime("00:00");
+        setCurrentSong(currentPlaylist[indexUpdated]);
+        setCurrentAudio(new Audio(currentSong.src));
+        setCurrentSongTotalTime();
+        setCurrentSongRestTime();
+        setCurrentSongMaxTime();
+        setCurrentRefAudio.current = new Audio(
+          currentPlaylist[indexUpdated].src
+        );
+        setCurrentRefAudio.current.play();
+      }
+      if (
+        !setCurrentRefAudio.current.paused &&
+        currentPlaylist.indexOf(currentSong) === currentIndex
+      ) {
+        currentAudio.pause();
+      }
+      if (
+        // !setCurrentRefAudio.current.paused &&
+        // currentPlaylist.indexOf(currentSong) > currentIndex - 1
+        true
+      ) {
+        setIndex(index + 1);
+        setCurrentForwardIndex.current = index;
+        const indexUpdated = currentIndex + 1;
+        // setCurrentRange(0);
+        // setRestTime("00:00");
+        setCurrentSong(currentPlaylist[indexUpdated]);
+        setCurrentAudio(new Audio(currentSong.src));
+        // setCurrentSongTotalTime();
+        // setCurrentSongRestTime();
+        // setCurrentSongMaxTime();
+        setCurrentRefAudio.current = new Audio(
+          currentPlaylist[indexUpdated].src
+        );
+        setCurrentSongIndex.current = currentPlaylist[indexUpdated];
 
-      // const sumIndex = sumIndex;
-      // setCurrentRange(0);
-      // setRestTime("00:00");
-      // setCurrentSong(currentPlaylist[sumIndex]);
-      // setCurrentAudio(new Audio(currentPlaylist[sumIndex].src));
-      // setCurrentSongTotalTime();
-      // setCurrentSongRestTime();
-      // setCurrentSongMaxTime();
-
-      // if (currentRangeNumber === 1) {
-      //   currentAudio.play();
-      // }
+        console.log("song index in", setCurrentSongIndex.current);
+        console.log("ref index in", setCurrentForwardIndex.current);
+        console.log("index in", indexUpdated);
+      }
     }
   };
 
