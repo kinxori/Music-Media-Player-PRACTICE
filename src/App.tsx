@@ -47,6 +47,8 @@ function App() {
       setMaxRange(maxDuration);
     });
   };
+  // const setCurrentRefAudio = useRef<any>();
+  // const setPastRefAudio = useRef<any>();
 
   useEffect(() => {
     setCurrentSongTotalTime();
@@ -71,50 +73,13 @@ function App() {
     }
   };
 
-  const setCurrentRefAudio = useRef<any>();
-  const setPastRefAudio = useRef<any>();
-
   // console.log("current", setCurrentRefAudio.current);
   // console.log("past", setPastRefAudio.current);
 
   const handleForwardClick = () => {
     const currentIndex = currentPlaylist.indexOf(currentSong);
     if (currentIndex !== currentPlaylist.length - 1) {
-      // if (currentAudio.paused && setCurrentRefAudio.current === undefined) {
-      //   const indexUpdated = currentIndex + 1;
-      //   setCurrentRange(0);
-      //   setRestTime("00:00");
-      //   setCurrentSong(currentPlaylist[indexUpdated]);
-      //   setCurrentAudio(new Audio(currentPlaylist[indexUpdated].src));
-      //   setCurrentSongTotalTime();
-      //   setCurrentSongRestTime();
-      //   setCurrentSongMaxTime();
-      //   setPlaying(!isPlaying);
-      //   setCurrentRefAudio.current = new Audio(
-      //     currentPlaylist[indexUpdated].src
-      //   );
-      //   setPastRefAudio.current = new Audio(currentPlaylist[currentIndex].src);
-      //   setCurrentRefAudio.current.play();
-      // }
-      // if (!currentAudio.paused && setCurrentRefAudio.current === undefined) {
-      //   const indexUpdated = currentIndex + 1;
-      //   setCurrentRange(0);
-      //   setRestTime("00:00");
-      //   setCurrentSong(currentPlaylist[indexUpdated]);
-      //   setCurrentAudio(new Audio(currentPlaylist[indexUpdated].src));
-      //   setCurrentSongTotalTime();
-      //   setCurrentSongRestTime();
-      //   setCurrentSongMaxTime();
-      //   setCurrentRefAudio.current = new Audio(
-      //     currentPlaylist[indexUpdated].src
-      //   );
-      //   setPastRefAudio.current = new Audio(currentPlaylist[currentIndex].src);
-      //   setCurrentRefAudio.current.play();
-      //   currentAudio.pause();
-      // }
-
-      if (true) {
-        console.log("hola");
+      if (currentAudio.paused) {
         const indexUpdated = currentIndex + 1;
         setCurrentRange(0);
         setRestTime("00:00");
@@ -123,19 +88,71 @@ function App() {
         setCurrentSongTotalTime();
         setCurrentSongRestTime();
         setCurrentSongMaxTime();
-        setCurrentRefAudio.current = new Audio(
-          currentPlaylist[indexUpdated].src
-        );
-        setPastRefAudio.current = new Audio(currentPlaylist[currentIndex].src);
-
-        currentAudio.pause();
-        setPastRefAudio.current.pause();
-        setCurrentRefAudio.current.play();
-
-        console.log("current song", currentAudio);
-        console.log("updated current song", setCurrentRefAudio.current);
-        console.log("past song", setPastRefAudio.current);
+        setPlaying(!isPlaying);
+        currentAudio.play();
+        // setCurrentRefAudio.current = new Audio(
+        //   currentPlaylist[indexUpdated].src
+        // );
+        // setPastRefAudio.current = new Audio(currentPlaylist[currentIndex].src);
+        // setCurrentRefAudio.current.pause();
       }
+      if (!currentAudio.paused) {
+        const indexUpdated = currentIndex + 1;
+        setCurrentRange(0);
+        setRestTime("00:00");
+        setCurrentSong(currentPlaylist[indexUpdated]);
+        setCurrentAudio(new Audio(currentPlaylist[indexUpdated].src));
+        setCurrentSongTotalTime();
+        setCurrentSongRestTime();
+        setCurrentSongMaxTime();
+        // setCurrentRefAudio.current = new Audio(
+        //   currentPlaylist[indexUpdated].src
+        // );
+        // setPastRefAudio.current = new Audio(currentPlaylist[currentIndex].src);
+        // setCurrentRefAudio.current.pause();
+        currentAudio.pause();
+      }
+
+      // if (true) {
+      //   const indexUpdated = currentIndex + 1;
+      //   setCurrentRange(0);
+      //   setRestTime("00:00");
+      //   setCurrentSong(currentPlaylist[indexUpdated]);
+      //   setCurrentAudio(new Audio(currentPlaylist[indexUpdated].src));
+      //   setCurrentSongTotalTime();
+      //   setCurrentSongRestTime();
+      //   setCurrentSongMaxTime();
+      //   setCurrentRefAudio.current = new Audio(
+      //     currentPlaylist[indexUpdated].src
+      //   );
+      //   setPastRefAudio.current = new Audio(currentPlaylist[currentIndex].src);
+      //   setCurrentRefAudio.current.pause();
+
+      //   console.log("current song", currentAudio);
+      //   console.log("updated current song", setCurrentRefAudio.current);
+      //   console.log("past song", setPastRefAudio.current);
+      // }
+      // console.log({ uno: setPastRefAudio.current, currentAudio });
+      // if (currentIndex === 1 && setPastRefAudio.current == currentAudio) {
+      //   console.log("adios");
+      //   const indexUpdated = currentIndex + 1;
+
+      //   setCurrentSong(currentPlaylist[indexUpdated]);
+      //   setCurrentAudio(new Audio(currentPlaylist[indexUpdated].src));
+
+      //   setCurrentRefAudio.current = new Audio(
+      //     currentPlaylist[indexUpdated].src
+      //   );
+      //   setPastRefAudio.current = new Audio(currentPlaylist[currentIndex].src);
+
+      //   // currentAudio.pause();
+      //   // setPastRefAudio.current.pause();
+      //   // setCurrentRefAudio.current.play();
+
+      //   console.log("current song", currentAudio);
+      //   console.log("updated current song", setCurrentRefAudio.current);
+      //   console.log("past song", setPastRefAudio.current);
+      // }
       // if (
       //   !setCurrentRefAudio.current.paused &&
       //   setPastRefAudio.current === new Audio(currentPlaylist[currentIndex].src)
