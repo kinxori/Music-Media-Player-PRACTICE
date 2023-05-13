@@ -14,52 +14,59 @@ function App() {
   const [maxRangeNumber, setMaxRange] = useState(0);
   const [currentRangeNumber, setCurrentRange] = useState(0);
 
-  console.log(currentSong.src);
+  const currentAudioRef = useRef<HTMLElement | any>();
 
-  // const setCurrentSongTotalTime = () => {
-  //   currentAudio.addEventListener("loadedmetadata", () => {
-  //     const totalMinutes = Math.floor(currentAudio.duration / 60);
-  //     const totalSeconds = Math.floor(currentAudio.duration % 60);
-  //     const formattedTotalTime = `${totalMinutes
-  //       .toString()
-  //       .padStart(2, "0")}:${totalSeconds.toString().padStart(2, "0")}`;
-  //     setTotalTime(formattedTotalTime);
-  //   });
-  // };
+  const setCurrentSongTotalTime = () => {
+    currentAudioRef.current.addEventListener("loadedmetadata", () => {
+      const totalMinutes = Math.floor(currentAudioRef.current.duration / 60);
+      const totalSeconds = Math.floor(currentAudioRef.current.duration % 60);
+      const formattedTotalTime = `${totalMinutes
+        .toString()
+        .padStart(2, "0")}:${totalSeconds.toString().padStart(2, "0")}`;
+      setTotalTime(formattedTotalTime);
+    });
+  };
 
-  // const setCurrentSongRestTime = () => {
-  //   currentAudio.addEventListener("timeupdate", () => {
-  //     const rest = currentAudio.currentTime;
-  //     const restMinutes = Math.floor(rest / 60);
-  //     const restSeconds = Math.floor(rest % 60);
-  //     const formattedRestTime = `${restMinutes
-  //       .toString()
-  //       .padStart(2, "0")}:${restSeconds.toString().padStart(2, "0")}`;
-  //     setRestTime(formattedRestTime);
-  //     setCurrentRange(rest);
-  //   });
-  // };
+  const setCurrentSongRestTime = () => {
+    currentAudioRef.current.addEventListener("timeupdate", () => {
+      const rest = currentAudioRef.current.currentTime;
+      const restMinutes = Math.floor(rest / 60);
+      const restSeconds = Math.floor(rest % 60);
+      const formattedRestTime = `${restMinutes
+        .toString()
+        .padStart(2, "0")}:${restSeconds.toString().padStart(2, "0")}`;
+      setRestTime(formattedRestTime);
+      setCurrentRange(rest);
+    });
+  };
 
-  // const setCurrentSongMaxTime = () => {
-  //   currentAudio.addEventListener("loadedmetadata", () => {
-  //     const maxDuration = currentAudio.duration;
-  //     setMaxRange(maxDuration);
-  //   });
-  // };
+  const setCurrentSongMaxTime = () => {
+    currentAudioRef.current.addEventListener("loadedmetadata", () => {
+      const maxDuration = currentAudioRef.current.duration;
+      setMaxRange(maxDuration);
+    });
+  };
 
-  // useEffect(() => {
-  //   setCurrentSongTotalTime();
-  //   setCurrentSongMaxTime();
-  //   setCurrentSongRestTime();
-  // }, [currentAudio, currentAudio.duration, currentAudio.currentTime]);
+  const handleInputRange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const audioPosition = parseFloat(event.target.value);
+    currentAudioRef.current.currentTime = audioPosition;
+    setCurrentRange(audioPosition);
+    setCurrentSongRestTime();
+  };
+
+  useEffect(() => {
+    setCurrentSongTotalTime();
+    setCurrentSongMaxTime();
+    setCurrentSongRestTime();
+  }, [currentSong.src, currentAudioRef.current, currentAudioRef]);
 
   const handlePlayClick = () => {
-    if (currentAudio.paused) {
-      currentAudio.play();
+    if (currentAudioRef.current.paused) {
+      currentAudioRef.current.play();
       setPlaying(!isPlaying);
     } else {
-      currentAudio.pause();
-      setPlaying(!isPlaying);
+      currentAudioRef.current.pause();
+      setPlaying((prev) => !prev);
     }
   };
 
@@ -123,7 +130,15 @@ function App() {
             </div>
           </div>
           <div className="song-range w-[85%]  h-[auto] flex flex-col justify-center items-center ">
-            <audio src={currentSong.src} />
+            <audio src={currentSong.src} ref={currentAudioRef} />
+            <input
+              type="range"
+              className=" w-full h-0.5 bg-grey rounded outline-none accent-white"
+              min={0}
+              max={maxRangeNumber}
+              value={currentRangeNumber}
+              onChange={handleInputRange}
+            ></input>
             <div className="w-[100%] flex mt-[10px]">
               <span className=" text-[10px] w-[min] flex  mr-[auto] ">
                 {restTimeString}
