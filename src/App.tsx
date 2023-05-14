@@ -75,12 +75,35 @@ function App() {
   //   currentAudioRef.current
   // );
 
+  const handleBackwardClick = () => {
+    if (currentSongIndex > 0) {
+      if (currentAudioRef.current) {
+        const updatedIndex = currentSongIndex - 1;
+        setCurrentSongIndex(updatedIndex);
+        setCurrentSong(currentPlaylist[updatedIndex]);
+        console.log("step 1 ", currentSongIndex);
+      }
+
+      // if (currentAudioRef.current.paused && currentAudioRef.current) {
+      //   setPlaying(!isPlaying);
+      //   currentAudioRef.current.play();
+      //   console.log("step 2 ", currentAudioRef.current.paused);
+      // }
+
+      // if (!currentAudioRef.current.paused && currentAudioRef.current) {
+      //   currentAudioRef.current.play();
+      //   console.log("step 3 ", currentAudioRef.current.paused);
+      // }
+    }
+  };
+
   const handleForwardClick = () => {
-    if (currentSongIndex !== currentPlaylist.length - 1) {
+    if (currentSongIndex < currentPlaylist.length - 1) {
       if (currentAudioRef.current) {
         const updatedIndex = currentSongIndex + 1;
         setCurrentSongIndex(updatedIndex);
         setCurrentSong(currentPlaylist[updatedIndex]);
+
         console.log("step 1 ", currentAudioRef.current.paused);
       }
 
@@ -194,7 +217,7 @@ function App() {
                 ></img>
               )}
             </button>
-            <button>
+            <button onClick={handleBackwardClick}>
               <img
                 src="../ASSETS/backward-icon.png"
                 alt="backward-icon"
@@ -216,12 +239,11 @@ function App() {
                 ></img>
               )}
             </button>
-            <button>
+            <button onClick={handleForwardClick}>
               <img
                 src="../ASSETS/forward-icon.png"
                 alt="forward-icon"
                 className="h-[20px] object-cover invert hover:scale-105"
-                onClick={handleForwardClick}
               ></img>
             </button>
             <button onClick={handleRepeatClick}>
