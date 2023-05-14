@@ -6,9 +6,12 @@ function App() {
   const [isSuffle, setSuffle] = useState(false);
   const [isLiked, setLiked] = useState(false);
   const [isDisliked, setDisliked] = useState(false);
-  const [isRepeat, setRepeat] = useState("1");
+  const [isRepeat, setRepeat] = useState("repeat-off");
   const [currentPlaylist, setCurrentPlaylist] = useState(data);
-  const [currentSong, setCurrentSong] = useState(currentPlaylist[0]);
+  const [currentSongIndex, setCurrentSongIndex] = useState(0);
+  const [currentSong, setCurrentSong] = useState(
+    currentPlaylist[currentSongIndex]
+  );
   const [totalTimeString, setTotalTime] = useState("00:00");
   const [restTimeString, setRestTime] = useState("00:00");
   const [maxRangeNumber, setMaxRange] = useState(0);
@@ -54,12 +57,6 @@ function App() {
     setCurrentSongRestTime();
   };
 
-  useEffect(() => {
-    setCurrentSongTotalTime();
-    setCurrentSongMaxTime();
-    setCurrentSongRestTime();
-  }, [currentSong.src, currentAudioRef.current, currentAudioRef]);
-
   const handlePlayClick = () => {
     if (currentAudioRef.current.paused) {
       currentAudioRef.current.play();
@@ -70,12 +67,33 @@ function App() {
     }
   };
 
-  // console.log("current", setCurrentRefAudio.current);
-  // console.log("past", setPastRefAudio.current);
+  // console.log("index state", currentSongIndex);
+  // console.log("current index out", currentPlaylist.indexOf(currentSong));
+  // console.log("current song index in", currentPlaylist.indexOf(currentSong));
+  // console.log(
+  //   "current song",
+  //   currentAudioRef.current
+  // );
 
   const handleForwardClick = () => {
-    const currentIndex = currentPlaylist.indexOf(currentSong);
-    if (currentIndex !== currentPlaylist.length - 1) {
+    if (currentSongIndex !== currentPlaylist.length - 1) {
+      if (currentAudioRef.current) {
+        const updatedIndex = currentSongIndex + 1;
+        setCurrentSongIndex(updatedIndex);
+        setCurrentSong(currentPlaylist[updatedIndex]);
+        console.log("step 1 ", currentAudioRef.current.paused);
+      }
+
+      if (currentAudioRef.current.paused && currentAudioRef.current) {
+        setPlaying(!isPlaying);
+        currentAudioRef.current.play();
+        console.log("step 2 ", currentAudioRef.current.paused);
+      }
+
+      if (!currentAudioRef.current.paused && currentAudioRef.current) {
+        currentAudioRef.current.play();
+        console.log("step 3 ", currentAudioRef.current.paused);
+      }
     }
   };
 
@@ -84,7 +102,13 @@ function App() {
   };
 
   const handleRepeatClick = () => {
-    setRepeat(isRepeat === "1" ? "2" : isRepeat === "2" ? "3" : "1");
+    setRepeat(
+      isRepeat === "repeat-off"
+        ? "repeat-on"
+        : isRepeat === "repeat-on"
+        ? "repeat-1-on"
+        : "repeat-off"
+    );
   };
 
   const handleLikedClick = () => {
@@ -94,6 +118,12 @@ function App() {
   const handleDislikedClick = () => {
     setDisliked(!isDisliked);
   };
+
+  useEffect(() => {
+    setCurrentSongTotalTime();
+    setCurrentSongMaxTime();
+    setCurrentSongRestTime();
+  }, [currentSong.src, currentAudioRef.current, currentAudioRef]);
 
   return (
     <section className="background bg-orange-200 h-screen w-screen flex justify-center items-center relative m-0">
@@ -195,19 +225,19 @@ function App() {
               ></img>
             </button>
             <button onClick={handleRepeatClick}>
-              {isRepeat === "1" ? (
+              {isRepeat === "repeat-off" ? (
                 <img
                   src="../ASSETS/repeat-icon.png"
                   alt="repeat-icon"
                   className="h-[20px] object-cover invert hover:scale-105 opacity-50"
                 ></img>
-              ) : isRepeat === "2" ? (
+              ) : isRepeat === "repeat-on" ? (
                 <img
                   src="../ASSETS/repeat-icon.png"
                   alt="repeat-icon"
                   className="h-[20px] object-cover invert hover:scale-105"
                 ></img>
-              ) : isRepeat === "3" ? (
+              ) : isRepeat === "repeat-1-on" ? (
                 <img
                   src="../ASSETS/repeat-1-icon.png"
                   alt="repeat-1-icon"

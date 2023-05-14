@@ -22,19 +22,19 @@ import song10 from "./../ASSETS/songs/zone by fvmeless Artlist.mp3";
 // prettier-ignore
 export const data = [
   {
-    id: "1", song: "Custom Melody", artist: "Bad Guys", src: song1,  cover: img7
+    id: "1",  song: "Cyber", artist: "Liquify", src: song3, cover: img4
   },
   {
     id: "2", song: "URL Melt", artist: "Unicorn Heads", src: song2, cover: img3
   },
   {
-    id: "3", song: "Cyber", artist: "Liquify", src: song3, cover: img4
+    id: "3", song: "Cyber Runner", artist: "2050", src: song4, cover: img2
   },
   {
-    id: "4", song: "Cyber Runner", artist: "2050", src: song4, cover: img2
+    id: "4", song: "Custom Melody", artist: "Bad Guys", src: song1,  cover: img7
   },
   {
-    id: "5", song: "Garage Sale", artist: "Alex Zado", src: song5, cover: img10
+    id: "5", song: "Rising Up", artist: "Arlist", src: song8, cover: img9
   },
   {
     id: "6", song: "Mon", artist: "Brad Cane", src:song6, cover: img6
@@ -43,7 +43,7 @@ export const data = [
     id: "7", song: "Mythologica", artist: "Ofrin", src: song7, cover: img1  
   },
   {
-    id: "8", song: "Rising Up", artist: "Arlist", src: song8, cover: img9
+    id: "8", song: "Garage Sale", artist: "Alex Zado", src: song5, cover: img10
   },
   {
     id: "9", song: "Strenght Men", artist: "Lux Inspira", src: song9, cover: img8
