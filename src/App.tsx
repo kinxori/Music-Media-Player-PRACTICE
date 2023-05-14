@@ -97,6 +97,11 @@ function App() {
     }
   };
 
+  const setReduce = useRef<any>(currentPlaylist);
+  const [reducePlaylist, setRuducePlaylist] = useState<any>(currentPlaylist);
+
+  // console.log("current playlist", setReduce.current);
+
   const handleForwardClick = () => {
     if (currentSongIndex < currentPlaylist.length - 1) {
       if (currentAudioRef.current) {
@@ -104,19 +109,28 @@ function App() {
         setCurrentSongIndex(updatedIndex);
         setCurrentSong(currentPlaylist[updatedIndex]);
 
-        console.log("step 1 ", currentAudioRef.current.paused);
+        // console.log("step 1 ", currentAudioRef.current.paused);
+
+        // setRuducePlaylist(setReduce.current.splice(0, 1));
+
+        console.log("current playlist", currentPlaylist);
+        console.log("current reduce", reducePlaylist);
+        // console.log("current Index", currentSongIndex);
+
+        // console.log("current Index", currentSongIndex);
+        // console.log("current Index", updatedIndex);
       }
 
-      if (currentAudioRef.current.paused && currentAudioRef.current) {
-        setPlaying(!isPlaying);
-        currentAudioRef.current.play();
-        console.log("step 2 ", currentAudioRef.current.paused);
-      }
+      // if (currentAudioRef.current.paused && currentAudioRef.current) {
+      //   setPlaying(!isPlaying);
+      //   // currentAudioRef.current.play();
+      //   console.log("step 2 ", currentAudioRef.current.paused);
+      // }
 
-      if (!currentAudioRef.current.paused && currentAudioRef.current) {
-        currentAudioRef.current.play();
-        console.log("step 3 ", currentAudioRef.current.paused);
-      }
+      // if (!currentAudioRef.current.paused && currentAudioRef.current) {
+      //   // currentAudioRef.current.play();
+      //   console.log("step 3 ", currentAudioRef.current.paused);
+      // }
     }
   };
 
@@ -146,7 +160,7 @@ function App() {
     setCurrentSongTotalTime();
     setCurrentSongMaxTime();
     setCurrentSongRestTime();
-  }, [currentSong.src, currentAudioRef.current, currentAudioRef]);
+  }, [currentAudioRef.current, currentPlaylist, currentSongIndex, currentSong]);
 
   return (
     <section className="background bg-orange-200 h-screen w-screen flex justify-center items-center relative m-0">
