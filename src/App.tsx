@@ -50,6 +50,35 @@ function App() {
     });
   };
 
+  const setNextSongPlaying = () => {
+    const updatedIndex = currentSongIndex + 1;
+    setCurrentSongIndex(updatedIndex);
+    setCurrentSong(currentPlaylist[updatedIndex]);
+    currentAudioRef.current.addEventListener("canplay", () => {
+      currentAudioRef.current.play();
+    });
+  };
+
+  if (currentAudioRef.current !== undefined) {
+    currentAudioRef.current.addEventListener("timeupdate", () => {
+      if (
+        currentAudioRef.current.currentTime === currentAudioRef.current.duration
+      ) {
+        if (currentSongIndex < currentPlaylist.length - 1) {
+          setNextSongPlaying();
+        } else {
+          setPlaying(!isPlaying);
+        }
+      }
+    });
+  }
+
+  useEffect(() => {
+    setCurrentSongTotalTime();
+    setCurrentSongMaxTime();
+    setCurrentSongRestTime();
+  }, [currentAudioRef.current, currentPlaylist, currentSongIndex, currentSong]);
+
   const handleInputRange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const audioPosition = parseFloat(event.target.value);
     currentAudioRef.current.currentTime = audioPosition;
@@ -67,14 +96,6 @@ function App() {
     }
   };
 
-  // console.log("index state", currentSongIndex);
-  // console.log("current index out", currentPlaylist.indexOf(currentSong));
-  // console.log("current song index in", currentPlaylist.indexOf(currentSong));
-  // console.log(
-  //   "current song",
-  //   currentAudioRef.current
-  // );
-
   const handleBackwardClick = () => {
     if (currentSongIndex > 0) {
       if (currentAudioRef.current) {
@@ -83,54 +104,27 @@ function App() {
         setCurrentSong(currentPlaylist[updatedIndex]);
         console.log("step 1 ", currentSongIndex);
       }
-
-      // if (currentAudioRef.current.paused && currentAudioRef.current) {
-      //   setPlaying(!isPlaying);
-      //   currentAudioRef.current.play();
-      //   console.log("step 2 ", currentAudioRef.current.paused);
-      // }
-
-      // if (!currentAudioRef.current.paused && currentAudioRef.current) {
-      //   currentAudioRef.current.play();
-      //   console.log("step 3 ", currentAudioRef.current.paused);
-      // }
     }
   };
 
-  const setReduce = useRef<any>(currentPlaylist);
-  const [reducePlaylist, setRuducePlaylist] = useState<any>(currentPlaylist);
-
-  // console.log("current playlist", setReduce.current);
-
   const handleForwardClick = () => {
     if (currentSongIndex < currentPlaylist.length - 1) {
-      if (currentAudioRef.current) {
+      if (currentAudioRef.current.paused) {
         const updatedIndex = currentSongIndex + 1;
         setCurrentSongIndex(updatedIndex);
         setCurrentSong(currentPlaylist[updatedIndex]);
-
-        // console.log("step 1 ", currentAudioRef.current.paused);
-
-        // setRuducePlaylist(setReduce.current.splice(0, 1));
-
-        console.log("current playlist", currentPlaylist);
-        console.log("current reduce", reducePlaylist);
-        // console.log("current Index", currentSongIndex);
-
-        // console.log("current Index", currentSongIndex);
-        // console.log("current Index", updatedIndex);
+        currentAudioRef.current.addEventListener("canplay", () => {
+          currentAudioRef.current.play();
+        });
+        setPlaying(!isPlaying);
+      } else {
+        const updatedIndex = currentSongIndex + 1;
+        setCurrentSongIndex(updatedIndex);
+        setCurrentSong(currentPlaylist[updatedIndex]);
+        currentAudioRef.current.addEventListener("canplay", () => {
+          currentAudioRef.current.play();
+        });
       }
-
-      // if (currentAudioRef.current.paused && currentAudioRef.current) {
-      //   setPlaying(!isPlaying);
-      //   // currentAudioRef.current.play();
-      //   console.log("step 2 ", currentAudioRef.current.paused);
-      // }
-
-      // if (!currentAudioRef.current.paused && currentAudioRef.current) {
-      //   // currentAudioRef.current.play();
-      //   console.log("step 3 ", currentAudioRef.current.paused);
-      // }
     }
   };
 
@@ -155,12 +149,6 @@ function App() {
   const handleDislikedClick = () => {
     setDisliked(!isDisliked);
   };
-
-  useEffect(() => {
-    setCurrentSongTotalTime();
-    setCurrentSongMaxTime();
-    setCurrentSongRestTime();
-  }, [currentAudioRef.current, currentPlaylist, currentSongIndex, currentSong]);
 
   return (
     <section className="background bg-orange-200 h-screen w-screen flex justify-center items-center relative m-0">
