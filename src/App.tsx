@@ -149,6 +149,7 @@ function App() {
 
   const handleSuffleClick = () => {
     setSuffle(!isSuffle);
+    const shufflePlaylist = currentPlaylist;
   };
 
   const handleRepeatClick = () => {
