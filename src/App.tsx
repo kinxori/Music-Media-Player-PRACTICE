@@ -181,8 +181,8 @@ function App() {
 
   return (
     <section className="background bg-orange-200 h-screen w-screen flex justify-center items-center relative m-0">
-      <div className="media-player h-[350px] w-[700px] bg-zinc-900 flex justify-evenly items-center relative  m-0 py-[20px] px-[0px] rounded-[20px] drop-shadow-[0px_0px_15px_rgba(0,0,0,.5)]">
-        <div className="song-cover-img w-[40%] object-cover bg-zinc-600 m-0 rounded-[20px] overflow-hidden">
+      <div className="media-player h-[325px] w-[700px] bg-zinc-900 flex justify-evenly items-center relative  m-0 py-[20px] px-[0px] rounded-[45px] drop-shadow-[0px_0px_15px_rgba(0,0,0,.5)]">
+        <div className="song-cover-img w-[40%] object-cover bg-zinc-600 m-0 rounded-[30px] overflow-hidden">
           <img src={currentSong.cover} alt="song-cover" />
         </div>
         <div className="song-content  w-[50%] h-[100%] m-0 flex justify-center items-center flex-col">
