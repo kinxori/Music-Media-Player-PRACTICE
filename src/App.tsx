@@ -84,9 +84,8 @@ function App() {
     currentAudioRef.current.currentTime = audioPosition;
     setCurrentRange(audioPosition);
     setCurrentSongRestTime();
-    if (currentAudioRef.current.paused) {
-      setPlaying(!isPlaying);
-    }
+    console.log("aaa", currentAudioRef.current.paused);
+    console.log("aaa", currentAudioRef.current.currentTime);
   };
 
   const handlePlayClick = () => {
@@ -101,6 +100,13 @@ function App() {
 
   const handleBackwardClick = () => {
     if (currentSongIndex > 0) {
+      if (
+        currentAudioRef.current.currentTime > 5 &&
+        currentAudioRef.current.paused
+      ) {
+        currentAudioRef.current.currentTime = 0;
+        setPlaying(!isPlaying);
+      }
       if (currentAudioRef.current.paused) {
         const updatedIndex = currentSongIndex - 1;
         setCurrentSongIndex(updatedIndex);
@@ -111,6 +117,22 @@ function App() {
         setCurrentSongIndex(updatedIndex);
         setCurrentSong(currentPlaylist[updatedIndex]);
       }
+    }
+    if (
+      currentAudioRef.current.paused &&
+      currentAudioRef.current.currentTime > 0 &&
+      currentSongIndex === 0
+    ) {
+      currentAudioRef.current.currentTime = 0;
+      currentAudioRef.current.play();
+      setPlaying(!isPlaying);
+    }
+    if (
+      !currentAudioRef.current.paused &&
+      currentAudioRef.current.currentTime > 0 &&
+      currentSongIndex === 0
+    ) {
+      currentAudioRef.current.currentTime = 0;
     }
   };
 
