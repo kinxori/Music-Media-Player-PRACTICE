@@ -50,6 +50,12 @@ function App() {
     });
   };
 
+  useEffect(() => {
+    setCurrentSongTotalTime();
+    setCurrentSongMaxTime();
+    setCurrentSongRestTime();
+  }, [currentAudioRef.current]);
+
   const setNextSongPlaying = () => {
     const updatedIndex = currentSongIndex + 1;
     setCurrentSongIndex(updatedIndex);
@@ -59,7 +65,7 @@ function App() {
     });
   };
 
-  if (currentAudioRef.current !== undefined) {
+  if (currentAudioRef.current) {
     currentAudioRef.current.addEventListener("timeupdate", () => {
       if (
         currentAudioRef.current.currentTime === currentAudioRef.current.duration
@@ -73,17 +79,14 @@ function App() {
     });
   }
 
-  useEffect(() => {
-    setCurrentSongTotalTime();
-    setCurrentSongMaxTime();
-    setCurrentSongRestTime();
-  }, [currentAudioRef.current, currentPlaylist, currentSongIndex, currentSong]);
-
   const handleInputRange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const audioPosition = parseFloat(event.target.value);
     currentAudioRef.current.currentTime = audioPosition;
     setCurrentRange(audioPosition);
     setCurrentSongRestTime();
+    if (currentAudioRef.current.paused) {
+      setPlaying(!isPlaying);
+    }
   };
 
   const handlePlayClick = () => {
@@ -98,11 +101,15 @@ function App() {
 
   const handleBackwardClick = () => {
     if (currentSongIndex > 0) {
-      if (currentAudioRef.current) {
+      if (currentAudioRef.current.paused) {
         const updatedIndex = currentSongIndex - 1;
         setCurrentSongIndex(updatedIndex);
         setCurrentSong(currentPlaylist[updatedIndex]);
-        console.log("step 1 ", currentSongIndex);
+        setPlaying(!isPlaying);
+      } else {
+        const updatedIndex = currentSongIndex - 1;
+        setCurrentSongIndex(updatedIndex);
+        setCurrentSong(currentPlaylist[updatedIndex]);
       }
     }
   };
