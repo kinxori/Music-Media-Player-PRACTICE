@@ -129,24 +129,28 @@ function App() {
   };
 
   const handleForwardClick = () => {
+    const updatedIndex = currentSongIndex + 1;
+    const idSongToNumber = parseFloat(currentSong.id);
     if (currentSongIndex < currentPlaylist.length - 1) {
       if (currentAudioRef.current.paused) {
-        const updatedIndex = currentSongIndex + 1;
         setCurrentSongIndex(updatedIndex);
         setCurrentSong(currentPlaylist[updatedIndex]);
         currentAudioRef.current.addEventListener("canplay", () => {
           currentAudioRef.current.play();
         });
         setPlaying(!isPlaying);
-        setPastSongIndex(pastSongIndex + 1);
+        setPastSongIndex((id) => id);
+        console.log("1", idSongToNumber);
+        console.log("1", currentPlaylist);
+        console.log("1", pastSongIndex);
       } else {
-        const updatedIndex = currentSongIndex + 1;
         setCurrentSongIndex(updatedIndex);
         setCurrentSong(currentPlaylist[updatedIndex]);
         currentAudioRef.current.addEventListener("canplay", () => {
           currentAudioRef.current.play();
         });
-        setPastSongIndex(pastSongIndex + 1);
+        setPastSongIndex(idSongToNumber);
+        console.log("2", idSongToNumber);
       }
     }
   };
@@ -161,21 +165,18 @@ function App() {
             .slice(currentSongIndex + 1)
             .sort(() => Math.random() - 0.5),
         ];
-        const pastIndex = currentPlaylist.findIndex(
-          (song) => song === currentSong
-        );
-        setPastSongIndex(pastIndex);
+        const idSongToNumber = parseFloat(currentSong.id);
+
+        setPastSongIndex(idSongToNumber - 1);
         setPastPlaylist(clonedPlaylistToShuffle);
         setCurrentPlaylist(randomizedPlaylist);
         setSuffle(!isSuffle);
         console.log("random", randomizedPlaylist);
-        console.log("past index", pastIndex);
       } else {
         setCurrentPlaylist(pastPlaylist);
         setCurrentSong(pastPlaylist[pastSongIndex]);
         setSuffle(!isSuffle);
         console.log("original😲", pastPlaylist);
-        console.log("original😲", pastSongIndex);
       }
     }
   };
