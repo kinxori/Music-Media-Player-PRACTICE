@@ -9,7 +9,7 @@ function App() {
   const [isRepeat, setRepeat] = useState("repeat-off");
   const [currentPlaylist, setCurrentPlaylist] = useState(data);
   const [pastPlaylist, setPastPlaylist] = useState<any>([]);
-  const [pastSongIndex, setPastSongIndex] = useState(0);
+  const [pastSongIndex, setPastSongIndex] = useState<number | any>(0);
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [currentSong, setCurrentSong] = useState(
     currentPlaylist[currentSongIndex]
@@ -20,6 +20,7 @@ function App() {
   const [currentRangeNumber, setCurrentRange] = useState(0);
 
   const currentAudioRef = useRef<HTMLAudioElement | any>();
+  const currentSongId = useRef<number>();
 
   const setCurrentSongTotalTime = () => {
     currentAudioRef.current.addEventListener("loadedmetadata", () => {
@@ -139,8 +140,12 @@ function App() {
           currentAudioRef.current.play();
         });
         setPlaying(!isPlaying);
-        setPastSongIndex((id) => id);
-        console.log("1", idSongToNumber);
+        const currentId = () => {
+          currentSongId.current = idSongToNumber;
+        };
+        currentId();
+        setPastSongIndex(currentSongId.current);
+        console.log("1", currentSongId.current);
         console.log("1", currentPlaylist);
         console.log("1", pastSongIndex);
       } else {
