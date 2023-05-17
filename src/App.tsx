@@ -8,6 +8,8 @@ function App() {
   const [isDisliked, setDisliked] = useState(false);
   const [isRepeat, setRepeat] = useState("repeat-off");
   const [currentPlaylist, setCurrentPlaylist] = useState(data);
+  const [pastPlaylist, setPastPlaylist] = useState<any>([]);
+  const [pastSongIndex, setPastSongIndex] = useState(0);
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [currentSong, setCurrentSong] = useState(
     currentPlaylist[currentSongIndex]
@@ -17,7 +19,7 @@ function App() {
   const [maxRangeNumber, setMaxRange] = useState(0);
   const [currentRangeNumber, setCurrentRange] = useState(0);
 
-  const currentAudioRef = useRef<HTMLElement | any>();
+  const currentAudioRef = useRef<HTMLAudioElement | any>();
 
   const setCurrentSongTotalTime = () => {
     currentAudioRef.current.addEventListener("loadedmetadata", () => {
@@ -56,7 +58,7 @@ function App() {
     setCurrentSongRestTime();
   }, [currentAudioRef.current]);
 
-  const setNextSongPlaying = () => {
+  const setAutoNextSongPlaying = () => {
     const updatedIndex = currentSongIndex + 1;
     setCurrentSongIndex(updatedIndex);
     setCurrentSong(currentPlaylist[updatedIndex]);
@@ -71,7 +73,7 @@ function App() {
         currentAudioRef.current.currentTime === currentAudioRef.current.duration
       ) {
         if (currentSongIndex < currentPlaylist.length - 1) {
-          setNextSongPlaying();
+          setAutoNextSongPlaying();
         } else {
           setPlaying(!isPlaying);
         }
@@ -136,6 +138,7 @@ function App() {
           currentAudioRef.current.play();
         });
         setPlaying(!isPlaying);
+        setPastSongIndex(pastSongIndex + 1);
       } else {
         const updatedIndex = currentSongIndex + 1;
         setCurrentSongIndex(updatedIndex);
@@ -143,13 +146,38 @@ function App() {
         currentAudioRef.current.addEventListener("canplay", () => {
           currentAudioRef.current.play();
         });
+        setPastSongIndex(pastSongIndex + 1);
       }
     }
   };
 
   const handleSuffleClick = () => {
-    setSuffle(!isSuffle);
-    const shufflePlaylist = currentPlaylist;
+    if (currentSongIndex < currentPlaylist.length - 1) {
+      if (isSuffle === false) {
+        const clonedPlaylistToShuffle = currentPlaylist.slice();
+        const randomizedPlaylist = [
+          ...clonedPlaylistToShuffle.slice(0, currentSongIndex + 1),
+          ...clonedPlaylistToShuffle
+            .slice(currentSongIndex + 1)
+            .sort(() => Math.random() - 0.5),
+        ];
+        const pastIndex = currentPlaylist.findIndex(
+          (song) => song === currentSong
+        );
+        setPastSongIndex(pastIndex);
+        setPastPlaylist(clonedPlaylistToShuffle);
+        setCurrentPlaylist(randomizedPlaylist);
+        setSuffle(!isSuffle);
+        console.log("random", randomizedPlaylist);
+        console.log("past index", pastIndex);
+      } else {
+        setCurrentPlaylist(pastPlaylist);
+        setCurrentSong(pastPlaylist[pastSongIndex]);
+        setSuffle(!isSuffle);
+        console.log("original😲", pastPlaylist);
+        console.log("original😲", pastSongIndex);
+      }
+    }
   };
 
   const handleRepeatClick = () => {
