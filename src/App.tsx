@@ -18,27 +18,12 @@ function App() {
   const [maxRangeNumber, setMaxRange] = useState(0);
   const [currentRangeNumber, setCurrentRange] = useState(0);
 
+  // Created refs to have the current information of each object -----------
+
   const currentAudioRef = useRef<HTMLAudioElement | any>();
   const currentSongId = useRef<any>({});
 
-  //Updates the audio information to then write it in the DOM
-
-  useEffect(() => {
-    currentAudioRef.current.addEventListener(
-      "loadedmetadata",
-      setCurrentSongRestTime,
-      setCurrentSongMaxTime,
-      setCurrentSongTotalTime
-    );
-    return () => {
-      currentAudioRef.current.removeEventListener(
-        "loadedmetadata",
-        setCurrentSongRestTime,
-        setCurrentSongMaxTime,
-        setCurrentSongTotalTime
-      );
-    };
-  }, [currentAudioRef.current]);
+  //Updates the audio information to then write it in the DOM -----------
 
   const setCurrentSongTotalTime = () => {
     const totalMinutes = Math.floor(currentAudioRef.current.duration / 60);
@@ -72,13 +57,36 @@ function App() {
     setCurrentSongRestTime();
   };
 
-  //Updates currentSong object based on index
+  useEffect(() => {
+    currentAudioRef.current.addEventListener(
+      "loadedmetadata",
+      setCurrentSongMaxTime,
+      setCurrentSongTotalTime
+    );
+    currentAudioRef.current.addEventListener(
+      "timeupdate",
+      setCurrentSongRestTime
+    );
+    return () => {
+      currentAudioRef.current.removeEventListener(
+        "loadedmetadata",
+        setCurrentSongMaxTime,
+        setCurrentSongTotalTime
+      );
+      currentAudioRef.current.removeEventListener(
+        "timeupdate",
+        setCurrentSongRestTime
+      );
+    };
+  }, [currentAudioRef.current]);
+
+  //Updates currentSong object based on index -----------
 
   useEffect(() => {
     setCurrentSong(currentPlaylist[currentSongIndex]);
   }, [currentSongIndex]);
 
-  //Controls Play state of audio
+  //Controls Play state of audio -----------
 
   useEffect(() => {
     if (isPlaying) {
