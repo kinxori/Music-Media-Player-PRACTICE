@@ -142,55 +142,32 @@ function App() {
     //   }
     // }
   };
+  useEffect(() => {}, []);
 
-  // paused controls play/pause, isPlaying
+  //Controls Play state of audio
   useEffect(() => {
-    // sustituyen a los listeners tipicos (dom)
     if (isPlaying) {
       currentAudioRef.current.addEventListener("canplay", () => {
         currentAudioRef.current.play();
       });
     } else {
-      currentAudioRef.current?.pause();
+      currentAudioRef.current.pause();
     }
-    console.log(currentAudioRef.current.paused);
   }, [isPlaying]);
 
   const handleForwardClick = () => {
-    if (currentAudioRef.current?.paused) {
-      const newIndex = currentSongIndex + 1;
-      setCurrentSongIndex(newIndex);
-      setCurrentSong(currentPlaylist[newIndex]);
-      setPlaying(true);
-    } else {
-      const newIndex = currentSongIndex + 1;
-      setCurrentSongIndex(newIndex);
-      setCurrentSong(currentPlaylist[newIndex]);
-      console.log("should play", currentSong);
+    if (currentSongIndex < currentPlaylist.length - 1) {
+      if (currentAudioRef.current.paused) {
+        const updatedIndex = currentSongIndex + 1;
+        setCurrentSongIndex(updatedIndex);
+        setCurrentSong(currentPlaylist[updatedIndex]);
+        setPlaying(true);
+      } else {
+        const updatedIndex = currentSongIndex + 1;
+        setCurrentSongIndex(updatedIndex);
+        setCurrentSong(currentPlaylist[updatedIndex]);
+      }
     }
-
-    // const updatedIndex = currentSongIndex + 1;
-
-    // if (currentSongIndex < currentPlaylist.length - 1) {
-    //   if (currentAudioRef.current.paused) {
-    //     setCurrentSongIndex(updatedIndex);
-    //     setCurrentSong(currentPlaylist[updatedIndex]);
-    //     // currentAudioRef.current.addEventListener("canplay", () => {
-    //     currentAudioRef.current.play();
-    //     // });
-    //     setPlaying(!isPlaying);
-    //     currentSongId.current = parseFloat(currentPlaylist[updatedIndex].id);
-
-    //     console.log("id??", currentPlaylist[updatedIndex].id);
-    //   } else {
-    //     setCurrentSongIndex(updatedIndex);
-    //     setCurrentSong(currentPlaylist[updatedIndex]);
-    //     // currentAudioRef.current.addEventListener("canplay", () => {
-    //     currentAudioRef.current.play();
-    //     // });
-    //     currentSongId.current = parseFloat(currentPlaylist[updatedIndex].id);
-    //   }
-    // }
   };
 
   const handleSuffleClick = () => {
@@ -296,7 +273,7 @@ function App() {
             <audio
               src={currentSong.src}
               ref={currentAudioRef}
-              onPlay={(event) => {
+              onPlay={(event: any) => {
                 event.target.volume = 0.1;
               }}
             />
