@@ -19,7 +19,7 @@ function App() {
   const [currentRangeNumber, setCurrentRange] = useState(0);
 
   const currentAudioRef = useRef<HTMLAudioElement | any>();
-  const currentSongId = useRef<number>(0);
+  const currentSongId = useRef<any>({});
 
   const setCurrentSongTotalTime = () => {
     currentAudioRef.current.addEventListener("loadedmetadata", () => {
@@ -143,9 +143,10 @@ function App() {
         });
         setPlaying(!isPlaying);
 
-        const idSongToNumber = parseFloat(currentSong.id);
-        currentSongId.current = idSongToNumber;
+        currentSongId.current = parseFloat(currentPlaylist[updatedIndex].id);
+
         console.log("id??", currentSongId.current);
+        console.log("id??", currentPlaylist[updatedIndex].id);
       } else {
         setCurrentSongIndex(updatedIndex);
         setCurrentSong(currentPlaylist[updatedIndex]);
@@ -166,16 +167,14 @@ function App() {
             .slice(currentSongIndex + 1)
             .sort(() => Math.random() - 0.5),
         ];
-        const currentId = () => {
-          currentSongId.current = idSongToNumber;
-        };
+
         setPastPlaylist(clonedPlaylistToShuffle);
         setCurrentPlaylist(randomizedPlaylist);
         setSuffle(!isSuffle);
         console.log("random", randomizedPlaylist);
       } else {
         setCurrentPlaylist(pastPlaylist);
-        setCurrentSong(pastPlaylist[currentSongId.current]);
+        setCurrentSong(pastPlaylist[currentSongId.current - 1]);
         setSuffle(!isSuffle);
         console.log("original😲", pastPlaylist);
       }
