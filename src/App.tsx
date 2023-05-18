@@ -100,10 +100,16 @@ function App() {
 
   const handleBackwardClick = () => {
     if (currentSongIndex > 0) {
+      //This should only go to currentTime 0 if currentTime > 4
       if (currentAudioRef.current.currentTime > 4) {
         currentAudioRef.current.currentTime = 0;
-        currentAudioRef.current.pause(); //mmmmmh 😵‍💫
+        currentAudioRef.current.addEventListener("canplay", () => {
+          currentAudioRef.current.pause();
+        });
+        // currentAudioRef.current.pause(); //mmmmmh 😵‍💫
       }
+      //this should go backwards in playlist if currentTime < 4
+      // && currentSong.paused
       if (
         currentAudioRef.current.paused &&
         currentAudioRef.current.currentTime < 4
@@ -113,6 +119,8 @@ function App() {
         setCurrentSong(currentPlaylist[updatedIndex]);
         setPlaying(!isPlaying);
       }
+      //this should go backwards in playlist if currentTime < 4
+      // && currentSong.play
       if (
         !currentAudioRef.current.paused &&
         currentAudioRef.current.currentTime < 4
