@@ -10,7 +10,7 @@ function App() {
   const [currentPlaylist, setCurrentPlaylist] = useState(data);
   const [pastPlaylist, setPastPlaylist] = useState<any>([]);
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
-  const [currentSong, setCurrentSong] = useState(
+  const [currentSong, setCurrentSong] = useState<any>(
     currentPlaylist[currentSongIndex]
   );
   const [totalTimeString, setTotalTime] = useState("00:00");
@@ -142,10 +142,8 @@ function App() {
           currentAudioRef.current.play();
         });
         setPlaying(!isPlaying);
-
         currentSongId.current = parseFloat(currentPlaylist[updatedIndex].id);
 
-        console.log("id??", currentSongId.current);
         console.log("id??", currentPlaylist[updatedIndex].id);
       } else {
         setCurrentSongIndex(updatedIndex);
@@ -153,30 +151,31 @@ function App() {
         currentAudioRef.current.addEventListener("canplay", () => {
           currentAudioRef.current.play();
         });
+        currentSongId.current = parseFloat(currentPlaylist[updatedIndex].id);
       }
     }
   };
-
   const handleSuffleClick = () => {
+    const clonedPlaylistToShuffle = currentPlaylist.slice();
     if (currentSongIndex < currentPlaylist.length - 1) {
       if (isSuffle === false) {
-        const clonedPlaylistToShuffle = currentPlaylist.slice();
         const randomizedPlaylist = [
           ...clonedPlaylistToShuffle.slice(0, currentSongIndex + 1),
           ...clonedPlaylistToShuffle
             .slice(currentSongIndex + 1)
             .sort(() => Math.random() - 0.5),
         ];
+        currentSongId.current = parseFloat(currentSong.id);
+        console.log("random", randomizedPlaylist);
 
         setPastPlaylist(clonedPlaylistToShuffle);
         setCurrentPlaylist(randomizedPlaylist);
         setSuffle(!isSuffle);
-        console.log("random", randomizedPlaylist);
       } else {
+        console.log("original😲", pastPlaylist);
         setCurrentPlaylist(pastPlaylist);
         setCurrentSong(pastPlaylist[currentSongId.current - 1]);
         setSuffle(!isSuffle);
-        console.log("original😲", pastPlaylist);
       }
     }
   };
