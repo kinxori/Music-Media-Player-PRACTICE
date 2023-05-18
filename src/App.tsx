@@ -21,57 +21,49 @@ function App() {
   const currentAudioRef = useRef<HTMLAudioElement | any>();
   const currentSongId = useRef<any>({});
 
+  //Updates the audio information to then write it in the DOM
+
+  useEffect(() => {
+    currentAudioRef.current.addEventListener(
+      "loadedmetadata",
+      setCurrentSongRestTime,
+      setCurrentSongMaxTime,
+      setCurrentSongTotalTime
+    );
+    return () => {
+      currentAudioRef.current.removeEventListener(
+        "loadedmetadata",
+        setCurrentSongRestTime,
+        setCurrentSongMaxTime,
+        setCurrentSongTotalTime
+      );
+    };
+  }, [currentAudioRef.current]);
+
   const setCurrentSongTotalTime = () => {
-    currentAudioRef.current.addEventListener("loadedmetadata", () => {
-      const totalMinutes = Math.floor(currentAudioRef.current.duration / 60);
-      const totalSeconds = Math.floor(currentAudioRef.current.duration % 60);
-      const formattedTotalTime = `${totalMinutes
-        .toString()
-        .padStart(2, "0")}:${totalSeconds.toString().padStart(2, "0")}`;
-      setTotalTime(formattedTotalTime);
-    });
+    const totalMinutes = Math.floor(currentAudioRef.current.duration / 60);
+    const totalSeconds = Math.floor(currentAudioRef.current.duration % 60);
+    const formattedTotalTime = `${totalMinutes
+      .toString()
+      .padStart(2, "0")}:${totalSeconds.toString().padStart(2, "0")}`;
+    setTotalTime(formattedTotalTime);
   };
 
   const setCurrentSongRestTime = () => {
-    currentAudioRef.current.addEventListener("timeupdate", () => {
-      const rest = currentAudioRef.current.currentTime;
-      const restMinutes = Math.floor(rest / 60);
-      const restSeconds = Math.floor(rest % 60);
-      const formattedRestTime = `${restMinutes
-        .toString()
-        .padStart(2, "0")}:${restSeconds.toString().padStart(2, "0")}`;
-      setRestTime(formattedRestTime);
-      setCurrentRange(rest);
-    });
+    const rest = currentAudioRef.current.currentTime;
+    const restMinutes = Math.floor(rest / 60);
+    const restSeconds = Math.floor(rest % 60);
+    const formattedRestTime = `${restMinutes
+      .toString()
+      .padStart(2, "0")}:${restSeconds.toString().padStart(2, "0")}`;
+    setRestTime(formattedRestTime);
+    setCurrentRange(rest);
   };
 
   const setCurrentSongMaxTime = () => {
-    const maxDuration = currentAudioRef.current?.duration;
+    const maxDuration = currentAudioRef.current.duration;
     setMaxRange(maxDuration);
   };
-
-  const setAutoNextSongPlaying = () => {
-    const updatedIndex = currentSongIndex + 1;
-    setCurrentSongIndex(updatedIndex);
-    setCurrentSong(currentPlaylist[updatedIndex]);
-    // currentAudioRef.current.addEventListener("canplay", () => {
-    //   currentAudioRef.current.play();
-    // });
-  };
-
-  if (currentAudioRef.current) {
-    // currentAudioRef.current.addEventListener("timeupdate", () => {
-    //   if (
-    //     currentAudioRef.current.currentTime === currentAudioRef.current.duration
-    //   ) {
-    //     if (currentSongIndex < currentPlaylist.length - 1) {
-    //       // setAutoNextSongPlaying();
-    //     } else {
-    //       // setPlaying(!isPlaying);
-    //     }
-    //   }
-    // });
-  }
 
   const handleInputRange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const audioPosition = parseFloat(event.target.value);
@@ -80,20 +72,42 @@ function App() {
     setCurrentSongRestTime();
   };
 
-  const handlePlayClick = () => {
-    if (currentAudioRef.current.paused) {
-      // currentAudioRef.current.play();
-      setPlaying(!isPlaying);
+  //Updates currentSong object based on index
+
+  useEffect(() => {
+    setCurrentSong(currentPlaylist[currentSongIndex]);
+  }, [currentSongIndex]);
+
+  //Controls Play state of audio
+
+  useEffect(() => {
+    if (isPlaying) {
+      currentAudioRef.current.play();
+      currentAudioRef.current.addEventListener("canplay", () => {
+        currentAudioRef.current.play();
+      });
     } else {
-      // currentAudioRef.current.pause();
-      setPlaying((prev) => !prev);
+      currentAudioRef.current.pause();
     }
+    if (currentSongIndex < currentPlaylist.length - 1) {
+      currentAudioRef.current.addEventListener("ended", () => {
+        setAutoNextSongPlaying();
+      });
+    }
+  }, [isPlaying, currentAudioRef.current, currentSongIndex]);
+
+  const setAutoNextSongPlaying = () => {
+    const updatedIndex = currentSongIndex + 1;
+    setCurrentSongIndex(updatedIndex);
   };
 
-  // observa
-  // useEffect(()=>{
-  //   setCurrentSong(currentPlaylist[currentSongIndex])
-  // },[currentSongIndex]) //
+  const handlePlayClick = () => {
+    if (isPlaying === false) {
+      setPlaying(true);
+    } else {
+      setPlaying(false);
+    }
+  };
 
   // const song = useMemo(()=>currentPlaylist[currentSongIndex]
   // ,[currentSongIndex]) // computar valores autom
@@ -112,21 +126,6 @@ function App() {
       currentAudioRef.current.currentTime = 0;
     }
   };
-  //Updates currentSong object based on index
-  useEffect(() => {
-    setCurrentSong(currentPlaylist[currentSongIndex]);
-  }, [currentSongIndex]);
-
-  //Controls Play state of audio
-  useEffect(() => {
-    if (isPlaying) {
-      currentAudioRef.current.addEventListener("canplay", () => {
-        currentAudioRef.current.play();
-      });
-    } else {
-      currentAudioRef.current.pause();
-    }
-  }, [isPlaying]);
 
   const handleForwardClick = () => {
     if (currentSongIndex < currentPlaylist.length - 1) {
