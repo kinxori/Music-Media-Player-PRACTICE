@@ -195,13 +195,23 @@ function App() {
     );
   };
 
-  // const handleLikedClick = () => {
-  //   setLiked(!isLiked);
-  // };
+  const handleLikedClick = () => {
+    if (isDisliked === false) {
+      setLiked(!isLiked);
+    } else {
+      setLiked(!isLiked);
+      setDisliked(!isDisliked);
+    }
+  };
 
-  // const handleDislikedClick = () => {
-  //   setDisliked(!isDisliked);
-  // };
+  const handleDislikedClick = () => {
+    if (isLiked === false) {
+      setDisliked(!isDisliked);
+    } else {
+      setLiked(!isLiked);
+      setDisliked(!isDisliked);
+    }
+  };
 
   return (
     <section className="background bg-orange-200 h-screen w-screen flex justify-center items-center relative m-0">
@@ -220,7 +230,7 @@ function App() {
             <h3 className="text-[18px] italic px-[20px]">
               {currentSong.artist}
             </h3>
-            {/* <div className="like-buttons w-[100%] flex gap-[20px] mt-[20px] px-[20px]">
+            <div className="like-buttons w-[100%] flex gap-[20px] mt-[20px] px-[20px]">
               <button className="h-min w-min" onClick={handleDislikedClick}>
                 {isDisliked === false ? (
                   <i className="fa-regular fa-thumbs-down text-[20px] hover:scale-105"></i>
@@ -235,7 +245,7 @@ function App() {
                   <i className="fa-solid fa-thumbs-up text-[20px] hover:scale-105"></i>
                 )}
               </button>
-            </div> */}
+            </div>
           </div>
           <div className="song-range w-[85%]  h-[auto] flex flex-col justify-center items-center ">
             <audio src={currentSong.src} ref={currentAudioRef} />
