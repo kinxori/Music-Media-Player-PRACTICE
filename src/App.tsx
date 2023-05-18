@@ -9,7 +9,6 @@ function App() {
   const [isRepeat, setRepeat] = useState("repeat-off");
   const [currentPlaylist, setCurrentPlaylist] = useState(data);
   const [pastPlaylist, setPastPlaylist] = useState<any>([]);
-  const [pastSongIndex, setPastSongIndex] = useState<number | any>(0);
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [currentSong, setCurrentSong] = useState(
     currentPlaylist[currentSongIndex]
@@ -20,7 +19,7 @@ function App() {
   const [currentRangeNumber, setCurrentRange] = useState(0);
 
   const currentAudioRef = useRef<HTMLAudioElement | any>();
-  const currentSongId = useRef<number>();
+  const currentSongId = useRef<number>(0);
 
   const setCurrentSongTotalTime = () => {
     currentAudioRef.current.addEventListener("loadedmetadata", () => {
@@ -113,7 +112,6 @@ function App() {
         setCurrentSongIndex(updatedIndex);
         setCurrentSong(currentPlaylist[updatedIndex]);
         setPlaying(!isPlaying);
-        console.log("aaa");
       }
       if (
         !currentAudioRef.current.paused &&
@@ -129,9 +127,13 @@ function App() {
     }
   };
 
+  // console.log("id", currentSongId.current);
+  // console.log("playlist", currentPlaylist);
+  // console.log("id??", currentSong.id);
+
   const handleForwardClick = () => {
     const updatedIndex = currentSongIndex + 1;
-    const idSongToNumber = parseFloat(currentSong.id);
+
     if (currentSongIndex < currentPlaylist.length - 1) {
       if (currentAudioRef.current.paused) {
         setCurrentSongIndex(updatedIndex);
@@ -140,22 +142,16 @@ function App() {
           currentAudioRef.current.play();
         });
         setPlaying(!isPlaying);
-        const currentId = () => {
-          currentSongId.current = idSongToNumber;
-        };
-        currentId();
-        setPastSongIndex(currentSongId.current);
-        console.log("1", currentSongId.current);
-        console.log("1", currentPlaylist);
-        console.log("1", pastSongIndex);
+
+        const idSongToNumber = parseFloat(currentSong.id);
+        currentSongId.current = idSongToNumber;
+        console.log("id??", currentSongId.current);
       } else {
         setCurrentSongIndex(updatedIndex);
         setCurrentSong(currentPlaylist[updatedIndex]);
         currentAudioRef.current.addEventListener("canplay", () => {
           currentAudioRef.current.play();
         });
-        setPastSongIndex(idSongToNumber);
-        console.log("2", idSongToNumber);
       }
     }
   };
@@ -170,16 +166,16 @@ function App() {
             .slice(currentSongIndex + 1)
             .sort(() => Math.random() - 0.5),
         ];
-        const idSongToNumber = parseFloat(currentSong.id);
-
-        setPastSongIndex(idSongToNumber - 1);
+        const currentId = () => {
+          currentSongId.current = idSongToNumber;
+        };
         setPastPlaylist(clonedPlaylistToShuffle);
         setCurrentPlaylist(randomizedPlaylist);
         setSuffle(!isSuffle);
         console.log("random", randomizedPlaylist);
       } else {
         setCurrentPlaylist(pastPlaylist);
-        setCurrentSong(pastPlaylist[pastSongIndex]);
+        setCurrentSong(pastPlaylist[currentSongId.current]);
         setSuffle(!isSuffle);
         console.log("original😲", pastPlaylist);
       }
@@ -207,7 +203,7 @@ function App() {
   return (
     <section className="background bg-orange-200 h-screen w-screen flex justify-center items-center relative m-0">
       <div className="media-player h-[325px] w-[700px] bg-zinc-900 flex justify-evenly items-center relative  m-0 py-[20px] px-[0px] rounded-[45px] drop-shadow-[0px_0px_15px_rgba(0,0,0,.5)]">
-        <div className="song-cover-img w-[40%] object-cover bg-zinc-600 m-0 rounded-[30px] overflow-hidden">
+        <div className="song-cover-img  w-[40%] object-cover bg-zinc-600 m-0 rounded-[30px] overflow-hidden">
           <img src={currentSong.cover} alt="song-cover" />
         </div>
         <div className="song-content  w-[50%] h-[100%] m-0 flex justify-center items-center flex-col">
