@@ -102,47 +102,20 @@ function App() {
     if (currentAudioRef.current.currentTime <= 0 && currentSongIndex === 0) {
       return;
     }
-
     if (currentAudioRef.current.currentTime < 4) {
       if (currentSongIndex !== 0) {
         setCurrentSongIndex(currentSongIndex - 1);
-        setCurrentSong(currentPlaylist[currentSongIndex - 1]);
       } else {
-        currentAudioRef.current.currentTime = 0; // +3s reset, sino, anterior
+        currentAudioRef.current.currentTime = 0;
       }
     } else {
-      currentAudioRef.current.currentTime = 0; // +3s reset, sino, anterior
+      currentAudioRef.current.currentTime = 0;
     }
-
-    // if (currentSongIndex > 0) {
-    //   //This should only go to currentTime 0 if currentTime > 4
-    //   if (currentAudioRef.current.currentTime > 4) {
-    //     currentAudioRef.current.currentTime = 0;
-    //   }
-    //   //this should go backwards in playlist if currentTime < 4
-    //   // && currentSong.paused
-    //   else if (
-    //     currentAudioRef.current.paused &&
-    //     currentAudioRef.current.currentTime < 4
-    //   ) {
-    //     const updatedIndex = currentSongIndex - 1;
-    //     setCurrentSongIndex(updatedIndex);
-    //     setCurrentSong(currentPlaylist[updatedIndex]);
-    //     setPlaying(!isPlaying);
-    //   }
-    //   //this should go backwards in playlist if currentTime < 4
-    //   // && currentSong.play
-    //   else if (
-    //     !currentAudioRef.current.paused &&
-    //     currentAudioRef.current.currentTime < 4
-    //   ) {
-    //     const updatedIndex = currentSongIndex - 1;
-    //     setCurrentSongIndex(updatedIndex);
-    //     setCurrentSong(currentPlaylist[updatedIndex]);
-    //   }
-    // }
   };
-  useEffect(() => {}, []);
+  //Updates currentSong object based on index
+  useEffect(() => {
+    setCurrentSong(currentPlaylist[currentSongIndex]);
+  }, [currentSongIndex]);
 
   //Controls Play state of audio
   useEffect(() => {
@@ -160,12 +133,10 @@ function App() {
       if (currentAudioRef.current.paused) {
         const updatedIndex = currentSongIndex + 1;
         setCurrentSongIndex(updatedIndex);
-        setCurrentSong(currentPlaylist[updatedIndex]);
         setPlaying(true);
       } else {
         const updatedIndex = currentSongIndex + 1;
         setCurrentSongIndex(updatedIndex);
-        setCurrentSong(currentPlaylist[updatedIndex]);
       }
     }
   };
