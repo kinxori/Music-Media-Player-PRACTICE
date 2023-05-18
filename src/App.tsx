@@ -220,14 +220,14 @@ function App() {
           <img src={currentSong.cover} alt="song-cover" />
         </div>
         <div className="song-content  w-[50%] h-[100%] m-0 flex justify-center items-center flex-col">
-          <div className="song-copy m-0  h-[80%] w-[100%]">
+          <div className="song-copy m-0  h-[90%] w-[100%]">
             <button className="song-copy h-min w-min ml-auto flex">
               <i className="fa-solid fa-music my-[10px] mx-[10px] text-[30px] hover:scale-105"></i>
             </button>
-            <h2 className="text-[30px] font-bold mt-[20px] px-[20px]">
+            <h2 className="text-[30px] font-bold px-[20px]">
               {currentSong.song}
             </h2>
-            <h3 className="text-[18px] italic px-[20px]">
+            <h3 className="text-[16px] italic px-[20px]">
               {currentSong.artist}
             </h3>
             <div className="like-buttons w-[100%] flex gap-[20px] mt-[20px] px-[20px]">
@@ -247,7 +247,7 @@ function App() {
               </button>
             </div>
           </div>
-          <div className="song-range w-[85%]  h-[auto] flex flex-col justify-center items-center ">
+          <div className="song-range w-[85%]  h-[10%] flex flex-col justify-center items-center ">
             <audio src={currentSong.src} ref={currentAudioRef} />
             <input
               type="range"
