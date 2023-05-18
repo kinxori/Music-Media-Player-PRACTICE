@@ -291,7 +291,7 @@ function App() {
                 src="../ASSETS/backward-icon.png"
                 alt="backward-icon"
                 className={
-                  currentSongIndex === 0
+                  currentAudioRef.current?.currentTime === 0
                     ? "h-[20px] object-cover invert opacity-50 cursor-default"
                     : "h-[20px] object-cover invert hover:scale-105"
                 }
