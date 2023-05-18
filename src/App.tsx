@@ -193,6 +193,18 @@ function App() {
         ? "repeat-1-on"
         : "repeat-off"
     );
+    if (isRepeat === "repeat-off") {
+      console.log("off");
+    }
+    if (
+      isRepeat === "repeat-on" &&
+      currentSongIndex < currentPlaylist.length - 1
+    ) {
+      console.log("repeat all");
+    }
+    if (isRepeat === "repeat-1-on") {
+      console.log("repeat 1");
+    }
   };
 
   const handleLikedClick = () => {
