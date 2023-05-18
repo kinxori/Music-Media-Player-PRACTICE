@@ -205,14 +205,12 @@ function App() {
     );
     if (isRepeat === "repeat-off") {
       console.log("off");
-    }
-    if (
+    } else if (
       isRepeat === "repeat-on" &&
       currentSongIndex < currentPlaylist.length - 1
     ) {
       console.log("repeat all");
-    }
-    if (isRepeat === "repeat-1-on") {
+    } else if (isRepeat === "repeat-1-on") {
       console.log("repeat 1");
     }
   };
@@ -312,13 +310,13 @@ function App() {
             </button>
             <button onClick={handleBackwardClick}>
               <img
-                style={{
-                  // filter: "none",
-                  cursor: currentSongIndex === 0 ? "none" : "pointer",
-                }}
                 src="../ASSETS/backward-icon.png"
                 alt="backward-icon"
-                className="h-[20px] object-cover invert hover:scale-105"
+                className={
+                  currentSongIndex === 0
+                    ? "h-[20px] object-cover invert opacity-50 cursor-default"
+                    : "h-[20px] object-cover invert hover:scale-105"
+                }
               ></img>
             </button>
             <button onClick={handlePlayClick}>
@@ -340,7 +338,11 @@ function App() {
               <img
                 src="../ASSETS/forward-icon.png"
                 alt="forward-icon"
-                className="h-[20px] object-cover invert hover:scale-105"
+                className={
+                  currentSongIndex === currentPlaylist.length - 1
+                    ? "h-[20px] object-cover invert opacity-50 cursor-default"
+                    : "h-[20px] object-cover invert hover:scale-105"
+                }
               ></img>
             </button>
             <button onClick={handleRepeatClick}>
