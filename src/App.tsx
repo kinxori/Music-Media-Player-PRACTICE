@@ -77,7 +77,8 @@ function App() {
 
   useEffect(() => {
     setCurrentSong(currentPlaylist[currentIndexSong]);
-  }, [currentIndexSong]);
+    currentSongId.current = parseFloat(currentSong.id);
+  }, [currentIndexSong, currentSongId.current]);
 
   //Controls Play state of audio 👺
 
@@ -138,13 +139,9 @@ function App() {
         const updatedIndex = currentIndexSong + 1;
         setCurrentIndexSong(updatedIndex);
         currentSongId.current = parseFloat(currentPlaylist[updatedIndex].id);
-        console.log("random", pastPlaylist.current);
       }
     }
   };
-
-  const pastPlaylist = useRef<any>({}); // mmmmh 🤡
-  console.log("original😲", currentPlaylist);
 
   const handleSuffleClick = () => {
     if (currentIndexSong < currentPlaylist.length - 1) {
@@ -154,34 +151,30 @@ function App() {
           ...clonedPlaylistToShuffle.slice(0, currentIndexSong + 1),
           ...clonedPlaylistToShuffle.slice(currentIndexSong + 1).sort(() => Math.random() - 0.5),
         ];
-        currentSongId.current = parseFloat(currentSong.id);
-        pastPlaylist.current = clonedPlaylistToShuffle;
         setCurrentPlaylist(randomizedPlaylist);
         setSuffle(true);
         console.log("random", randomizedPlaylist);
       } else {
-        setCurrentPlaylist(pastPlaylist.current);
-        setCurrentSong(pastPlaylist.current[currentSongId.current - 1]);
         setSuffle(false);
+        setCurrentPlaylist(data);
+        setCurrentSong(data[currentSongId.current - 1]);
         console.log("original?🚀", currentPlaylist);
       }
     }
   };
 
   const handleRepeatClick = () => {
-    setRepeat(
-      isRepeat === "repeat-off"
-        ? "repeat-on"
-        : isRepeat === "repeat-on"
-        ? "repeat-1-on"
-        : "repeat-off"
-    );
     if (isRepeat === "repeat-off") {
-      console.log("off");
-    } else if (isRepeat === "repeat-on" && currentIndexSong < currentPlaylist.length - 1) {
-      console.log("repeat all");
-    } else if (isRepeat === "repeat-1-on") {
-      console.log("repeat 1");
+      setRepeat("repeat-all");
+      setCurrentPlaylist(data);
+      setCurrentSong(data[currentSongId.current - 1]);
+      console.log("👺", isRepeat);
+    } else if (isRepeat === "repeat-all" && currentIndexSong < currentPlaylist.length - 1) {
+      setRepeat("repeat-1");
+      console.log("💡", isRepeat);
+    } else if (isRepeat === "repeat-1") {
+      setRepeat("repeat-off");
+      console.log("🚀", isRepeat);
     }
   };
 
@@ -310,13 +303,13 @@ function App() {
                   alt="repeat-icon"
                   className="h-[20px] object-cover invert hover:scale-105 opacity-50"
                 ></img>
-              ) : isRepeat === "repeat-on" ? (
+              ) : isRepeat === "repeat-all" ? (
                 <img
                   src="../ASSETS/repeat-icon.png"
                   alt="repeat-icon"
                   className="h-[20px] object-cover invert hover:scale-105"
                 ></img>
-              ) : isRepeat === "repeat-1-on" ? (
+              ) : isRepeat === "repeat-1" ? (
                 <img
                   src="../ASSETS/repeat-1-icon.png"
                   alt="repeat-1-icon"
