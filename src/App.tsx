@@ -149,17 +149,19 @@ function App() {
         const updatedIndex = currentSongIndex + 1;
         setCurrentSongIndex(updatedIndex);
         setPlaying(true);
+        currentSongId.current = parseFloat(currentPlaylist[updatedIndex].id);
       } else {
         const updatedIndex = currentSongIndex + 1;
         setCurrentSongIndex(updatedIndex);
+        currentSongId.current = parseFloat(currentPlaylist[updatedIndex].id);
       }
     }
   };
 
   const handleSuffleClick = () => {
-    const clonedPlaylistToShuffle = currentPlaylist.slice();
     if (currentSongIndex < currentPlaylist.length - 1) {
       if (isSuffle === false) {
+        const clonedPlaylistToShuffle = currentPlaylist.slice();
         const randomizedPlaylist = [
           ...clonedPlaylistToShuffle.slice(0, currentSongIndex + 1),
           ...clonedPlaylistToShuffle
@@ -167,11 +169,10 @@ function App() {
             .sort(() => Math.random() - 0.5),
         ];
         currentSongId.current = parseFloat(currentSong.id);
-        console.log("random", randomizedPlaylist);
-
         setPastPlaylist(clonedPlaylistToShuffle);
         setCurrentPlaylist(randomizedPlaylist);
         setSuffle(!isSuffle);
+        console.log("random", randomizedPlaylist);
       } else {
         console.log("original😲", pastPlaylist);
         setCurrentPlaylist(pastPlaylist);
