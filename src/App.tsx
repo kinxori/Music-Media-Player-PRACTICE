@@ -134,7 +134,9 @@ function App() {
     }
     if (currentAudioRef.current.currentTime < 4) {
       if (currentSongIndex !== 0) {
-        setCurrentSongIndex(currentSongIndex - 1);
+        const updatedIndex = currentSongIndex - 1;
+        setCurrentSongIndex(updatedIndex);
+        currentSongId.current = parseFloat(currentPlaylist[updatedIndex].id);
       } else {
         currentAudioRef.current.currentTime = 0;
       }
