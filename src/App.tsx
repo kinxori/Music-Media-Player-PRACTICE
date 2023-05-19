@@ -144,6 +144,7 @@ function App() {
   };
 
   const pastPlaylist = useRef<any>({}); // mmmmh 🤡
+  console.log("original😲", currentPlaylist);
 
   const handleSuffleClick = () => {
     if (currentIndexSong < currentPlaylist.length - 1) {
@@ -158,12 +159,11 @@ function App() {
         setCurrentPlaylist(randomizedPlaylist);
         setSuffle(true);
         console.log("random", randomizedPlaylist);
-        console.log("original", pastPlaylist.current);
       } else {
         setCurrentPlaylist(pastPlaylist.current);
         setCurrentSong(pastPlaylist.current[currentSongId.current - 1]);
         setSuffle(false);
-        console.log("original😲", currentPlaylist);
+        console.log("original?🚀", currentPlaylist);
       }
     }
   };
