@@ -86,7 +86,7 @@ function App() {
         setCurrentSongRestTime
       );
     };
-  }, [currentAudioRef.current]);
+  }, [currentAudioRef]);
 
   //Updates currentSong object based on index -----------
 
