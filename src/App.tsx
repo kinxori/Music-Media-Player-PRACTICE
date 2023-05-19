@@ -8,93 +8,78 @@ function App() {
   const [isDisliked, setDisliked] = useState(false);
   const [isRepeat, setRepeat] = useState("repeat-off");
   const [currentPlaylist, setCurrentPlaylist] = useState(data);
-  const [pastPlaylist, setPastPlaylist] = useState<any>([]);
-  const [currentSongIndex, setCurrentSongIndex] = useState(0);
-  const [currentSong, setCurrentSong] = useState<any>(
-    currentPlaylist[currentSongIndex]
-  );
-  const [totalTimeString, setTotalTime] = useState("00:00");
-  const [restTimeString, setRestTime] = useState("00:00");
-  const [maxRangeNumber, setMaxRange] = useState(0);
-  const [currentRangeNumber, setCurrentRange] = useState(0);
+  const [currentIndexSong, setCurrentIndexSong] = useState(0);
+  const [currentSong, setCurrentSong] = useState<any>(currentPlaylist[currentIndexSong]);
+  const [songTotalTime, setSongTotalTime] = useState("00:00");
+  const [songRestTime, setSongRestTime] = useState("00:00");
+  const [songMaxTime, setSongMaxTime] = useState(0);
+  const [songCurrentTime, setSongCurrentTime] = useState(0);
 
-  // Created refs to have the current information of each object -----------
+  // Created refs to have the current information of each object 👺
 
   const currentAudioRef = useRef<HTMLAudioElement | any>();
   const currentSongId = useRef<any>({});
 
-  //Updates the audio information to then write it in the DOM -----------
+  //Updates the audio information to then write it in the DOM 👺
 
   const setCurrentSongTotalTime = () => {
     const totalMinutes = Math.floor(currentAudioRef.current.duration / 60);
     const totalSeconds = Math.floor(currentAudioRef.current.duration % 60);
-    const formattedTotalTime = `${totalMinutes
+    const formattedTotalTime = `${totalMinutes.toString().padStart(2, "0")}:${totalSeconds
       .toString()
-      .padStart(2, "0")}:${totalSeconds.toString().padStart(2, "0")}`;
-    setTotalTime(formattedTotalTime);
+      .padStart(2, "0")}`;
+    setSongTotalTime(formattedTotalTime);
   };
 
   const setCurrentSongRestTime = () => {
     const rest = currentAudioRef.current.currentTime;
     const restMinutes = Math.floor(rest / 60);
     const restSeconds = Math.floor(rest % 60);
-    const formattedRestTime = `${restMinutes
+    const formattedRestTime = `${restMinutes.toString().padStart(2, "0")}:${restSeconds
       .toString()
-      .padStart(2, "0")}:${restSeconds.toString().padStart(2, "0")}`;
-    setRestTime(formattedRestTime);
-    setCurrentRange(rest);
+      .padStart(2, "0")}`;
+    setSongRestTime(formattedRestTime);
+    setSongCurrentTime(rest);
   };
 
   const setCurrentSongMaxTime = () => {
     const maxDuration = currentAudioRef.current.duration;
-    setMaxRange(maxDuration);
+    setSongMaxTime(maxDuration);
   };
 
   const handleInputRange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const audioPosition = parseFloat(event.target.value);
     currentAudioRef.current.currentTime = audioPosition;
-    setCurrentRange(audioPosition);
+    setSongCurrentTime(audioPosition);
     setCurrentSongRestTime();
   };
 
   useEffect(() => {
-    currentAudioRef.current.addEventListener(
-      "loadedmetadata",
-      setCurrentSongMaxTime
-    );
+    currentAudioRef.current.addEventListener("loadedmetadata", setCurrentSongMaxTime);
     currentAudioRef.current.addEventListener(
       "loadedmetadata",
 
       setCurrentSongTotalTime
     );
-    currentAudioRef.current.addEventListener(
-      "timeupdate",
-      setCurrentSongRestTime
-    );
+    currentAudioRef.current.addEventListener("timeupdate", setCurrentSongRestTime);
     return () => {
-      currentAudioRef.current.removeEventListener(
-        "loadedmetadata",
-        setCurrentSongMaxTime
-      );
+      currentAudioRef.current.removeEventListener("loadedmetadata", setCurrentSongMaxTime);
       currentAudioRef.current.removeEventListener(
         "loadedmetadata",
 
         setCurrentSongTotalTime
       );
-      currentAudioRef.current.removeEventListener(
-        "timeupdate",
-        setCurrentSongRestTime
-      );
+      currentAudioRef.current.removeEventListener("timeupdate", setCurrentSongRestTime);
     };
   }, [currentAudioRef]);
 
-  //Updates currentSong object based on index -----------
+  //Updates currentSong object based on index 👺
 
   useEffect(() => {
-    setCurrentSong(currentPlaylist[currentSongIndex]);
-  }, [currentSongIndex]);
+    setCurrentSong(currentPlaylist[currentIndexSong]);
+  }, [currentIndexSong]);
 
-  //Controls Play state of audio -----------
+  //Controls Play state of audio 👺
 
   useEffect(() => {
     if (isPlaying) {
@@ -105,16 +90,16 @@ function App() {
     } else {
       currentAudioRef.current.pause();
     }
-    if (currentSongIndex < currentPlaylist.length - 1) {
+    if (currentIndexSong < currentPlaylist.length - 1) {
       currentAudioRef.current.addEventListener("ended", () => {
         setAutoNextSongPlaying();
       });
     }
-  }, [isPlaying, currentAudioRef.current, currentSongIndex]);
+  }, [isPlaying, currentAudioRef.current, currentIndexSong]);
 
   const setAutoNextSongPlaying = () => {
-    const updatedIndex = currentSongIndex + 1;
-    setCurrentSongIndex(updatedIndex);
+    const updatedIndex = currentIndexSong + 1;
+    setCurrentIndexSong(updatedIndex);
   };
 
   const handlePlayClick = () => {
@@ -125,17 +110,14 @@ function App() {
     }
   };
 
-  // const song = useMemo(()=>currentPlaylist[currentSongIndex]
-  // ,[currentSongIndex]) // computar valores autom
-
   const handleBackwardClick = () => {
-    if (currentAudioRef.current.currentTime <= 0 && currentSongIndex === 0) {
+    if (currentAudioRef.current.currentTime <= 0 && currentIndexSong === 0) {
       return;
     }
     if (currentAudioRef.current.currentTime < 4) {
-      if (currentSongIndex !== 0) {
-        const updatedIndex = currentSongIndex - 1;
-        setCurrentSongIndex(updatedIndex);
+      if (currentIndexSong !== 0) {
+        const updatedIndex = currentIndexSong - 1;
+        setCurrentIndexSong(updatedIndex);
         currentSongId.current = parseFloat(currentPlaylist[updatedIndex].id);
       } else {
         currentAudioRef.current.currentTime = 0;
@@ -146,40 +128,42 @@ function App() {
   };
 
   const handleForwardClick = () => {
-    if (currentSongIndex < currentPlaylist.length - 1) {
+    if (currentIndexSong < currentPlaylist.length - 1) {
       if (currentAudioRef.current.paused) {
-        const updatedIndex = currentSongIndex + 1;
-        setCurrentSongIndex(updatedIndex);
+        const updatedIndex = currentIndexSong + 1;
+        setCurrentIndexSong(updatedIndex);
         setPlaying(true);
         currentSongId.current = parseFloat(currentPlaylist[updatedIndex].id);
       } else {
-        const updatedIndex = currentSongIndex + 1;
-        setCurrentSongIndex(updatedIndex);
+        const updatedIndex = currentIndexSong + 1;
+        setCurrentIndexSong(updatedIndex);
         currentSongId.current = parseFloat(currentPlaylist[updatedIndex].id);
+        console.log("random", pastPlaylist.current);
       }
     }
   };
 
+  const pastPlaylist = useRef<any>({}); // mmmmh 🤡
+
   const handleSuffleClick = () => {
-    if (currentSongIndex < currentPlaylist.length - 1) {
-      if (isSuffle === false) {
+    if (currentIndexSong < currentPlaylist.length - 1) {
+      if (!isSuffle) {
         const clonedPlaylistToShuffle = currentPlaylist.slice();
         const randomizedPlaylist = [
-          ...clonedPlaylistToShuffle.slice(0, currentSongIndex + 1),
-          ...clonedPlaylistToShuffle
-            .slice(currentSongIndex + 1)
-            .sort(() => Math.random() - 0.5),
+          ...clonedPlaylistToShuffle.slice(0, currentIndexSong + 1),
+          ...clonedPlaylistToShuffle.slice(currentIndexSong + 1).sort(() => Math.random() - 0.5),
         ];
         currentSongId.current = parseFloat(currentSong.id);
-        setPastPlaylist(clonedPlaylistToShuffle);
+        pastPlaylist.current = clonedPlaylistToShuffle;
         setCurrentPlaylist(randomizedPlaylist);
-        setSuffle(!isSuffle);
+        setSuffle(true);
         console.log("random", randomizedPlaylist);
+        console.log("original", pastPlaylist.current);
       } else {
-        console.log("original😲", pastPlaylist);
-        setCurrentPlaylist(pastPlaylist);
-        setCurrentSong(pastPlaylist[currentSongId.current - 1]);
-        setSuffle(!isSuffle);
+        setCurrentPlaylist(pastPlaylist.current);
+        setCurrentSong(pastPlaylist.current[currentSongId.current - 1]);
+        setSuffle(false);
+        console.log("original😲", currentPlaylist);
       }
     }
   };
@@ -194,10 +178,7 @@ function App() {
     );
     if (isRepeat === "repeat-off") {
       console.log("off");
-    } else if (
-      isRepeat === "repeat-on" &&
-      currentSongIndex < currentPlaylist.length - 1
-    ) {
+    } else if (isRepeat === "repeat-on" && currentIndexSong < currentPlaylist.length - 1) {
       console.log("repeat all");
     } else if (isRepeat === "repeat-1-on") {
       console.log("repeat 1");
@@ -233,12 +214,8 @@ function App() {
             <button className="song-copy h-min w-min ml-auto flex">
               <i className="fa-solid fa-music my-[10px] mx-[10px] text-[30px] hover:scale-105"></i>
             </button>
-            <h2 className="text-[30px] font-bold px-[20px]">
-              {currentSong.song}
-            </h2>
-            <h3 className="text-[16px] italic px-[20px]">
-              {currentSong.artist}
-            </h3>
+            <h2 className="text-[30px] font-bold px-[20px]">{currentSong.song}</h2>
+            <h3 className="text-[16px] italic px-[20px]">{currentSong.artist}</h3>
             <div className="like-buttons w-[100%] flex gap-[20px] mt-[20px] px-[20px]">
               <button className="h-min w-min" onClick={handleDislikedClick}>
                 {isDisliked === false ? (
@@ -268,42 +245,33 @@ function App() {
               type="range"
               className=" w-full h-0.5 bg-grey rounded outline-none accent-white"
               min={0}
-              max={maxRangeNumber}
-              value={currentRangeNumber}
+              max={songMaxTime}
+              value={songCurrentTime}
               onChange={handleInputRange}
             ></input>
             <div className="w-[100%] flex mt-[10px]">
-              <span className=" text-[10px] w-[min] flex  mr-[auto] ">
-                {restTimeString}
-              </span>
-              <span className=" text-[10px]  w-[min] flex ml-[auto] ">
-                {totalTimeString}
-              </span>
+              <span className=" text-[10px] w-[min] flex  mr-[auto] ">{songRestTime}</span>
+              <span className=" text-[10px]  w-[min] flex ml-[auto] ">{songTotalTime}</span>
             </div>
           </div>
           <div className="song-buttons-actions m-0 h-[20%] w-[100%] flex justify-center items-center gap-[40px]">
             <button onClick={handleSuffleClick}>
-              {isSuffle === false ? (
-                <img
-                  src="../ASSETS/shuffle-icon.png"
-                  alt="suffle-icon"
-                  className="h-[20px] object-cover invert hover:scale-105 opacity-50"
-                ></img>
-              ) : (
-                <img
-                  src="../ASSETS/shuffle-icon.png"
-                  alt="suffle-icon"
-                  className="h-[20px] object-cover invert hover:scale-105"
-                ></img>
-              )}
+              <img
+                src="../ASSETS/shuffle-icon.png"
+                alt="suffle-icon"
+                className={
+                  isSuffle
+                    ? "h-[20px] object-cover invert hover:scale-105"
+                    : "h-[20px] object-cover invert hover:scale-105 opacity-50"
+                }
+              ></img>
             </button>
             <button onClick={handleBackwardClick}>
               <img
                 src="../ASSETS/backward-icon.png"
                 alt="backward-icon"
                 className={
-                  currentAudioRef.current?.currentTime === 0 &&
-                  currentSongIndex === 0
+                  currentAudioRef.current?.currentTime === 0 && currentIndexSong === 0
                     ? "h-[20px] object-cover invert opacity-50 cursor-default"
                     : "h-[20px] object-cover invert hover:scale-105"
                 }
@@ -329,7 +297,7 @@ function App() {
                 src="../ASSETS/forward-icon.png"
                 alt="forward-icon"
                 className={
-                  currentSongIndex === currentPlaylist.length - 1
+                  currentIndexSong === currentPlaylist.length - 1
                     ? "h-[20px] object-cover invert opacity-50 cursor-default"
                     : "h-[20px] object-cover invert hover:scale-105"
                 }
