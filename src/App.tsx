@@ -60,7 +60,11 @@ function App() {
   useEffect(() => {
     currentAudioRef.current.addEventListener(
       "loadedmetadata",
-      setCurrentSongMaxTime,
+      setCurrentSongMaxTime
+    );
+    currentAudioRef.current.addEventListener(
+      "loadedmetadata",
+
       setCurrentSongTotalTime
     );
     currentAudioRef.current.addEventListener(
@@ -70,7 +74,11 @@ function App() {
     return () => {
       currentAudioRef.current.removeEventListener(
         "loadedmetadata",
-        setCurrentSongMaxTime,
+        setCurrentSongMaxTime
+      );
+      currentAudioRef.current.removeEventListener(
+        "loadedmetadata",
+
         setCurrentSongTotalTime
       );
       currentAudioRef.current.removeEventListener(
@@ -291,7 +299,8 @@ function App() {
                 src="../ASSETS/backward-icon.png"
                 alt="backward-icon"
                 className={
-                  currentAudioRef.current?.currentTime === 0
+                  currentAudioRef.current?.currentTime === 0 &&
+                  currentSongIndex === 0
                     ? "h-[20px] object-cover invert opacity-50 cursor-default"
                     : "h-[20px] object-cover invert hover:scale-105"
                 }
