@@ -82,38 +82,64 @@ function App() {
 
   //Controls Play state of audio 👺
 
-  const setAutoNextSongPlaying = () => {
+  // const setAutoNextSongPlaying = () => {
+  //   if (isRepeat === "repeat-off") {
+  //     if (currentIndexSong < currentPlaylist.length - 1) {
+  //       currentAudioRef.current.addEventListener("ended", () => {
+  //         const updatedIndex = currentIndexSong + 1;
+  //         setCurrentIndexSong(updatedIndex);
+  //         console.log("👺");
+  //       });
+  //     }
+  //   } else if (isRepeat === "repeat-all") {
+  //     if (currentIndexSong < currentPlaylist.length - 1) {
+  //       currentAudioRef.current.addEventListener("ended", () => {
+  //         setCurrentIndexSong(0);
+  //         console.log("🤡");
+  //       });
+  //     }
+  //   } else if (isRepeat === "repeat-1") {
+  //     currentAudioRef.current.addEventListener("ended", () => {
+  //       currentAudioRef.current.currentTime = 0;
+  //       console.log("🚀");
+  //     });
+  //   }
+  // };
+
+  useEffect(() => {
+    if (isPlaying) {
+      if (currentIndexSong === 0) {
+        currentAudioRef.current.play();
+      } else
+        currentAudioRef.current.addEventListener("canplay", () => {
+          currentAudioRef.current.play();
+        });
+    } else {
+      currentAudioRef.current.pause();
+    }
+    // setAutoNextSongPlaying();
     if (isRepeat === "repeat-off") {
       if (currentIndexSong < currentPlaylist.length - 1) {
         currentAudioRef.current.addEventListener("ended", () => {
           const updatedIndex = currentIndexSong + 1;
           setCurrentIndexSong(updatedIndex);
+          console.log("👺", isRepeat);
         });
       }
     } else if (isRepeat === "repeat-all") {
       if (currentIndexSong < currentPlaylist.length - 1) {
         currentAudioRef.current.addEventListener("ended", () => {
           setCurrentIndexSong(0);
+          console.log("🤡", isRepeat);
         });
       }
     } else if (isRepeat === "repeat-1") {
       currentAudioRef.current.addEventListener("ended", () => {
         currentAudioRef.current.currentTime = 0;
+        console.log("🚀", isRepeat);
       });
     }
-  };
-
-  useEffect(() => {
-    if (isPlaying) {
-      currentAudioRef.current.play();
-      currentAudioRef.current.addEventListener("canplay", () => {
-        currentAudioRef.current.play();
-      });
-    } else {
-      currentAudioRef.current.pause();
-    }
-    setAutoNextSongPlaying();
-  }, [isPlaying, currentAudioRef.current, currentIndexSong]);
+  }, [isPlaying, currentAudioRef, currentIndexSong, currentPlaylist, isRepeat]);
 
   const handlePlayClick = () => {
     if (isPlaying === false) {
@@ -141,7 +167,7 @@ function App() {
   };
 
   const handleForwardClick = () => {
-    if (isRepeat === "repeat-off") {
+    if (isRepeat === "repeat-off" || "repeat-1") {
       if (currentIndexSong < currentPlaylist.length - 1) {
         if (currentAudioRef.current.paused) {
           const updatedIndex = currentIndexSong + 1;
@@ -197,15 +223,15 @@ function App() {
     if (isRepeat === "repeat-off") {
       setRepeat("repeat-all");
 
-      console.log("👺", isRepeat);
+      // console.log("👺", isRepeat);
     } else if (isRepeat === "repeat-all") {
       setRepeat("repeat-1");
 
-      console.log("💡", isRepeat);
+      // console.log("💡", isRepeat);
     } else if (isRepeat === "repeat-1") {
       setRepeat("repeat-off");
 
-      console.log("🚀", isRepeat);
+      // console.log("🚀", isRepeat);
     }
   };
 
