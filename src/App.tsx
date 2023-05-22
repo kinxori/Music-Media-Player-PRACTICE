@@ -105,6 +105,30 @@ function App() {
   //     });
   //   }
   // };
+  useEffect(() => {
+    if (isRepeat === "repeat-off") {
+      if (currentIndexSong < currentPlaylist.length - 1) {
+        currentAudioRef.current.addEventListener("ended", () => {
+          const updatedIndex = currentIndexSong + 1;
+          setCurrentIndexSong(updatedIndex);
+          console.log("👺", isRepeat);
+        });
+      }
+    } else if (isRepeat === "repeat-all") {
+      if (currentIndexSong < currentPlaylist.length - 1) {
+        currentAudioRef.current.addEventListener("ended", () => {
+          const updatedIndex = currentIndexSong + 1;
+          setCurrentIndexSong(updatedIndex);
+          console.log("🤡", isRepeat);
+        });
+      } else setCurrentIndexSong(0);
+    } else if (isRepeat === "repeat-1") {
+      currentAudioRef.current.addEventListener("ended", () => {
+        currentAudioRef.current.currentTime = 0;
+        console.log("🚀", isRepeat);
+      });
+    }
+  }, [isRepeat]);
 
   useEffect(() => {
     if (isPlaying) {
@@ -118,28 +142,7 @@ function App() {
       currentAudioRef.current.pause();
     }
     // setAutoNextSongPlaying();
-    if (isRepeat === "repeat-off") {
-      if (currentIndexSong < currentPlaylist.length - 1) {
-        currentAudioRef.current.addEventListener("ended", () => {
-          const updatedIndex = currentIndexSong + 1;
-          setCurrentIndexSong(updatedIndex);
-          console.log("👺", isRepeat);
-        });
-      }
-    } else if (isRepeat === "repeat-all") {
-      if (currentIndexSong < currentPlaylist.length - 1) {
-        currentAudioRef.current.addEventListener("ended", () => {
-          setCurrentIndexSong(0);
-          console.log("🤡", isRepeat);
-        });
-      }
-    } else if (isRepeat === "repeat-1") {
-      currentAudioRef.current.addEventListener("ended", () => {
-        currentAudioRef.current.currentTime = 0;
-        console.log("🚀", isRepeat);
-      });
-    }
-  }, [isPlaying, currentAudioRef, currentIndexSong, currentPlaylist, isRepeat]);
+  }, [isPlaying, currentAudioRef, currentIndexSong, currentPlaylist]);
 
   const handlePlayClick = () => {
     if (isPlaying === false) {
