@@ -3,12 +3,12 @@ import { data } from "./data.tsx";
 
 function App() {
   const [isPlaying, setPlaying] = useState(false);
-  const [isSuffle, setSuffle] = useState(false);
+  // const [isSuffle, setSuffle] = useState(false);
   const [isLiked, setLiked] = useState(false);
   const [isDisliked, setDisliked] = useState(false);
   const [isRepeat, setRepeat] = useState("repeat-off");
   const [currentPlaylist, setCurrentPlaylist] = useState(data);
-  const [currentIndexSong, setCurrentIndexSong] = useState(9);
+  const [currentIndexSong, setCurrentIndexSong] = useState(0);
   const [currentSong, setCurrentSong] = useState<any>(currentPlaylist[currentIndexSong]);
   const [songTotalTime, setSongTotalTime] = useState("00:00");
   const [songRestTime, setSongRestTime] = useState("00:00");
@@ -84,29 +84,32 @@ function App() {
 
   useEffect(() => {
     if (isRepeat === "repeat-off") {
-      if (currentIndexSong < currentPlaylist.length - 1) {
-        currentAudioRef.current.addEventListener("ended", () => {
-          const updatedIndex = currentIndexSong + 1;
-          setCurrentIndexSong(updatedIndex);
-          console.log("👺", isRepeat);
-        });
-      }
+      // if (currentIndexSong < currentPlaylist.length - 1) {
+      //   currentAudioRef.current.addEventListener("ended", () => {
+      //     const updatedIndex = currentIndexSong + 1;
+      //     setCurrentIndexSong(updatedIndex);
+      console.log("👺", isRepeat);
+      //   });
+      // }
     } else if (isRepeat === "repeat-all") {
-      if (currentIndexSong < currentPlaylist.length - 1) {
-        currentAudioRef.current.addEventListener("ended", () => {
-          const updatedIndex = currentIndexSong + 1;
-          setCurrentIndexSong(updatedIndex);
-          console.log("🤡", isRepeat);
-        });
-      } else
-        currentAudioRef.current.addEventListener("ended", () => {
-          setCurrentIndexSong(0);
-        });
+      // if (currentIndexSong < currentPlaylist.length - 1) {
+      //   currentAudioRef.current.addEventListener("ended", () => {
+      //     const updatedIndex = currentIndexSong + 1;
+      //     setCurrentIndexSong(updatedIndex);
+      console.log("🤡", isRepeat);
+      //   });
+      // } else
+      //   currentAudioRef.current.addEventListener("ended", () => {
+      //     setCurrentIndexSong(0);
+      //   });
     } else if (isRepeat === "repeat-1") {
       currentAudioRef.current.addEventListener("ended", () => {
         currentAudioRef.current.currentTime = 0;
-        console.log("🚀", isRepeat);
       });
+      currentAudioRef.current.addEventListener("canplay", () => {
+        currentAudioRef.current.play();
+      });
+      console.log("🚀", isRepeat);
     }
   }, [isRepeat]);
 
@@ -183,25 +186,46 @@ function App() {
     }
   };
 
-  const handleSuffleClick = () => {
-    if (currentIndexSong < currentPlaylist.length - 1) {
-      if (!isSuffle) {
-        const clonedPlaylistToShuffle = currentPlaylist.slice();
-        const randomizedPlaylist = [
-          ...clonedPlaylistToShuffle.slice(0, currentIndexSong + 1),
-          ...clonedPlaylistToShuffle.slice(currentIndexSong + 1).sort(() => Math.random() - 0.5),
-        ];
-        setSuffle(true);
-        setCurrentPlaylist(randomizedPlaylist);
-        console.log("random", randomizedPlaylist);
-      } else {
-        setSuffle(false);
-        setCurrentPlaylist(data);
-        setCurrentSong(data[currentSongId.current - 1]);
-        console.log("original?🚀", currentPlaylist);
-      }
-    }
-  };
+  //maybe later 🥲
+  // const handleSuffleClick = () => {
+  //   if (isRepeat === "repeat-all") {
+  //     if (currentIndexSong === currentPlaylist.length - 1) {
+  //       if (!isSuffle) {
+  //         const clonedPlaylistToShuffle = currentPlaylist.slice();
+  //         const randomizedPlaylist = [
+  //           clonedPlaylistToShuffle[currentIndexSong],
+  //           ...clonedPlaylistToShuffle.slice(0, currentIndexSong).sort(() => Math.random() - 0.5),
+  //         ];
+  //         setSuffle(true);
+  //         setCurrentPlaylist(randomizedPlaylist);
+  //         console.log("random", randomizedPlaylist);
+  //       } else {
+  //         setSuffle(false);
+  //         setCurrentPlaylist(data);
+  //         setCurrentSong(data[currentSongId.current - 1]);
+  //         console.log("original?🚀", currentPlaylist);
+  //       }
+  //     }
+  //   } else {
+  //     if (currentIndexSong < currentPlaylist.length - 1) {
+  //       if (!isSuffle) {
+  //         const clonedPlaylistToShuffle = currentPlaylist.slice();
+  //         const randomizedPlaylist = [
+  //           ...clonedPlaylistToShuffle.slice(0, currentIndexSong + 1),
+  //           ...clonedPlaylistToShuffle.slice(currentIndexSong + 1).sort(() => Math.random() - 0.5),
+  //         ];
+  //         setSuffle(true);
+  //         setCurrentPlaylist(randomizedPlaylist);
+  //         console.log("random", randomizedPlaylist);
+  //       } else {
+  //         setSuffle(false);
+  //         setCurrentPlaylist(data);
+  //         setCurrentSong(data[currentSongId.current - 1]);
+  //         console.log("original?🚀", currentPlaylist);
+  //       }
+  //     }
+  //   }
+  // };
 
   const handleRepeatClick = () => {
     if (isRepeat === "repeat-off") {
@@ -283,7 +307,7 @@ function App() {
             </div>
           </div>
           <div className="song-buttons-actions m-0 h-[20%] w-[100%] flex justify-center items-center gap-[40px]">
-            <button onClick={handleSuffleClick}>
+            {/* <button onClick={handleSuffleClick}>
               <img
                 src="../ASSETS/shuffle-icon.png"
                 alt="suffle-icon"
@@ -293,7 +317,7 @@ function App() {
                     : "h-[20px] object-cover invert hover:scale-105 opacity-50"
                 }
               ></img>
-            </button>
+            </button> */}
             <button onClick={handleBackwardClick}>
               <img
                 src="../ASSETS/backward-icon.png"
