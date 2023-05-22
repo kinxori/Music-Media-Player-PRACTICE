@@ -80,31 +80,8 @@ function App() {
     currentSongId.current = parseFloat(currentSong.id);
   }, [currentIndexSong, currentSongId.current]);
 
-  //Controls Play state of audio 👺
+  //Controls autoPlay state of audio depending of repeat value 👺
 
-  // const setAutoNextSongPlaying = () => {
-  //   if (isRepeat === "repeat-off") {
-  //     if (currentIndexSong < currentPlaylist.length - 1) {
-  //       currentAudioRef.current.addEventListener("ended", () => {
-  //         const updatedIndex = currentIndexSong + 1;
-  //         setCurrentIndexSong(updatedIndex);
-  //         console.log("👺");
-  //       });
-  //     }
-  //   } else if (isRepeat === "repeat-all") {
-  //     if (currentIndexSong < currentPlaylist.length - 1) {
-  //       currentAudioRef.current.addEventListener("ended", () => {
-  //         setCurrentIndexSong(0);
-  //         console.log("🤡");
-  //       });
-  //     }
-  //   } else if (isRepeat === "repeat-1") {
-  //     currentAudioRef.current.addEventListener("ended", () => {
-  //       currentAudioRef.current.currentTime = 0;
-  //       console.log("🚀");
-  //     });
-  //   }
-  // };
   useEffect(() => {
     if (isRepeat === "repeat-off") {
       if (currentIndexSong < currentPlaylist.length - 1) {
@@ -130,6 +107,8 @@ function App() {
     }
   }, [isRepeat]);
 
+  //Controls Play state of audio 👺
+
   useEffect(() => {
     if (isPlaying) {
       if (currentIndexSong === 0) {
@@ -141,8 +120,7 @@ function App() {
     } else {
       currentAudioRef.current.pause();
     }
-    // setAutoNextSongPlaying();
-  }, [isPlaying, currentAudioRef, currentIndexSong, currentPlaylist]);
+  }, [isPlaying]);
 
   const handlePlayClick = () => {
     if (isPlaying === false) {
@@ -210,8 +188,8 @@ function App() {
           ...clonedPlaylistToShuffle.slice(0, currentIndexSong + 1),
           ...clonedPlaylistToShuffle.slice(currentIndexSong + 1).sort(() => Math.random() - 0.5),
         ];
-        setCurrentPlaylist(randomizedPlaylist);
         setSuffle(true);
+        setCurrentPlaylist(randomizedPlaylist);
         console.log("random", randomizedPlaylist);
       } else {
         setSuffle(false);
@@ -225,16 +203,10 @@ function App() {
   const handleRepeatClick = () => {
     if (isRepeat === "repeat-off") {
       setRepeat("repeat-all");
-
-      // console.log("👺", isRepeat);
     } else if (isRepeat === "repeat-all") {
       setRepeat("repeat-1");
-
-      // console.log("💡", isRepeat);
     } else if (isRepeat === "repeat-1") {
       setRepeat("repeat-off");
-
-      // console.log("🚀", isRepeat);
     }
   };
 
@@ -350,7 +322,9 @@ function App() {
                 src="../ASSETS/forward-icon.png"
                 alt="forward-icon"
                 className={
-                  currentIndexSong === currentPlaylist.length - 1
+                  isRepeat === "repeat-all"
+                    ? "h-[20px] object-cover invert hover:scale-105"
+                    : currentIndexSong === currentPlaylist.length - 1
                     ? "h-[20px] object-cover invert opacity-50 cursor-default"
                     : "h-[20px] object-cover invert hover:scale-105"
                 }
