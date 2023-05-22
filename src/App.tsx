@@ -8,7 +8,7 @@ function App() {
   const [isDisliked, setDisliked] = useState(false);
   const [isRepeat, setRepeat] = useState("repeat-off");
   const [currentPlaylist, setCurrentPlaylist] = useState(data);
-  const [currentIndexSong, setCurrentIndexSong] = useState(0);
+  const [currentIndexSong, setCurrentIndexSong] = useState(9);
   const [currentSong, setCurrentSong] = useState<any>(currentPlaylist[currentIndexSong]);
   const [songTotalTime, setSongTotalTime] = useState("00:00");
   const [songRestTime, setSongRestTime] = useState("00:00");
@@ -98,7 +98,10 @@ function App() {
           setCurrentIndexSong(updatedIndex);
           console.log("🤡", isRepeat);
         });
-      } else setCurrentIndexSong(0);
+      } else
+        currentAudioRef.current.addEventListener("ended", () => {
+          setCurrentIndexSong(0);
+        });
     } else if (isRepeat === "repeat-1") {
       currentAudioRef.current.addEventListener("ended", () => {
         currentAudioRef.current.currentTime = 0;
