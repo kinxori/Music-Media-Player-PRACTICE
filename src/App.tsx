@@ -130,7 +130,7 @@ function App() {
     return () => {
       currentAudioRef.current.removeEventListener("ended", handleAudioEnded);
     };
-  }, [isRepeat, currentAudioRef.current]);
+  }, [isRepeat]);
 
   //Controls Play state of audio 👺
 
