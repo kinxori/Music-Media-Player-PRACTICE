@@ -7,7 +7,7 @@ function App() {
   const [isLiked, setLiked] = useState(false);
   const [isDisliked, setDisliked] = useState(false);
   const [isRepeat, setRepeat] = useState("repeat-off");
-  const [currentPlaylist, setCurrentPlaylist] = useState(data);
+  const [currentPlaylist] = useState(data);
   const [currentIndexSong, setCurrentIndexSong] = useState(0);
   const [currentSong, setCurrentSong] = useState<any>(currentPlaylist[currentIndexSong]);
   const [songTotalTime, setSongTotalTime] = useState("00:00");
@@ -71,7 +71,7 @@ function App() {
       );
       currentAudioRef.current.removeEventListener("timeupdate", setCurrentSongRestTime);
     };
-  }, [currentAudioRef]);
+  }, [currentAudioRef.current]);
 
   //Updates currentSong object based on index 👺
 
@@ -83,35 +83,54 @@ function App() {
   //Controls autoPlay state of audio depending of repeat value 👺
 
   useEffect(() => {
-    if (isRepeat === "repeat-off") {
-      // if (currentIndexSong < currentPlaylist.length - 1) {
-      //   currentAudioRef.current.addEventListener("ended", () => {
-      //     const updatedIndex = currentIndexSong + 1;
-      //     setCurrentIndexSong(updatedIndex);
-      console.log("👺", isRepeat);
-      //   });
-      // }
-    } else if (isRepeat === "repeat-all") {
-      // if (currentIndexSong < currentPlaylist.length - 1) {
-      //   currentAudioRef.current.addEventListener("ended", () => {
-      //     const updatedIndex = currentIndexSong + 1;
-      //     setCurrentIndexSong(updatedIndex);
-      console.log("🤡", isRepeat);
-      //   });
-      // } else
-      //   currentAudioRef.current.addEventListener("ended", () => {
-      //     setCurrentIndexSong(0);
-      //   });
-    } else if (isRepeat === "repeat-1") {
-      currentAudioRef.current.addEventListener("ended", () => {
+    const handleAudioEnded = () => {
+      if (isRepeat === "repeat-off") {
+        //cambiar siguiente cancion hasta que no haya más elementos
+        if (currentIndexSong < currentPlaylist.length - 1) {
+          const updatedIndex = currentIndexSong + 1;
+          setCurrentIndexSong(updatedIndex);
+          currentAudioRef.current.addEventListener("canplay", () => {
+            currentAudioRef.current.play();
+          });
+          console.log("👺", isRepeat);
+        } else {
+          const updatedIndex = currentIndexSong + 1;
+          setCurrentIndexSong(updatedIndex);
+          currentAudioRef.current.addEventListener("canplay", () => {
+            currentAudioRef.current.play();
+          });
+          console.log("👺", isRepeat);
+        }
+      } else if (isRepeat === "repeat-all") {
+        //loopear toda la playlist
+        if (currentIndexSong < currentPlaylist.length - 1) {
+          const updatedIndex = currentIndexSong + 1;
+          setCurrentIndexSong(updatedIndex);
+          currentAudioRef.current.addEventListener("canplay", () => {
+            currentAudioRef.current.play();
+          });
+          console.log("🤡", isRepeat);
+        } else {
+          setCurrentIndexSong(0);
+          currentAudioRef.current.addEventListener("canplay", () => {
+            currentAudioRef.current.play();
+          });
+          console.log("🤡", isRepeat);
+        }
+      } else if (isRepeat === "repeat-1") {
+        //loopear solo 1 cancion
         currentAudioRef.current.currentTime = 0;
-      });
-      currentAudioRef.current.addEventListener("canplay", () => {
-        currentAudioRef.current.play();
-      });
-      console.log("🚀", isRepeat);
-    }
-  }, [isRepeat]);
+        currentAudioRef.current.addEventListener("canplay", () => {
+          currentAudioRef.current.play();
+        });
+        console.log("🚀", isRepeat);
+      }
+    };
+    currentAudioRef.current.addEventListener("ended", handleAudioEnded);
+    return () => {
+      currentAudioRef.current.removeEventListener("ended", handleAudioEnded);
+    };
+  }, [isRepeat, currentAudioRef.current]);
 
   //Controls Play state of audio 👺
 
@@ -125,6 +144,7 @@ function App() {
         });
     } else {
       currentAudioRef.current.pause();
+      setPlaying(false);
     }
   }, [isPlaying]);
 
