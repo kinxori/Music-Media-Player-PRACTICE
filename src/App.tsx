@@ -4,8 +4,8 @@ import { data } from "./data.tsx";
 function App() {
   const [isPlaying, setPlaying] = useState(false);
   // const [isSuffle, setSuffle] = useState(false);
-  const [isLiked, setLiked] = useState(false);
-  const [isDisliked, setDisliked] = useState(false);
+  // const [isLiked, setLiked] = useState(false);
+  // const [isDisliked, setDisliked] = useState(false);
   const [isRepeat, setRepeat] = useState("repeat-off");
   const [currentPlaylist] = useState(data);
   const [currentIndexSong, setCurrentIndexSong] = useState(0);
@@ -18,7 +18,7 @@ function App() {
   // Created refs to have the current information of each object 👺
 
   const currentAudioRef = useRef<HTMLAudioElement | any>();
-  const currentSongId = useRef<any>({});
+  // const currentSongId = useRef<any>({});
 
   //Updates the audio information to then write it in the DOM 👺
 
@@ -77,15 +77,17 @@ function App() {
 
   useEffect(() => {
     setCurrentSong(currentPlaylist[currentIndexSong]);
-    currentSongId.current = parseFloat(currentSong.id);
-  }, [currentIndexSong, currentSongId.current]);
+    // currentSongId.current = parseFloat(currentSong.id);
+  }, [
+    currentIndexSong,
+    // currentSongId.current
+  ]);
 
   //Controls autoPlay state of audio depending of repeat value 👺
 
   useEffect(() => {
     const handleAudioEnded = () => {
       if (isRepeat === "repeat-off") {
-        //cambiar siguiente cancion hasta que no haya más elementos
         if (currentIndexSong < currentPlaylist.length - 1) {
           const updatedIndex = currentIndexSong + 1;
           setCurrentIndexSong(updatedIndex);
@@ -102,7 +104,6 @@ function App() {
           console.log("👺", isRepeat);
         }
       } else if (isRepeat === "repeat-all") {
-        //loopear toda la playlist
         if (currentIndexSong < currentPlaylist.length - 1) {
           const updatedIndex = currentIndexSong + 1;
           setCurrentIndexSong(updatedIndex);
@@ -118,7 +119,6 @@ function App() {
           console.log("🤡", isRepeat);
         }
       } else if (isRepeat === "repeat-1") {
-        //loopear solo 1 cancion
         currentAudioRef.current.currentTime = 0;
         currentAudioRef.current.addEventListener("canplay", () => {
           currentAudioRef.current.play();
@@ -164,7 +164,7 @@ function App() {
       if (currentIndexSong !== 0) {
         const updatedIndex = currentIndexSong - 1;
         setCurrentIndexSong(updatedIndex);
-        currentSongId.current = parseFloat(currentPlaylist[updatedIndex].id);
+        // currentSongId.current = parseFloat(currentPlaylist[updatedIndex].id);
       } else {
         currentAudioRef.current.currentTime = 0;
       }
@@ -180,11 +180,11 @@ function App() {
           const updatedIndex = currentIndexSong + 1;
           setCurrentIndexSong(updatedIndex);
           setPlaying(true);
-          currentSongId.current = parseFloat(currentPlaylist[updatedIndex].id);
+          // currentSongId.current = parseFloat(currentPlaylist[updatedIndex].id);
         } else {
           const updatedIndex = currentIndexSong + 1;
           setCurrentIndexSong(updatedIndex);
-          currentSongId.current = parseFloat(currentPlaylist[updatedIndex].id);
+          // currentSongId.current = parseFloat(currentPlaylist[updatedIndex].id);
         }
       }
     }
@@ -194,11 +194,11 @@ function App() {
           const updatedIndex = currentIndexSong + 1;
           setCurrentIndexSong(updatedIndex);
           setPlaying(true);
-          currentSongId.current = parseFloat(currentPlaylist[updatedIndex].id);
+          // currentSongId.current = parseFloat(currentPlaylist[updatedIndex].id);
         } else {
           const updatedIndex = currentIndexSong + 1;
           setCurrentIndexSong(updatedIndex);
-          currentSongId.current = parseFloat(currentPlaylist[updatedIndex].id);
+          // currentSongId.current = parseFloat(currentPlaylist[updatedIndex].id);
         }
       } else {
         setCurrentIndexSong(0);
@@ -257,23 +257,23 @@ function App() {
     }
   };
 
-  const handleLikedClick = () => {
-    if (isDisliked === false) {
-      setLiked(!isLiked);
-    } else {
-      setLiked(!isLiked);
-      setDisliked(!isDisliked);
-    }
-  };
+  // const handleLikedClick = () => {
+  //   if (isDisliked === false) {
+  //     setLiked(!isLiked);
+  //   } else {
+  //     setLiked(!isLiked);
+  //     setDisliked(!isDisliked);
+  //   }
+  // };
 
-  const handleDislikedClick = () => {
-    if (isLiked === false) {
-      setDisliked(!isDisliked);
-    } else {
-      setLiked(!isLiked);
-      setDisliked(!isDisliked);
-    }
-  };
+  // const handleDislikedClick = () => {
+  //   if (isLiked === false) {
+  //     setDisliked(!isDisliked);
+  //   } else {
+  //     setLiked(!isLiked);
+  //     setDisliked(!isDisliked);
+  //   }
+  // };
 
   return (
     <section className="background bg-orange-200 h-screen w-screen flex justify-center items-center relative m-0">
@@ -282,13 +282,13 @@ function App() {
           <img src={currentSong.cover} alt="song-cover" />
         </div>
         <div className="song-content  w-[50%] h-[100%] m-0 flex justify-center items-center flex-col">
-          <div className="song-copy m-0  h-[90%] w-[100%]">
+          <div className="song-copy m-0  h-[80%] w-[100%]">
             <button className="song-copy h-min w-min ml-auto flex">
               <i className="fa-solid fa-music my-[10px] mx-[10px] text-[30px] hover:scale-105"></i>
             </button>
             <h2 className="text-[30px] font-bold px-[20px]">{currentSong.song}</h2>
             <h3 className="text-[16px] italic px-[20px]">{currentSong.artist}</h3>
-            <div className="like-buttons w-[100%] flex gap-[20px] mt-[20px] px-[20px]">
+            {/* <div className="like-buttons w-[100%] flex gap-[20px] mt-[20px] px-[20px]">
               <button className="h-min w-min" onClick={handleDislikedClick}>
                 {isDisliked === false ? (
                   <i className="fa-regular fa-thumbs-down text-[20px] hover:scale-105"></i>
@@ -303,9 +303,9 @@ function App() {
                   <i className="fa-solid fa-thumbs-up text-[20px] hover:scale-105"></i>
                 )}
               </button>
-            </div>
+            </div> */}
           </div>
-          <div className="song-range w-[85%]  h-[10%] flex flex-col justify-center items-center ">
+          <div className="song-range w-[85%]  h-[20%] flex flex-col justify-center items-center ">
             <audio
               src={currentSong.src}
               ref={currentAudioRef}
@@ -338,6 +338,33 @@ function App() {
                 }
               ></img>
             </button> */}
+            <button onClick={handleRepeatClick}>
+              {isRepeat === "repeat-off" ? (
+                <img
+                  src="../ASSETS/repeat-icon.png"
+                  alt="repeat-icon"
+                  className="h-[20px] object-cover invert hover:scale-105 opacity-50"
+                ></img>
+              ) : isRepeat === "repeat-all" ? (
+                <img
+                  src="../ASSETS/repeat-icon.png"
+                  alt="repeat-icon"
+                  className="h-[20px] object-cover invert hover:scale-105"
+                ></img>
+              ) : isRepeat === "repeat-1" ? (
+                <img
+                  src="../ASSETS/repeat-1-icon.png"
+                  alt="repeat-1-icon"
+                  className="h-[20px] object-cover invert hover:scale-105"
+                ></img>
+              ) : (
+                <img
+                  src="../ASSETS/repeat-icon.png"
+                  alt="repeat-icon"
+                  className="h-[20px] object-cover invert hover:scale-105 opacity-50"
+                ></img>
+              )}
+            </button>
             <button onClick={handleBackwardClick}>
               <img
                 src="../ASSETS/backward-icon.png"
@@ -377,32 +404,9 @@ function App() {
                 }
               ></img>
             </button>
-            <button onClick={handleRepeatClick}>
-              {isRepeat === "repeat-off" ? (
-                <img
-                  src="../ASSETS/repeat-icon.png"
-                  alt="repeat-icon"
-                  className="h-[20px] object-cover invert hover:scale-105 opacity-50"
-                ></img>
-              ) : isRepeat === "repeat-all" ? (
-                <img
-                  src="../ASSETS/repeat-icon.png"
-                  alt="repeat-icon"
-                  className="h-[20px] object-cover invert hover:scale-105"
-                ></img>
-              ) : isRepeat === "repeat-1" ? (
-                <img
-                  src="../ASSETS/repeat-1-icon.png"
-                  alt="repeat-1-icon"
-                  className="h-[20px] object-cover invert hover:scale-105"
-                ></img>
-              ) : (
-                <img
-                  src="../ASSETS/repeat-icon.png"
-                  alt="repeat-icon"
-                  className="h-[20px] object-cover invert hover:scale-105 opacity-50"
-                ></img>
-              )}
+            <button>
+              <i className="fa-solid fa-volume-low hover:scale-105 text-[20px]"></i>
+              <i className="fa-solid fa-volume-xmark hover:scale-105 text-[20px]"></i>
             </button>
           </div>
         </div>
