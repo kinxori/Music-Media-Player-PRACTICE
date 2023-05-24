@@ -10,7 +10,7 @@ function App() {
   const [currentPlaylist, setCurrentPlaylist] = useState(data);
   const [currentIndexSong, setCurrentIndexSong] = useState(0);
   const [currentIDsong, setCurrentIDsong] = useState(currentIndexSong + 1);
-  const [currentSong, setCurrentSong] = useState<any>(currentPlaylist[currentIndexSong]);
+  const [currentSong, setCurrentSong] = useState(currentPlaylist[currentIndexSong]);
   const [songTotalTime, setSongTotalTime] = useState("00:00");
   const [songRestTime, setSongRestTime] = useState("00:00");
   const [songMaxTime, setSongMaxTime] = useState(0);
@@ -20,42 +20,49 @@ function App() {
 
   // Created refs to have the current information of each object 👺
 
-  const currentAudioRef = useRef<HTMLAudioElement | any>();
-  const isMouseEnteredRef = useRef<any>(false);
-  const currentSongId = useRef<any>({});
+  const currentAudioRef = useRef<HTMLMediaElement | any>();
+  const isMouseEnteredRef = useRef<Boolean>(false);
 
   //Updates the audio information to then write it in the DOM 👺
 
   const setCurrentSongTotalTime = () => {
-    const totalMinutes = Math.floor(currentAudioRef.current.duration / 60);
-    const totalSeconds = Math.floor(currentAudioRef.current.duration % 60);
-    const formattedTotalTime = `${totalMinutes.toString().padStart(2, "0")}:${totalSeconds
-      .toString()
-      .padStart(2, "0")}`;
-    setSongTotalTime(formattedTotalTime);
+    if (currentAudioRef.current) {
+      const totalMinutes = Math.floor(currentAudioRef.current.duration / 60);
+      const totalSeconds = Math.floor(currentAudioRef.current.duration % 60);
+      const formattedTotalTime = `${totalMinutes.toString().padStart(2, "0")}:${totalSeconds
+        .toString()
+        .padStart(2, "0")}`;
+      setSongTotalTime(formattedTotalTime);
+    }
   };
 
   const setCurrentSongRestTime = () => {
-    const rest = currentAudioRef.current.currentTime;
-    const restMinutes = Math.floor(rest / 60);
-    const restSeconds = Math.floor(rest % 60);
-    const formattedRestTime = `${restMinutes.toString().padStart(2, "0")}:${restSeconds
-      .toString()
-      .padStart(2, "0")}`;
-    setSongRestTime(formattedRestTime);
-    setSongCurrentTime(rest);
+    if (currentAudioRef.current) {
+      const rest = currentAudioRef.current.currentTime;
+      const restMinutes = Math.floor(rest / 60);
+      const restSeconds = Math.floor(rest % 60);
+      const formattedRestTime = `${restMinutes.toString().padStart(2, "0")}:${restSeconds
+        .toString()
+        .padStart(2, "0")}`;
+      setSongRestTime(formattedRestTime);
+      setSongCurrentTime(rest);
+    }
   };
 
   const setCurrentSongMaxTime = () => {
-    const maxDuration = currentAudioRef.current.duration;
-    setSongMaxTime(maxDuration);
+    if (currentAudioRef.current) {
+      const maxDuration = currentAudioRef.current.duration;
+      setSongMaxTime(maxDuration);
+    }
   };
 
   const handleInputRange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const audioPosition = parseFloat(event.target.value);
-    currentAudioRef.current.currentTime = audioPosition;
-    setSongCurrentTime(audioPosition);
-    setCurrentSongRestTime();
+    if (currentAudioRef.current) {
+      const audioPosition = parseFloat(event.target.value);
+      currentAudioRef.current.currentTime = audioPosition;
+      setSongCurrentTime(audioPosition);
+      setCurrentSongRestTime();
+    }
   };
 
   useEffect(() => {
@@ -81,8 +88,7 @@ function App() {
 
   useEffect(() => {
     setCurrentSong(currentPlaylist[currentIndexSong]);
-    currentSongId.current = parseFloat(currentSong.id);
-  }, [currentIndexSong, currentSongId.current]);
+  }, [currentIndexSong]);
 
   //Controls autoPlay state of audio depending of repeat value 👺
 
@@ -213,9 +219,9 @@ function App() {
     }
   };
 
-  // console.log("playlist?🥸", currentPlaylist);
-  // console.log("index?🥸", currentIndexSong);
-  // console.log("ID?🚀", currentIDsong);
+  console.log("playlist?🥸", currentPlaylist);
+  console.log("index?🥸", currentIndexSong);
+  console.log("ID?🚀", currentIDsong);
 
   const handleSuffleClick = () => {
     if (!isSuffle) {
@@ -231,7 +237,8 @@ function App() {
     } else {
       setSuffle(false);
       setCurrentPlaylist(data);
-      setCurrentSong(data[currentSongId.current - 1]);
+      setCurrentIndexSong(currentIDsong - 1);
+      setCurrentSong(data[currentIndexSong]);
       console.log("works?------------🤡");
     }
   };
