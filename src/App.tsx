@@ -280,12 +280,6 @@ function App() {
     setIsVolumeDisplay(false);
   };
 
-  const handleMouseUp = () => {
-    isMouseEnteredRef.current = false;
-  };
-
-  console.log(isMouseEnteredRef);
-
   //maybe later 🥲
   //
   // const handleLikedClick = () => {
@@ -328,7 +322,6 @@ function App() {
                     className="h-[100px] w-[30px] absolute  "
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
-                    onMouseUp={handleMouseUp}
                   >
                     <input
                       type="range"
@@ -345,7 +338,6 @@ function App() {
                   className="h-min w-min flex mt-auto"
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseLeave}
-                  onMouseUp={handleMouseUp}
                 >
                   {volume === 0 ? (
                     <i className="fa-solid fa-volume-xmark hover:scale-105 text-[20px]"></i>
