@@ -2,13 +2,14 @@ import { useEffect, useRef, useState } from "react";
 import { data } from "./data.tsx";
 
 function App() {
-  const [isPlaying, setPlaying] = useState(false);
-  const [isSuffle, setSuffle] = useState(false);
   // const [isLiked, setLiked] = useState(false);
   // const [isDisliked, setDisliked] = useState(false);
+  const [isPlaying, setPlaying] = useState(false);
+  const [isSuffle, setSuffle] = useState(false);
   const [isRepeat, setRepeat] = useState("repeat-off");
   const [currentPlaylist, setCurrentPlaylist] = useState(data);
   const [currentIndexSong, setCurrentIndexSong] = useState(0);
+  const [currentIDsong, setCurrentIDsong] = useState(currentIndexSong + 1);
   const [currentSong, setCurrentSong] = useState<any>(currentPlaylist[currentIndexSong]);
   const [songTotalTime, setSongTotalTime] = useState("00:00");
   const [songRestTime, setSongRestTime] = useState("00:00");
@@ -88,49 +89,44 @@ function App() {
   useEffect(() => {
     const handleAudioEnded = () => {
       if (isRepeat === "repeat-off") {
-        if (currentIndexSong < currentPlaylist.length - 1) {
-          const updatedIndex = currentIndexSong + 1;
-          setCurrentIndexSong(updatedIndex);
-          currentAudioRef.current.addEventListener("canplay", () => {
-            currentAudioRef.current.play();
-          });
-          console.log("👺", isRepeat);
+        if (currentIndexSong === currentPlaylist.length - 1) {
+          return;
         } else {
           const updatedIndex = currentIndexSong + 1;
           setCurrentIndexSong(updatedIndex);
+          setCurrentIDsong(parseFloat(currentPlaylist[updatedIndex].id));
           currentAudioRef.current.addEventListener("canplay", () => {
             currentAudioRef.current.play();
           });
-          console.log("👺", isRepeat);
         }
       } else if (isRepeat === "repeat-all") {
         if (currentIndexSong < currentPlaylist.length - 1) {
           const updatedIndex = currentIndexSong + 1;
           setCurrentIndexSong(updatedIndex);
+          setCurrentIDsong(parseFloat(currentPlaylist[updatedIndex].id));
           currentAudioRef.current.addEventListener("canplay", () => {
             currentAudioRef.current.play();
           });
-          console.log("🤡", isRepeat);
         } else {
           setCurrentIndexSong(0);
+          setCurrentIDsong(1);
           currentAudioRef.current.addEventListener("canplay", () => {
             currentAudioRef.current.play();
           });
-          console.log("🤡", isRepeat);
         }
       } else if (isRepeat === "repeat-1") {
         currentAudioRef.current.currentTime = 0;
         currentAudioRef.current.addEventListener("canplay", () => {
           currentAudioRef.current.play();
         });
-        console.log("🚀", isRepeat);
       }
     };
+
     currentAudioRef.current.addEventListener("ended", handleAudioEnded);
     return () => {
       currentAudioRef.current.removeEventListener("ended", handleAudioEnded);
     };
-  }, [isRepeat]);
+  }, [isRepeat, currentPlaylist, currentAudioRef, currentIndexSong]);
 
   //Controls Play state of audio 👺
 
@@ -164,7 +160,7 @@ function App() {
       if (currentIndexSong !== 0) {
         const updatedIndex = currentIndexSong - 1;
         setCurrentIndexSong(updatedIndex);
-        currentSongId.current = parseFloat(currentPlaylist[updatedIndex].id);
+        setCurrentIDsong(parseFloat(currentPlaylist[updatedIndex].id));
       } else {
         currentAudioRef.current.currentTime = 0;
       }
@@ -180,11 +176,11 @@ function App() {
           const updatedIndex = currentIndexSong + 1;
           setCurrentIndexSong(updatedIndex);
           setPlaying(true);
-          currentSongId.current = parseFloat(currentPlaylist[updatedIndex].id);
+          setCurrentIDsong(parseFloat(currentPlaylist[updatedIndex].id));
         } else {
           const updatedIndex = currentIndexSong + 1;
           setCurrentIndexSong(updatedIndex);
-          currentSongId.current = parseFloat(currentPlaylist[updatedIndex].id);
+          setCurrentIDsong(parseFloat(currentPlaylist[updatedIndex].id));
         }
       }
     }
@@ -194,14 +190,15 @@ function App() {
           const updatedIndex = currentIndexSong + 1;
           setCurrentIndexSong(updatedIndex);
           setPlaying(true);
-          currentSongId.current = parseFloat(currentPlaylist[updatedIndex].id);
+          setCurrentIDsong(parseFloat(currentPlaylist[updatedIndex].id));
         } else {
           const updatedIndex = currentIndexSong + 1;
           setCurrentIndexSong(updatedIndex);
-          currentSongId.current = parseFloat(currentPlaylist[updatedIndex].id);
+          setCurrentIDsong(parseFloat(currentPlaylist[updatedIndex].id));
         }
       } else {
         setCurrentIndexSong(0);
+        setCurrentIDsong(1);
       }
     }
   };
@@ -216,43 +213,26 @@ function App() {
     }
   };
 
+  // console.log("playlist?🥸", currentPlaylist);
+  // console.log("index?🥸", currentIndexSong);
+  // console.log("ID?🚀", currentIDsong);
+
   const handleSuffleClick = () => {
-    if (isRepeat === "repeat-all") {
-      if (currentIndexSong === currentPlaylist.length - 1) {
-        if (!isSuffle) {
-          const clonedPlaylistToShuffle = currentPlaylist.slice();
-          const randomizedPlaylist = [
-            clonedPlaylistToShuffle[currentIndexSong],
-            ...clonedPlaylistToShuffle.slice(0, currentIndexSong).sort(() => Math.random() - 0.5),
-          ];
-          setSuffle(true);
-          setCurrentPlaylist(randomizedPlaylist);
-          console.log("random", randomizedPlaylist);
-        } else {
-          setSuffle(false);
-          setCurrentPlaylist(data);
-          setCurrentSong(data[currentSongId.current - 1]);
-          console.log("original?🚀", currentPlaylist);
-        }
-      }
+    if (!isSuffle) {
+      console.log("works?------------🤡");
+      const clonedPlaylistToShuffle = currentPlaylist.slice();
+      const randomizedPlaylist = [
+        clonedPlaylistToShuffle[currentIndexSong],
+        ...clonedPlaylistToShuffle.slice(0, currentIndexSong),
+        ...clonedPlaylistToShuffle.slice(currentIndexSong + 1).sort(() => Math.random() - 0.5),
+      ];
+      setCurrentPlaylist(randomizedPlaylist);
+      setSuffle(true);
     } else {
-      if (currentIndexSong < currentPlaylist.length - 1) {
-        if (!isSuffle) {
-          const clonedPlaylistToShuffle = currentPlaylist.slice();
-          const randomizedPlaylist = [
-            ...clonedPlaylistToShuffle.slice(0, currentIndexSong + 1),
-            ...clonedPlaylistToShuffle.slice(currentIndexSong + 1).sort(() => Math.random() - 0.5),
-          ];
-          setSuffle(true);
-          setCurrentPlaylist(randomizedPlaylist);
-          console.log("random", randomizedPlaylist);
-        } else {
-          setSuffle(false);
-          setCurrentPlaylist(data);
-          setCurrentSong(data[currentSongId.current - 1]);
-          console.log("original?🚀", currentPlaylist);
-        }
-      }
+      setSuffle(false);
+      setCurrentPlaylist(data);
+      setCurrentSong(data[currentSongId.current - 1]);
+      console.log("works?------------🤡");
     }
   };
 
