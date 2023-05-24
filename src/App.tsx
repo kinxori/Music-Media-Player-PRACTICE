@@ -15,7 +15,7 @@ function App() {
   const [songRestTime, setSongRestTime] = useState("00:00");
   const [songMaxTime, setSongMaxTime] = useState(0);
   const [songCurrentTime, setSongCurrentTime] = useState(0);
-  const [volume, setVolume] = useState(1);
+  const [volume, setVolume] = useState(2);
   const [isVolumeDisplay, setIsVolumeDisplay] = useState(false);
 
   // Created refs to have the current information of each object 👺
@@ -84,7 +84,7 @@ function App() {
     };
   }, [currentAudioRef.current]);
 
-  //Updates currentSong object based on index 👺
+  //Updates currentSong object based on index globally👺
 
   useEffect(() => {
     setCurrentSong(currentPlaylist[currentIndexSong]);
@@ -219,9 +219,9 @@ function App() {
     }
   };
 
-  console.log("playlist?🥸", currentPlaylist);
-  console.log("index?🥸", currentIndexSong);
-  console.log("ID?🚀", currentIDsong);
+  // console.log("playlist?🥸", currentPlaylist);
+  // console.log("index?🥸", currentIndexSong);
+  // console.log("ID?🚀", currentIDsong);
 
   const handleSuffleClick = () => {
     if (!isSuffle) {
@@ -238,7 +238,6 @@ function App() {
       setSuffle(false);
       setCurrentPlaylist(data);
       setCurrentIndexSong(currentIDsong - 1);
-      setCurrentSong(data[currentIndexSong]);
       console.log("works?------------🤡");
     }
   };
