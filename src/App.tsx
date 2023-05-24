@@ -139,16 +139,16 @@ function App() {
   useEffect(() => {
     if (isPlaying) {
       if (currentIndexSong === 0) {
-        currentAudioRef.current.play();
+        currentAudioRef.current?.play();
       } else
-        currentAudioRef.current.addEventListener("canplay", () => {
-          currentAudioRef.current.play();
+        currentAudioRef.current?.addEventListener("canplay", () => {
+          currentAudioRef.current?.play();
         });
     } else {
-      currentAudioRef.current.pause();
+      currentAudioRef.current?.pause();
       setPlaying(false);
     }
-  }, [isPlaying]);
+  }, [isPlaying, currentAudioRef.current]);
 
   const handlePlayClick = () => {
     if (isPlaying === false) {
