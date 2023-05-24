@@ -15,7 +15,7 @@ function App() {
   const [songRestTime, setSongRestTime] = useState("00:00");
   const [songMaxTime, setSongMaxTime] = useState(0);
   const [songCurrentTime, setSongCurrentTime] = useState(0);
-  const [volume, setVolume] = useState(2);
+  const [volume, setVolume] = useState(1);
   const [isVolumeDisplay, setIsVolumeDisplay] = useState(false);
 
   // Created refs to have the current information of each object 👺
@@ -313,7 +313,7 @@ function App() {
                       type="range"
                       min="0"
                       max="1"
-                      step="0.1"
+                      step="0.01"
                       value={volume}
                       onChange={handleVolume}
                       className="rotate-[-90deg] w-[60px] h-2 accent-white absolute top-[30px] left-[-16px] "
@@ -377,7 +377,6 @@ function App() {
                 }
               ></img>
             </button>
-
             <button onClick={handleBackwardClick}>
               <img
                 src="../ASSETS/backward-icon.png"
