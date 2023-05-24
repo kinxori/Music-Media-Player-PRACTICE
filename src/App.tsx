@@ -14,6 +14,7 @@ function App() {
   const [songRestTime, setSongRestTime] = useState("00:00");
   const [songMaxTime, setSongMaxTime] = useState(0);
   const [songCurrentTime, setSongCurrentTime] = useState(0);
+  const [volume, setVolume] = useState(1);
 
   // Created refs to have the current information of each object 👺
 
@@ -206,6 +207,31 @@ function App() {
     }
   };
 
+  const handleRepeatClick = () => {
+    if (isRepeat === "repeat-off") {
+      setRepeat("repeat-all");
+    } else if (isRepeat === "repeat-all") {
+      setRepeat("repeat-1");
+    } else if (isRepeat === "repeat-1") {
+      setRepeat("repeat-off");
+    }
+  };
+
+  const handleVolume = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newVolume = parseFloat(event.target.value);
+    if (!isNaN(newVolume) && isFinite(newVolume)) {
+      currentAudioRef.current.volume = newVolume;
+      setVolume(newVolume);
+    }
+  };
+
+  useEffect(() => {
+    currentAudioRef.current.addEventListener("loadedmetadata", handleVolume);
+    return () => {
+      currentAudioRef.current.removeEventListener("loadedmetadata", handleVolume);
+    };
+  }, []);
+
   //maybe later 🥲
   // const handleSuffleClick = () => {
   //   if (isRepeat === "repeat-all") {
@@ -246,17 +272,7 @@ function App() {
   //     }
   //   }
   // };
-
-  const handleRepeatClick = () => {
-    if (isRepeat === "repeat-off") {
-      setRepeat("repeat-all");
-    } else if (isRepeat === "repeat-all") {
-      setRepeat("repeat-1");
-    } else if (isRepeat === "repeat-1") {
-      setRepeat("repeat-off");
-    }
-  };
-
+  //
   // const handleLikedClick = () => {
   //   if (isDisliked === false) {
   //     setLiked(!isLiked);
@@ -282,8 +298,8 @@ function App() {
           <img src={currentSong.cover} alt="song-cover" />
         </div>
         <div className="song-content  w-[50%] h-[100%] m-0 flex justify-center items-center flex-col">
-          <div className="song-copy m-0  h-[80%] w-[100%]">
-            <button className="song-copy h-min w-min ml-auto flex">
+          <div className="song-copy m-0  h-[80%] w-[100%] relative ">
+            <button className="h-min w-min ml-auto flex">
               <i className="fa-solid fa-music my-[10px] mx-[10px] text-[30px] hover:scale-105"></i>
             </button>
             <h2 className="text-[30px] font-bold px-[20px]">{currentSong.song}</h2>
@@ -304,15 +320,25 @@ function App() {
                 )}
               </button>
             </div> */}
+            <button className="h-[100px] w-min right-0 bottom-0 flex fixed border">
+              {volume === 0 ? (
+                <i className="fa-solid fa-volume-xmark hover:scale-105 text-[20px] absolute"></i>
+              ) : (
+                <i className="fa-solid fa-volume-low hover:scale-105 text-[20px] absolute"></i>
+              )}
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.1"
+                value={volume}
+                onChange={handleVolume}
+                className="rotate-[-90deg] w-[80px] absolute"
+              ></input>
+            </button>
           </div>
           <div className="song-range w-[85%]  h-[20%] flex flex-col justify-center items-center ">
-            <audio
-              src={currentSong.src}
-              ref={currentAudioRef}
-              onPlay={(event: any) => {
-                event.target.volume = 0.1;
-              }}
-            />
+            <audio src={currentSong.src} ref={currentAudioRef} />
             <input
               type="range"
               className=" w-full h-0.5 bg-grey rounded outline-none accent-white"
@@ -403,10 +429,6 @@ function App() {
                     : "h-[20px] object-cover invert hover:scale-105"
                 }
               ></img>
-            </button>
-            <button>
-              <i className="fa-solid fa-volume-low hover:scale-105 text-[20px]"></i>
-              <i className="fa-solid fa-volume-xmark hover:scale-105 text-[20px]"></i>
             </button>
           </div>
         </div>
