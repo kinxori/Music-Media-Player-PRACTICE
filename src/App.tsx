@@ -216,36 +216,6 @@ function App() {
     }
   };
 
-  const handleVolume = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newVolume = parseFloat(event.target.value);
-    if (!isNaN(newVolume) && isFinite(newVolume)) {
-      currentAudioRef.current.volume = newVolume;
-      setVolume(newVolume);
-    }
-  };
-
-  const handleMouseEnter = () => {
-    isMouseEnteredRef.current = true;
-    setIsVolumeDisplay(true);
-  };
-
-  const handleMouseLeave = () => {
-    if (!isMouseEnteredRef.current) {
-      setIsVolumeDisplay(false);
-    }
-  };
-
-  const handleMouseUp = () => {
-    isMouseEnteredRef.current = false;
-  };
-
-  useEffect(() => {
-    currentAudioRef.current.addEventListener("loadedmetadata", handleVolume);
-    return () => {
-      currentAudioRef.current.removeEventListener("loadedmetadata", handleVolume);
-    };
-  }, []);
-
   const handleSuffleClick = () => {
     if (isRepeat === "repeat-all") {
       if (currentIndexSong === currentPlaylist.length - 1) {
@@ -285,6 +255,37 @@ function App() {
       }
     }
   };
+
+  const handleVolume = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newVolume = parseFloat(event.target.value);
+    if (!isNaN(newVolume) && isFinite(newVolume)) {
+      currentAudioRef.current.volume = newVolume;
+      setVolume(newVolume);
+    }
+  };
+
+  useEffect(() => {
+    currentAudioRef.current.addEventListener("loadedmetadata", handleVolume);
+    return () => {
+      currentAudioRef.current.removeEventListener("loadedmetadata", handleVolume);
+    };
+  }, []);
+
+  const handleMouseEnter = () => {
+    isMouseEnteredRef.current = true;
+    setIsVolumeDisplay(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsVolumeDisplay(false);
+  };
+
+  const handleMouseUp = () => {
+    isMouseEnteredRef.current = false;
+  };
+
+  console.log(isMouseEnteredRef);
+
   //maybe later 🥲
   //
   // const handleLikedClick = () => {
@@ -340,21 +341,16 @@ function App() {
                     ></input>
                   </div>
                 )}
-                <button className="h-min w-min  flex mt-auto">
+                <button
+                  className="h-min w-min flex mt-auto"
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                  onMouseUp={handleMouseUp}
+                >
                   {volume === 0 ? (
-                    <i
-                      className="fa-solid fa-volume-xmark hover:scale-105 text-[20px]"
-                      onMouseEnter={handleMouseEnter}
-                      onMouseLeave={handleMouseLeave}
-                      onMouseUp={handleMouseUp}
-                    ></i>
+                    <i className="fa-solid fa-volume-xmark hover:scale-105 text-[20px]"></i>
                   ) : (
-                    <i
-                      className="fa-solid fa-volume-high hover:scale-105 text-[20px]  "
-                      onMouseEnter={handleMouseEnter}
-                      onMouseLeave={handleMouseLeave}
-                      onMouseUp={handleMouseUp}
-                    ></i>
+                    <i className="fa-solid fa-volume-high hover:scale-105 text-[20px]"></i>
                   )}
                 </button>
               </div>
