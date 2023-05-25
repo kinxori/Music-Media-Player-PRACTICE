@@ -463,7 +463,7 @@ function App() {
                   console.log(indexClicked);
                 }}
                 className={
-                  currentIndexSong === parseFloat(elem.id) - 1
+                  currentIndexSong === currentPlaylist.findIndex((song) => song.id === elem.id)
                     ? "cursor-pointer h-[70px] w-[95%] bg-zinc-600/[.5] py-[10px] px-[10px] rounded-[15px] flex flex-row  mt-[10px] justify-start items-center"
                     : "cursor-pointer h-[70px] w-[95%] hover:bg-zinc-600/[.5] bg-zinc-800/[.5] py-[10px] px-[10px] rounded-[15px] flex flex-row  mt-[10px] justify-start items-center"
                 }
@@ -476,7 +476,7 @@ function App() {
                 <div
                   onClick={() => setPlaying((prev) => !prev)}
                   className={
-                    currentIndexSong === parseFloat(elem.id) - 1
+                    currentIndexSong === currentPlaylist.findIndex((song) => song.id === elem.id)
                       ? "display flex w-auto ml-auto mr-[10px]"
                       : "invisible  "
                   }
