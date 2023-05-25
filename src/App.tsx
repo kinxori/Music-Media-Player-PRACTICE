@@ -219,13 +219,8 @@ function App() {
     }
   };
 
-  // console.log("playlist?🥸", currentPlaylist);
-  // console.log("index?🥸", currentIndexSong);
-  // console.log("ID?🚀", currentIDsong);
-
   const handleSuffleClick = () => {
     if (!isSuffle) {
-      console.log("works?------------🤡");
       const clonedPlaylistToShuffle = currentPlaylist.slice();
       const randomizedPlaylist = [
         clonedPlaylistToShuffle[currentIndexSong],
@@ -238,7 +233,6 @@ function App() {
       setSuffle(false);
       setCurrentPlaylist(data);
       setCurrentIndexSong(currentIDsong - 1);
-      console.log("works?------------🤡");
     }
   };
 
@@ -287,8 +281,8 @@ function App() {
   // };
 
   return (
-    <section className="background bg-orange-200 h-screen w-screen flex justify-center items-center relative m-0">
-      <div className="media-player h-[325px] w-[700px] bg-zinc-900 flex justify-evenly items-center relative  m-0 py-[20px] px-[0px] rounded-[45px] drop-shadow-[0px_0px_15px_rgba(0,0,0,.5)]">
+    <section className="background bg-orange-200 h-screen w-screen flex flex-col justify-center items-center relative m-0">
+      <div className="media-player h-[325px] w-[700px] bg-zinc-900 flex justify-evenly items-center relative  m-2 py-[20px] px-[0px] rounded-[45px] drop-shadow-[0px_0px_15px_rgba(0,0,0,.5)]">
         <div className="song-cover-img  w-[40%] object-cover bg-zinc-600 m-0 rounded-[30px] overflow-hidden">
           <img src={currentSong.cover} alt="song-cover" />
         </div>
@@ -444,6 +438,25 @@ function App() {
               )}
             </button>
           </div>
+        </div>
+      </div>
+      <div className="overflow-y-scroll relative  w-[700px] h-[500px] bg-zinc-900 flex rounded-[45px] drop-shadow-[0px_0px_15px_rgba(0,0,0,.5)] flex-col justify-start items-center ">
+        <h2 className="text-[24px] flex mr-auto items-center font-bold m-5 h-min">
+          <i className="fa-solid fa-music  mx-[15px] text-[24px]"></i>Now Playing
+        </h2>
+        <hr className="w-[90%] h-[1px] rounded       "></hr>
+        <div className="flex flex-col h-auto w-[95%] mb-[30px] mt-[20px] items-center      ">
+          {currentPlaylist.map((elem: any) => {
+            return (
+              <div className="cursor-pointer  h-[70px] w-[95%] hover:bg-zinc-600/[.5] bg-zinc-800/[.5] py-[10px] px-[10px] rounded-[15px]    flex flex-row  mt-[10px] justify-start items-center   ">
+                <img src={elem.cover} className="h-[50px] object-contain rounded-[10px]     "></img>
+                <div className="pl-[10px] text-[12px] font-regular   ">
+                  <h3 className="text-[20px] font-semibold    ">{elem.song}</h3>
+                  <h4 className="text-[12px] font-regular   ">{elem.artist}</h4>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
