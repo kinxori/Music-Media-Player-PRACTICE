@@ -474,7 +474,7 @@ function App() {
                   <h4 className="text-[12px] font-regular   ">{elem.artist}</h4>
                 </div>
                 <div
-                  onClick={() => setPlaying((prev) => !prev)}
+                  onClick={handlePlayClick}
                   className={
                     currentIndexSong === currentPlaylist.findIndex((song) => song.id === elem.id)
                       ? "display flex w-auto ml-auto mr-[10px]"
