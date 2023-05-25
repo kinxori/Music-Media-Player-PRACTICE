@@ -58,7 +58,7 @@ function App() {
   };
 
   const handleInputRange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (currentAudioRef.current) {
+    if (currentAudioRef?.current) {
       const audioPosition = parseFloat(event.target.value);
       currentAudioRef.current.currentTime = audioPosition;
       setSongCurrentTime(audioPosition);
@@ -149,15 +149,15 @@ function App() {
       currentAudioRef.current?.pause();
       setPlaying(false);
     }
-  }, [isPlaying, currentAudioRef.current]);
+  }, [isPlaying, currentAudioRef.current?.paused]);
 
   const handlePlayClick = () => {
-    if (currentAudioRef?.current) {
-      if (isPlaying === false) {
-        setPlaying(true);
-      } else {
-        setPlaying(false);
-      }
+    if (currentAudioRef?.current.paused) {
+      setPlaying(true);
+      currentAudioRef.current?.play();
+    } else {
+      setPlaying(false);
+      currentAudioRef.current?.pause();
     }
   };
 
@@ -386,7 +386,7 @@ function App() {
               ></img>
             </button>
             <button onClick={handlePlayClick}>
-              {isPlaying === false ? (
+              {currentAudioRef.current?.paused ? (
                 <img
                   src="../ASSETS/play-icon.png"
                   alt="play-icon"
@@ -452,12 +452,15 @@ function App() {
           {currentPlaylist.map((elem: any) => {
             return (
               <div
+                key={elem.id}
                 onClick={() => {
-                  setCurrentIndexSong(parseFloat(elem.id) - 1);
+                  const indexClicked = currentPlaylist.findIndex((song) => song.id === elem.id);
+                  setCurrentIndexSong(indexClicked);
                   setPlaying(true);
-                  currentAudioRef.current.addEventListener("canplay", () => {
-                    currentAudioRef.current.play();
+                  currentAudioRef.current?.addEventListener("canplay", () => {
+                    currentAudioRef.current?.play();
                   });
+                  console.log(indexClicked);
                 }}
                 className={
                   currentIndexSong === parseFloat(elem.id) - 1
@@ -471,7 +474,7 @@ function App() {
                   <h4 className="text-[12px] font-regular   ">{elem.artist}</h4>
                 </div>
                 <div
-                  onClick={() => setPlaying(!isPlaying)}
+                  onClick={() => setPlaying((prev) => !prev)}
                   className={
                     currentIndexSong === parseFloat(elem.id) - 1
                       ? "display flex w-auto ml-auto mr-[10px]"
