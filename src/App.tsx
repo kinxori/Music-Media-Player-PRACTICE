@@ -365,7 +365,7 @@ function App() {
           <div className="song-buttons-actions m-0 h-[20%] w-[100%] flex justify-center items-center gap-[40px]">
             <button onClick={handleSuffleClick}>
               <img
-                src="/shuffle-icon.png"
+                src="./shuffle-icon.png"
                 alt="suffle-icon"
                 className={
                   isSuffle
