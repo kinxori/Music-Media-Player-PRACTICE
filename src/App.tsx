@@ -166,34 +166,47 @@ function App() {
 
   const handleBackwardClick = () => {
     if (currentAudioRef.current) {
-      if (currentAudioRef.current.currentTime === 0 && currentIndexSong === 0) {
-        return;
-      }
-      if (currentAudioRef.current.currentTime < 4) {
-        if (currentIndexSong !== 0) {
+      if (isRepeat === "repeat-all" && currentIndexSong === 0) {
+        if (currentAudioRef.current?.currentTime < 4) {
           if (currentAudioRef.current?.paused) {
-            const updatedIndex = currentIndexSong - 1;
-            setCurrentIndexSong(updatedIndex);
-            setCurrentIDsong(parseFloat(currentPlaylist[updatedIndex].id));
-            currentAudioRef.current?.addEventListener("canplay", () => {
-              currentAudioRef.current?.play();
-            });
+            setCurrentIndexSong(currentPlaylist.length - 1);
             setPlaying((prev) => !prev);
           } else {
-            const updatedIndex = currentIndexSong - 1;
-            setCurrentIndexSong(updatedIndex);
-            setCurrentIDsong(parseFloat(currentPlaylist[updatedIndex].id));
+            setCurrentIndexSong(currentPlaylist.length - 1);
           }
         } else {
-          if (currentAudioRef.current?.paused) {
-            currentAudioRef.current.currentTime = 0;
-            setPlaying((prev) => !prev);
-          } else {
-            currentAudioRef.current.currentTime = 0;
-          }
+          currentAudioRef.current.currentTime = 0;
         }
       } else {
-        currentAudioRef.current.currentTime = 0;
+        if (currentAudioRef.current.currentTime === 0 && currentIndexSong === 0) {
+          return;
+        }
+        if (currentAudioRef.current.currentTime < 4) {
+          if (currentIndexSong !== 0) {
+            if (currentAudioRef.current?.paused) {
+              const updatedIndex = currentIndexSong - 1;
+              setCurrentIndexSong(updatedIndex);
+              setCurrentIDsong(parseFloat(currentPlaylist[updatedIndex].id));
+              currentAudioRef.current?.addEventListener("canplay", () => {
+                currentAudioRef.current?.play();
+              });
+              setPlaying((prev) => !prev);
+            } else {
+              const updatedIndex = currentIndexSong - 1;
+              setCurrentIndexSong(updatedIndex);
+              setCurrentIDsong(parseFloat(currentPlaylist[updatedIndex].id));
+            }
+          } else {
+            if (currentAudioRef.current?.paused) {
+              currentAudioRef.current.currentTime = 0;
+              setPlaying((prev) => !prev);
+            } else {
+              currentAudioRef.current.currentTime = 0;
+            }
+          }
+        } else {
+          currentAudioRef.current.currentTime = 0;
+        }
       }
     }
   };
