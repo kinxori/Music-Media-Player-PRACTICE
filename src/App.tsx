@@ -225,18 +225,33 @@ function App() {
   const handleSuffleClick = () => {
     if (!isSuffle) {
       const clonedPlaylistToShuffle = currentPlaylist.slice();
-      const randomizedPlaylist = [
-        clonedPlaylistToShuffle[currentIndexSong],
-        ...clonedPlaylistToShuffle.slice(0, currentIndexSong),
-        ...clonedPlaylistToShuffle.slice(currentIndexSong + 1).sort(() => Math.random() - 0.5),
-      ];
+      const extractedSong = clonedPlaylistToShuffle[currentIndexSong];
+      const shuffledSongs = clonedPlaylistToShuffle
+        .slice(0, currentIndexSong)
+        .concat(clonedPlaylistToShuffle.slice(currentIndexSong + 1))
+        .sort(() => Math.random() - 0.5);
+      const randomizedPlaylist = [extractedSong, ...shuffledSongs];
+
+      console.log("🥸", randomizedPlaylist);
       setCurrentPlaylist(randomizedPlaylist);
+      setCurrentIndexSong(currentPlaylist.findIndex((song) => song));
       setSuffle(true);
+      console.log("index", currentIndexSong);
     } else {
       setSuffle(false);
       setCurrentPlaylist(data);
       setCurrentIndexSong(currentIDsong - 1);
     }
+  };
+
+  const handleDashboardClick = (song: any) => {
+    setPlaying(true);
+    const indexClicked = currentPlaylist.findIndex((elem) => elem.id === song.id);
+    setCurrentIndexSong(indexClicked);
+    setCurrentIDsong(parseFloat(song.id));
+    currentAudioRef.current?.addEventListener("canplay", () => {
+      currentAudioRef.current?.play();
+    });
   };
 
   const handleVolume = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -449,19 +464,11 @@ function App() {
         </h2>
         <hr className="w-[90%] h-[0px] rounded  border-t-[1px]     "></hr>
         <div className="custom-scrollbar overflow-y-scroll flex flex-col h-auto w-[95%] mb-[30px] mt-[20px] items-center      ">
-          {currentPlaylist.map((elem: any) => {
+          {currentPlaylist.map((elem) => {
             return (
               <div
                 key={elem.id}
-                onClick={() => {
-                  const indexClicked = currentPlaylist.findIndex((song) => song.id === elem.id);
-                  setCurrentIndexSong(indexClicked);
-                  setPlaying(true);
-                  currentAudioRef.current?.addEventListener("canplay", () => {
-                    currentAudioRef.current?.play();
-                  });
-                  console.log(indexClicked);
-                }}
+                onClick={() => handleDashboardClick(elem)}
                 className={
                   currentIndexSong === currentPlaylist.findIndex((song) => song.id === elem.id)
                     ? "cursor-pointer h-[70px] w-[95%] bg-zinc-600/[.5] py-[10px] px-[10px] rounded-[15px] flex flex-row  mt-[10px] justify-start items-center"
