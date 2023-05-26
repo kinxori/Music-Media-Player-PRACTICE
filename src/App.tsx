@@ -21,7 +21,7 @@ function App() {
 
   // Created refs to have the current information of each object 👺
 
-  const currentAudioRef = useRef<HTMLMediaElement | any>();
+  const currentAudioRef = useRef<HTMLMediaElement>(null);
   const isMouseEnteredRef = useRef<Boolean>(false);
   const scrollElementRef = useRef<HTMLDivElement>(null);
 
@@ -68,21 +68,21 @@ function App() {
   };
 
   useEffect(() => {
-    currentAudioRef.current.addEventListener("loadedmetadata", setCurrentSongMaxTime);
-    currentAudioRef.current.addEventListener(
+    currentAudioRef.current?.addEventListener("loadedmetadata", setCurrentSongMaxTime);
+    currentAudioRef.current?.addEventListener(
       "loadedmetadata",
 
       setCurrentSongTotalTime
     );
-    currentAudioRef.current.addEventListener("timeupdate", setCurrentSongRestTime);
+    currentAudioRef.current?.addEventListener("timeupdate", setCurrentSongRestTime);
     return () => {
-      currentAudioRef.current.removeEventListener("loadedmetadata", setCurrentSongMaxTime);
-      currentAudioRef.current.removeEventListener(
+      currentAudioRef.current?.removeEventListener("loadedmetadata", setCurrentSongMaxTime);
+      currentAudioRef.current?.removeEventListener(
         "loadedmetadata",
 
         setCurrentSongTotalTime
       );
-      currentAudioRef.current.removeEventListener("timeupdate", setCurrentSongRestTime);
+      currentAudioRef.current?.removeEventListener("timeupdate", setCurrentSongRestTime);
     };
   }, [currentAudioRef.current]);
 
@@ -103,8 +103,8 @@ function App() {
           const updatedIndex = currentIndexSong + 1;
           setCurrentIndexSong(updatedIndex);
           setCurrentIDsong(parseFloat(currentPlaylist[updatedIndex].id));
-          currentAudioRef.current.addEventListener("canplay", () => {
-            currentAudioRef.current.play();
+          currentAudioRef.current?.addEventListener("canplay", () => {
+            currentAudioRef.current?.play();
           });
         }
       } else if (isRepeat === "repeat-all") {
@@ -112,27 +112,29 @@ function App() {
           const updatedIndex = currentIndexSong + 1;
           setCurrentIndexSong(updatedIndex);
           setCurrentIDsong(parseFloat(currentPlaylist[updatedIndex].id));
-          currentAudioRef.current.addEventListener("canplay", () => {
-            currentAudioRef.current.play();
+          currentAudioRef.current?.addEventListener("canplay", () => {
+            currentAudioRef.current?.play();
           });
         } else {
           setCurrentIndexSong(0);
           setCurrentIDsong(1);
-          currentAudioRef.current.addEventListener("canplay", () => {
-            currentAudioRef.current.play();
+          currentAudioRef.current?.addEventListener("canplay", () => {
+            currentAudioRef.current?.play();
           });
         }
       } else if (isRepeat === "repeat-1") {
-        currentAudioRef.current.currentTime = 0;
-        currentAudioRef.current.addEventListener("canplay", () => {
-          currentAudioRef.current.play();
-        });
+        if (currentAudioRef.current) {
+          currentAudioRef.current.currentTime = 0;
+          currentAudioRef.current?.addEventListener("canplay", () => {
+            currentAudioRef.current?.play();
+          });
+        }
       }
     };
 
-    currentAudioRef.current.addEventListener("ended", handleAudioEnded);
+    currentAudioRef.current?.addEventListener("ended", handleAudioEnded);
     return () => {
-      currentAudioRef.current.removeEventListener("ended", handleAudioEnded);
+      currentAudioRef.current?.removeEventListener("ended", handleAudioEnded);
     };
   }, [isRepeat, currentPlaylist, currentAudioRef, currentIndexSong]);
 
@@ -153,7 +155,7 @@ function App() {
   }, [isPlaying, currentAudioRef.current?.paused]);
 
   const handlePlayClick = () => {
-    if (currentAudioRef?.current.paused) {
+    if (currentAudioRef.current?.paused) {
       setPlaying(true);
       currentAudioRef.current?.play();
     } else {
@@ -163,41 +165,43 @@ function App() {
   };
 
   const handleBackwardClick = () => {
-    if (currentAudioRef.current.currentTime === 0 && currentIndexSong === 0) {
-      return;
-    }
-    if (currentAudioRef.current.currentTime < 4) {
-      if (currentIndexSong !== 0) {
-        if (currentAudioRef.current?.paused) {
-          const updatedIndex = currentIndexSong - 1;
-          setCurrentIndexSong(updatedIndex);
-          setCurrentIDsong(parseFloat(currentPlaylist[updatedIndex].id));
-          currentAudioRef.current?.addEventListener("canplay", () => {
-            currentAudioRef.current?.play();
-          });
-          setPlaying((prev) => !prev);
+    if (currentAudioRef.current) {
+      if (currentAudioRef.current.currentTime === 0 && currentIndexSong === 0) {
+        return;
+      }
+      if (currentAudioRef.current.currentTime < 4) {
+        if (currentIndexSong !== 0) {
+          if (currentAudioRef.current?.paused) {
+            const updatedIndex = currentIndexSong - 1;
+            setCurrentIndexSong(updatedIndex);
+            setCurrentIDsong(parseFloat(currentPlaylist[updatedIndex].id));
+            currentAudioRef.current?.addEventListener("canplay", () => {
+              currentAudioRef.current?.play();
+            });
+            setPlaying((prev) => !prev);
+          } else {
+            const updatedIndex = currentIndexSong - 1;
+            setCurrentIndexSong(updatedIndex);
+            setCurrentIDsong(parseFloat(currentPlaylist[updatedIndex].id));
+          }
         } else {
-          const updatedIndex = currentIndexSong - 1;
-          setCurrentIndexSong(updatedIndex);
-          setCurrentIDsong(parseFloat(currentPlaylist[updatedIndex].id));
+          if (currentAudioRef.current?.paused) {
+            currentAudioRef.current.currentTime = 0;
+            setPlaying((prev) => !prev);
+          } else {
+            currentAudioRef.current.currentTime = 0;
+          }
         }
       } else {
-        if (currentAudioRef.current?.paused) {
-          currentAudioRef.current.currentTime = 0;
-          setPlaying((prev) => !prev);
-        } else {
-          currentAudioRef.current.currentTime = 0;
-        }
+        currentAudioRef.current.currentTime = 0;
       }
-    } else {
-      currentAudioRef.current.currentTime = 0;
     }
   };
 
   const handleForwardClick = () => {
     if (isRepeat === "repeat-off" || "repeat-1") {
       if (currentIndexSong < currentPlaylist.length - 1) {
-        if (currentAudioRef.current.paused) {
+        if (currentAudioRef.current?.paused) {
           const updatedIndex = currentIndexSong + 1;
           setCurrentIndexSong(updatedIndex);
           setPlaying(true);
@@ -211,7 +215,7 @@ function App() {
     }
     if (isRepeat === "repeat-all") {
       if (currentIndexSong < currentPlaylist.length - 1) {
-        if (currentAudioRef.current.paused) {
+        if (currentAudioRef.current?.paused) {
           const updatedIndex = currentIndexSong + 1;
           setCurrentIndexSong(updatedIndex);
           setPlaying(true);
@@ -257,7 +261,7 @@ function App() {
     }
   };
 
-  const handleDashboardClick = (song: any) => {
+  const handleDashboardClick = (song: (typeof currentPlaylist)[number]) => {
     setPlaying(true);
     const indexClicked = currentPlaylist.findIndex((elem) => elem.id === song.id);
     setCurrentIndexSong(indexClicked);
@@ -269,20 +273,22 @@ function App() {
 
   //Controls volume of audio 👺
 
-  const handleVolume = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newVolume = parseFloat(event.target.value);
-    if (!isNaN(newVolume) && isFinite(newVolume)) {
-      currentAudioRef.current.volume = newVolume;
-      setVolume(newVolume);
+  const handleVolume = (event: React.ChangeEvent<HTMLInputElement> | any) => {
+    if (currentAudioRef.current) {
+      const newVolume = parseFloat(event.target.value);
+      if (!isNaN(newVolume) && isFinite(newVolume)) {
+        currentAudioRef.current.volume = newVolume;
+        setVolume(newVolume);
+      }
     }
   };
 
   useEffect(() => {
-    currentAudioRef.current.addEventListener("loadedmetadata", handleVolume);
+    currentAudioRef.current?.addEventListener("loadedmetadata", handleVolume);
     return () => {
-      currentAudioRef.current.removeEventListener("loadedmetadata", handleVolume);
+      currentAudioRef.current?.removeEventListener("loadedmetadata", handleVolume);
     };
-  }, []);
+  }, [currentAudioRef.current]);
 
   const handleMouseEnter = () => {
     isMouseEnteredRef.current = true;
