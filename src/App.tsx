@@ -231,10 +231,8 @@ function App() {
         .concat(clonedPlaylistToShuffle.slice(currentIndexSong + 1))
         .sort(() => Math.random() - 0.5);
       const randomizedPlaylist = [extractedSong, ...shuffledSongs];
-
-      console.log("🥸", randomizedPlaylist);
       setCurrentPlaylist(randomizedPlaylist);
-      setCurrentIndexSong(currentPlaylist.findIndex((song) => song));
+      setCurrentIndexSong(0);
       setSuffle(true);
       console.log("index", currentIndexSong);
     } else {
