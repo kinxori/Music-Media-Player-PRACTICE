@@ -392,8 +392,10 @@ function App() {
                 src="./backward-icon.png"
                 alt="backward-icon"
                 className={
-                  currentAudioRef.current?.currentTime === 0 && currentIndexSong === 0
+                  currentIndexSong === 0 && currentAudioRef.current?.currentTime === 0
                     ? "h-[20px] object-cover invert opacity-50 cursor-default"
+                    : currentIndexSong === 0 && currentAudioRef.current?.currentTime !== 0
+                    ? "h-[20px] object-cover invert hover:scale-105"
                     : "h-[20px] object-cover invert hover:scale-105"
                 }
               ></img>
