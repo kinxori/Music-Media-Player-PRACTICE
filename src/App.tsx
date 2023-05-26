@@ -162,16 +162,31 @@ function App() {
   };
 
   const handleBackwardClick = () => {
-    if (currentAudioRef.current.currentTime <= 0 && currentIndexSong === 0) {
+    if (currentAudioRef.current.currentTime === 0 && currentIndexSong === 0) {
       return;
     }
     if (currentAudioRef.current.currentTime < 4) {
       if (currentIndexSong !== 0) {
-        const updatedIndex = currentIndexSong - 1;
-        setCurrentIndexSong(updatedIndex);
-        setCurrentIDsong(parseFloat(currentPlaylist[updatedIndex].id));
+        if (currentAudioRef.current?.paused) {
+          const updatedIndex = currentIndexSong - 1;
+          setCurrentIndexSong(updatedIndex);
+          setCurrentIDsong(parseFloat(currentPlaylist[updatedIndex].id));
+          currentAudioRef.current?.addEventListener("canplay", () => {
+            currentAudioRef.current?.play();
+          });
+          setPlaying((prev) => !prev);
+        } else {
+          const updatedIndex = currentIndexSong - 1;
+          setCurrentIndexSong(updatedIndex);
+          setCurrentIDsong(parseFloat(currentPlaylist[updatedIndex].id));
+        }
       } else {
-        currentAudioRef.current.currentTime = 0;
+        if (currentAudioRef.current?.paused) {
+          currentAudioRef.current.currentTime = 0;
+          setPlaying((prev) => !prev);
+        } else {
+          currentAudioRef.current.currentTime = 0;
+        }
       }
     } else {
       currentAudioRef.current.currentTime = 0;
@@ -234,7 +249,6 @@ function App() {
       setCurrentPlaylist(randomizedPlaylist);
       setCurrentIndexSong(0);
       setSuffle(true);
-      console.log("index", currentIndexSong);
     } else {
       setSuffle(false);
       setCurrentPlaylist(data);
