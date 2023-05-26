@@ -290,6 +290,25 @@ function App() {
     setIsVolumeDisplay(false);
   };
 
+  const handleScrollToID = () => {
+    const element = document.getElementById(currentSong?.id);
+
+    if (element) {
+      const scrollOptions: any = {
+        behavior: "smooth",
+        block: "end",
+        inline: "nearest",
+      };
+
+      const isScrolledToBottom = element.scrollHeight - element.scrollTop === element.clientHeight;
+      if (isScrolledToBottom) {
+        element.scrollTop = element.scrollHeight; // Scroll to the bottom
+      } else {
+        element.scrollIntoView(scrollOptions); // Scroll to the element using smooth behavior
+      }
+    }
+  };
+
   //maybe later 🥲
   //
   // const handleLikedClick = () => {
@@ -391,15 +410,17 @@ function App() {
           </div>
           <div className="song-buttons-actions m-0 h-[20%] w-[100%] flex justify-center items-center gap-[40px]">
             <button onClick={handleSuffleClick}>
-              <img
-                src="./shuffle-icon.png"
-                alt="suffle-icon"
-                className={
-                  isSuffle
-                    ? "h-[20px] object-cover invert hover:scale-105"
-                    : "h-[20px] object-cover invert hover:scale-105 opacity-50"
-                }
-              ></img>
+              <a href={`#${currentSong?.id}`}>
+                <img
+                  src="./shuffle-icon.png"
+                  alt="suffle-icon"
+                  className={
+                    isSuffle
+                      ? "h-[20px] object-cover invert hover:scale-105"
+                      : "h-[20px] object-cover invert hover:scale-105 opacity-50"
+                  }
+                ></img>
+              </a>
             </button>
             <button onClick={handleBackwardClick}>
               <img
@@ -481,6 +502,7 @@ function App() {
           {currentPlaylist.map((elem) => {
             return (
               <div
+                id={currentSong?.id}
                 key={elem.id}
                 onClick={() => handleDashboardClick(elem)}
                 className={
