@@ -376,7 +376,7 @@ function App() {
             </button>
             <button onClick={handleBackwardClick}>
               <img
-                src="/backward-icon.png"
+                src="./backward-icon.png"
                 alt="backward-icon"
                 className={
                   currentAudioRef.current?.currentTime === 0 && currentIndexSong === 0
@@ -388,13 +388,13 @@ function App() {
             <button onClick={handlePlayClick}>
               {currentAudioRef.current?.paused ? (
                 <img
-                  src="/play-icon.png"
+                  src="./play-icon.png"
                   alt="play-icon"
                   className="h-[25px] object-cover invert hover:scale-105"
                 ></img>
               ) : (
                 <img
-                  src="/pause-icon.png"
+                  src="./pause-icon.png"
                   alt="pause-icon"
                   className="h-[25px] object-cover invert hover:scale-105"
                 ></img>
@@ -402,7 +402,7 @@ function App() {
             </button>
             <button onClick={handleForwardClick}>
               <img
-                src="/forward-icon.png"
+                src="./forward-icon.png"
                 alt="forward-icon"
                 className={
                   isRepeat === "repeat-all"
@@ -416,25 +416,25 @@ function App() {
             <button onClick={handleRepeatClick}>
               {isRepeat === "repeat-off" ? (
                 <img
-                  src="/repeat-icon.png"
+                  src="./repeat-icon.png"
                   alt="repeat-icon"
                   className="h-[20px] object-cover invert hover:scale-105 opacity-50"
                 ></img>
               ) : isRepeat === "repeat-all" ? (
                 <img
-                  src="/repeat-icon.png"
+                  src="./repeat-icon.png"
                   alt="repeat-icon"
                   className="h-[20px] object-cover invert hover:scale-105"
                 ></img>
               ) : isRepeat === "repeat-1" ? (
                 <img
-                  src="/repeat-1-icon.png"
+                  src="./repeat-1-icon.png"
                   alt="repeat-1-icon"
                   className="h-[20px] object-cover invert hover:scale-105"
                 ></img>
               ) : (
                 <img
-                  src="/repeat-icon.png"
+                  src="./repeat-icon.png"
                   alt="repeat-icon"
                   className="h-[20px] object-cover invert hover:scale-105 opacity-50"
                 ></img>
@@ -483,13 +483,13 @@ function App() {
                 >
                   {currentAudioRef.current?.paused ? (
                     <img
-                      src="/play-icon.png"
+                      src="./play-icon.png"
                       alt="play-icon"
                       className="h-[25px] object-cover invert hover:scale-105"
                     ></img>
                   ) : (
                     <img
-                      src="/pause-icon.png"
+                      src="./pause-icon.png"
                       alt="pause-icon"
                       className="h-[25px] object-cover invert hover:scale-105"
                     ></img>
