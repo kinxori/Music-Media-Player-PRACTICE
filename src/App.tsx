@@ -23,6 +23,7 @@ function App() {
 
   const currentAudioRef = useRef<HTMLMediaElement | any>();
   const isMouseEnteredRef = useRef<Boolean>(false);
+  const scrollElementRef = useRef<HTMLDivElement>(null);
 
   //Updates the audio information to then write it in the DOM 👺
 
@@ -266,6 +267,8 @@ function App() {
     });
   };
 
+  //Controls volume of audio 👺
+
   const handleVolume = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newVolume = parseFloat(event.target.value);
     if (!isNaN(newVolume) && isFinite(newVolume)) {
@@ -290,24 +293,20 @@ function App() {
     setIsVolumeDisplay(false);
   };
 
-  const handleScrollToID = () => {
-    const element = document.getElementById(currentSong?.id);
+  //Controls scroll position depending of current index song 👺
 
-    if (element) {
-      const scrollOptions: any = {
-        behavior: "smooth",
-        block: "end",
-        inline: "nearest",
-      };
+  useEffect(() => {
+    const scrollRange = 427;
+    const maxElem = currentPlaylist.length - 1;
+    const calSection = scrollRange / maxElem;
 
-      const isScrolledToBottom = element.scrollHeight - element.scrollTop === element.clientHeight;
-      if (isScrolledToBottom) {
-        element.scrollTop = element.scrollHeight; // Scroll to the bottom
-      } else {
-        element.scrollIntoView(scrollOptions); // Scroll to the element using smooth behavior
-      }
-    }
-  };
+    const handleScroll = () => {
+      const targetScrollPosition = calSection * currentIndexSong;
+      scrollElementRef.current?.scrollTo(0, targetScrollPosition);
+    };
+
+    handleScroll();
+  }, [currentIndexSong]);
 
   //maybe later 🥲
   //
@@ -410,17 +409,15 @@ function App() {
           </div>
           <div className="song-buttons-actions m-0 h-[20%] w-[100%] flex justify-center items-center gap-[40px]">
             <button onClick={handleSuffleClick}>
-              <a href={`#${currentSong?.id}`}>
-                <img
-                  src="./shuffle-icon.png"
-                  alt="suffle-icon"
-                  className={
-                    isSuffle
-                      ? "h-[20px] object-cover invert hover:scale-105"
-                      : "h-[20px] object-cover invert hover:scale-105 opacity-50"
-                  }
-                ></img>
-              </a>
+              <img
+                src="./shuffle-icon.png"
+                alt="suffle-icon"
+                className={
+                  isSuffle
+                    ? "h-[20px] object-cover invert hover:scale-105"
+                    : "h-[20px] object-cover invert hover:scale-105 opacity-50"
+                }
+              ></img>
             </button>
             <button onClick={handleBackwardClick}>
               <img
@@ -498,11 +495,13 @@ function App() {
           <i className="fa-solid fa-music  mx-[15px] text-[24px]"></i>Now Playing
         </h2>
         <hr className="w-[90%] h-[0px] rounded  border-t-[1px]     "></hr>
-        <div className="custom-scrollbar overflow-y-scroll flex flex-col h-auto w-[95%] mb-[30px] mt-[20px] items-center      ">
+        <div
+          ref={scrollElementRef}
+          className="custom-scrollbar overflow-y-scroll flex flex-col h-auto w-[95%] mb-[30px] mt-[20px] items-center      "
+        >
           {currentPlaylist.map((elem) => {
             return (
               <div
-                id={currentSong?.id}
                 key={elem.id}
                 onClick={() => handleDashboardClick(elem)}
                 className={
