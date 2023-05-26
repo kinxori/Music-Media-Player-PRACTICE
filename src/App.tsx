@@ -443,7 +443,9 @@ function App() {
                 src="./backward-icon.png"
                 alt="backward-icon"
                 className={
-                  currentIndexSong === 0 && currentAudioRef.current?.currentTime === 0
+                  isRepeat === "repeat-all"
+                    ? "h-[20px] object-cover invert hover:scale-105"
+                    : currentIndexSong === 0 && currentAudioRef.current?.currentTime === 0
                     ? "h-[20px] object-cover invert opacity-50 cursor-default"
                     : currentIndexSong === 0 && currentAudioRef.current?.currentTime !== 0
                     ? "h-[20px] object-cover invert hover:scale-105"
