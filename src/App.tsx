@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from "react";
-import { data } from "./data.tsx";
+import React, { useEffect, useRef, useState } from "react";
+
 import "./App.css";
+import { data } from "./data.tsx";
 
 function App() {
   // const [isLiked, setLiked] = useState(false);
@@ -355,15 +356,15 @@ function App() {
         </div>
         <div className=" w-[100%] flex justify-center items-center flex-col gap-4 mb-3 ">
           <div className="w-[100%]">
-            <button className="top-0 right-0 absolute m-3 bg-white rounded-[100%] hover:scale-105 ">
+            <button className="top-0 right-0 absolute m-3 bg-white rounded-[100%] hover:scale-105 transition-all ">
               <i className="fa-solid fa-music m-3 text-[20px] text-zinc-900"></i>
             </button>
             <div className="flex w-[100%] ">
-              <div className="w-[100%] mb-3  ">
+              <div className="w-[100%] mb-3 pl-3 ">
                 <h2 className="text-[30px] font-bold px-[20px]">{currentSong.song}</h2>
                 <h3 className="text-[16px] italic px-[20px]">{currentSong.artist}</h3>
               </div>
-              <div className="h-[100px] w-[30px] m-[10px] ml-auto mt-auto flex flex-col hidden">
+              <div className="hidden">
                 {isVolumeDisplay && (
                   <div
                     className="h-[100px] w-[30px] absolute "
