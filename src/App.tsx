@@ -359,18 +359,21 @@ function App() {
   return (
     <>
       {isLoading && <Loader />}
-      <section className=" relative bg-orange-200 h-screen w-screen flex flex-col gap-[10px] justify-center items-center m-[10% auto] ">
-        <div className=" h-[420px] w-[350px] bg-zinc-900 gap-2 flex flex-col justify-between items-center py-[20px] px-[0px] rounded-[35px] drop-shadow-[0px_0px_10px_rgba(0,0,0,1)]">
-          <div className="  w-[90%] bg-zinc-600 rounded-[35px] overflow-hidden">
+      <section className=" relative bg-orange-200 h-screen w-screen flex flex-col gap-[10px] justify-center items-center m-[10% auto] md:gap-[20px] ">
+        <div
+          className=" h-[420px] w-[350px] bg-zinc-900 gap-2 flex flex-col justify-between items-center py-[20px] px-[0px] rounded-[35px] drop-shadow-[0px_0px_10px_rgba(0,0,0,1)] 
+        md:h-[520px] md:w-[550px] md:py-[30px] md:px-[0px]   md:rounded-[40px] md:drop-shadow-[0px_0px_15px_rgba(0,0,0,1)] md:gap-4                         "
+        >
+          <div className=" overflow-hidden bg-zinc-700 rounded-[35px] w-[90%] md:rounded-[30px]  ">
             <img src={currentSong.cover} alt="song-cover" className="object-center" />
           </div>
-          <div className=" w-[100%] flex justify-center items-center flex-col gap-4 mb-3 ">
+          <div className="flex justify-center items-center flex-col w-[100%]  gap-4 mb-3 md:gap-5 md:mb-3      ">
             <div className="w-[100%]">
-              <button className="top-0 right-0 absolute m-3 bg-white rounded-[100%] hover:scale-105 transition-all ">
-                <i className="fa-solid fa-music m-3 text-[20px] text-zinc-900"></i>
+              <button className="hover:scale-105 transition-all bg-white absolute m-3 top-0 right-0 rounded-[100%] md:m-5 ">
+                <i className="fa-solid fa-music m-3 text-[20px] text-zinc-900   md:m-4 md:text-[25px]"></i>
               </button>
               <div className="flex w-[100%] ">
-                <div className="w-[100%] mb-3 pl-3 ">
+                <div className="w-[100%] mb-3 pl-3 md:mb-3 md:pl-5 ">
                   <h2 className="text-[30px] font-bold px-[20px]">{currentSong.song}</h2>
                   <h3 className="text-[16px] italic px-[20px]">{currentSong.artist}</h3>
                 </div>
