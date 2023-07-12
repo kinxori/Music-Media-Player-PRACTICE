@@ -348,9 +348,9 @@ function App() {
   // };
 
   return (
-    <section className="background  bg-orange-200 h-screen w-screen flex flex-col justify-center items-center relative m-0">
-      <div className="media-player h-[325px] w-[700px] bg-zinc-900 flex justify-evenly items-center relative  m-2 py-[20px] px-[0px] rounded-[45px] drop-shadow-[0px_0px_15px_rgba(0,0,0,.5)]">
-        <div className="song-cover-img  w-[40%] object-cover bg-zinc-600 m-0 rounded-[30px] overflow-hidden">
+    <section className="background  bg-orange-200 h-screen w-screen flex flex-col justify-center items-center relative m-0 m-[10% auto] ">
+      <div className="media-player h-[32px] w-[70px] bg-zinc-900 flex justify-evenly items-center relative  m-2 py-[20px] px-[0px] rounded-[45px] drop-shadow-[0px_0px_15px_rgba(0,0,0,.5)]">
+        <div className="song-cover-img  w-[10%] object-cover bg-zinc-600 m-0 rounded-[30px] overflow-hidden">
           <img src={currentSong.cover} alt="song-cover" />
         </div>
         <div className="song-content  w-[50%] h-[100%] m-0 flex justify-center items-center flex-col">
@@ -511,7 +511,7 @@ function App() {
           </div>
         </div>
       </div>
-      <div className=" relative  w-[700px] h-[500px] bg-zinc-900 flex rounded-[45px] drop-shadow-[0px_0px_15px_rgba(0,0,0,.5)] flex-col justify-start items-center ">
+      <div className=" relative  w-[70px] h-[50px] bg-zinc-900 flex rounded-[45px] drop-shadow-[0px_0px_15px_rgba(0,0,0,.5)] flex-col justify-start items-center ">
         <h2 className="text-[24px] flex mr-auto items-center font-bold m-5 h-min">
           <i className="fa-solid fa-music  mx-[15px] text-[24px]"></i>Now Playing
         </h2>
