@@ -348,17 +348,17 @@ function App() {
   // };
 
   return (
-    <section className="background  bg-orange-200 h-screen w-screen flex flex-col justify-center items-center relative m-0 m-[10% auto] ">
-      <div className="media-player h-[32px] w-[70px] bg-zinc-900 flex justify-evenly items-center relative  m-2 py-[20px] px-[0px] rounded-[45px] drop-shadow-[0px_0px_15px_rgba(0,0,0,.5)]">
-        <div className="song-cover-img  w-[10%] object-cover bg-zinc-600 m-0 rounded-[30px] overflow-hidden">
-          <img src={currentSong.cover} alt="song-cover" />
+    <section className=" relative bg-orange-200 h-screen w-screen flex flex-col gap-[10px] justify-center items-center m-[10% auto] ">
+      <div className=" h-[420px] w-[350px] bg-zinc-900 gap-2 flex flex-col justify-evenly items-center py-[20px] px-[0px] rounded-[35px] drop-shadow-[0px_0px_10px_rgba(0,0,0,1)]">
+        <div className="  w-[90%] bg-zinc-600 rounded-[30px] overflow-hidden">
+          <img src={currentSong.cover} alt="song-cover" className="object-contain w-[100%]" />
         </div>
-        <div className="song-content  w-[50%] h-[100%] m-0 flex justify-center items-center flex-col">
-          <div className="song-copy m-0  h-[80%] w-[100%] relative ">
-            <button className="h-min w-min ml-auto flex">
-              <i className="fa-solid fa-music my-[10px] mx-[10px] text-[30px] hover:scale-105"></i>
+        <div className=" w-[90%]  flex justify-center items-center flex-col">
+          <div className="song-copy w-[100%]">
+            <button className="top-0 right-0 absolute m-6 bg-white rounded-[100%] hover:scale-105 ">
+              <i className="fa-solid fa-music m-3 text-[20px] text-zinc-900"></i>
             </button>
-            <div className="flex w-[100%] h-[70%] ">
+            <div className="flex w-[100%] ">
               <div>
                 <h2 className="text-[30px] font-bold px-[20px]">{currentSong.song}</h2>
                 <h3 className="text-[16px] italic px-[20px]">{currentSong.artist}</h3>
@@ -511,7 +511,7 @@ function App() {
           </div>
         </div>
       </div>
-      <div className=" relative  w-[70px] h-[50px] bg-zinc-900 flex rounded-[45px] drop-shadow-[0px_0px_15px_rgba(0,0,0,.5)] flex-col justify-start items-center ">
+      <div className=" relative h-[350px] w-[350px] bg-zinc-900 flex rounded-[35px] drop-shadow-[0px_0px_10px_rgba(0,0,0,1)] flex-col justify-start items-center ">
         <h2 className="text-[24px] flex mr-auto items-center font-bold m-5 h-min">
           <i className="fa-solid fa-music  mx-[15px] text-[24px]"></i>Now Playing
         </h2>
