@@ -425,7 +425,7 @@ function App() {
             </div> */}
               </div>
             </div>
-            <div className="w-[80%] flex flex-col justify-center items-center ">
+            <div className="w-[80%] flex flex-col justify-center items-center md:gap-2 ">
               <audio src={currentSong.src} ref={currentAudioRef} />
               <input
                 type="range"
@@ -525,7 +525,11 @@ function App() {
             </div>
           </div>
         </div>
-        <div className=" relative h-[350px] w-[350px] bg-zinc-900 flex rounded-[35px] drop-shadow-[0px_0px_10px_rgba(0,0,0,1)] flex-col justify-start items-center ">
+        <div
+          className="flex-col justify-start items-center relative bg-zinc-900 flex h-[350px] w-[350px]  rounded-[35px] drop-shadow-[0px_0px_10px_rgba(0,0,0,1)]          
+        md:h-[550px] md:w-[550px] md:py-[30px] md:px-[0px]
+        "
+        >
           <h2 className="text-[24px] flex mr-auto items-center font-bold m-5 h-min">
             <i className="fa-solid fa-music  mx-[15px] text-[24px]"></i>Now Playing
           </h2>
