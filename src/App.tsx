@@ -349,24 +349,24 @@ function App() {
 
   return (
     <section className=" relative bg-orange-200 h-screen w-screen flex flex-col gap-[10px] justify-center items-center m-[10% auto] ">
-      <div className=" h-[420px] w-[350px] bg-zinc-900 gap-2 flex flex-col justify-evenly items-center py-[20px] px-[0px] rounded-[35px] drop-shadow-[0px_0px_10px_rgba(0,0,0,1)]">
-        <div className="  w-[90%] bg-zinc-600 rounded-[30px] overflow-hidden">
-          <img src={currentSong.cover} alt="song-cover" className="object-contain w-[100%]" />
+      <div className=" h-[420px] w-[350px] bg-zinc-900 gap-2 flex flex-col justify-between items-center py-[20px] px-[0px] rounded-[35px] drop-shadow-[0px_0px_10px_rgba(0,0,0,1)]">
+        <div className="  w-[90%] bg-zinc-600 rounded-[35px] overflow-hidden">
+          <img src={currentSong.cover} alt="song-cover" className="object-center" />
         </div>
-        <div className=" w-[90%]  flex justify-center items-center flex-col">
-          <div className="song-copy w-[100%]">
-            <button className="top-0 right-0 absolute m-6 bg-white rounded-[100%] hover:scale-105 ">
+        <div className=" w-[100%] flex justify-center items-center flex-col gap-4 mb-3 ">
+          <div className="w-[100%]">
+            <button className="top-0 right-0 absolute m-3 bg-white rounded-[100%] hover:scale-105 ">
               <i className="fa-solid fa-music m-3 text-[20px] text-zinc-900"></i>
             </button>
             <div className="flex w-[100%] ">
-              <div>
+              <div className="w-[100%] mb-3  ">
                 <h2 className="text-[30px] font-bold px-[20px]">{currentSong.song}</h2>
                 <h3 className="text-[16px] italic px-[20px]">{currentSong.artist}</h3>
               </div>
-              <div className="h-[100px] w-[30px] m-[10px] ml-auto mt-auto flex flex-col relative ">
+              <div className="h-[100px] w-[30px] m-[10px] ml-auto mt-auto flex flex-col hidden">
                 {isVolumeDisplay && (
                   <div
-                    className="h-[100px] w-[30px] absolute  "
+                    className="h-[100px] w-[30px] absolute "
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
                   >
@@ -411,7 +411,7 @@ function App() {
             </div> */}
             </div>
           </div>
-          <div className="song-range w-[85%]  h-[20%] flex flex-col justify-center items-center ">
+          <div className="w-[80%] flex flex-col justify-center items-center ">
             <audio src={currentSong.src} ref={currentAudioRef} />
             <input
               type="range"
@@ -426,7 +426,7 @@ function App() {
               <span className=" text-[10px]  w-[min] flex ml-[auto] ">{songTotalTime}</span>
             </div>
           </div>
-          <div className="song-buttons-actions m-0 h-[20%] w-[100%] flex justify-center items-center gap-[40px]">
+          <div className="  h-[20%] w-[100%] flex justify-center items-center gap-[40px]">
             <button onClick={handleSuffleClick}>
               <img
                 src="./shuffle-icon.png"
