@@ -359,10 +359,12 @@ function App() {
   return (
     <>
       {isLoading && <Loader />}
-      <section className=" relative bg-orange-200 h-screen w-screen flex flex-col gap-[10px] justify-center items-center m-[10% auto] md:gap-[20px] ">
+      <section className=" relative bg-orange-200 h-screen w-screen flex flex-col gap-[10px] justify-center items-center m-[10% auto] md:gap-[20px] ml:flex-row">
         <div
-          className=" h-[420px] w-[350px] bg-zinc-900 gap-2 flex flex-col justify-between items-center py-[20px] px-[0px] rounded-[35px] drop-shadow-[0px_0px_10px_rgba(0,0,0,1)] 
-        md:h-[520px] md:w-[550px] md:py-[30px] md:px-[0px]   md:rounded-[40px] md:drop-shadow-[0px_0px_15px_rgba(0,0,0,1)] md:gap-4                         "
+          className=" h-[420px] w-[350px] bg-zinc-900 gap-2 flex flex-col justify-between items-center py-[20px] px-[0px] rounded-[35px] drop-shadow-[0px_0px_10px_rgba(0,0,0,1)]  transition-all hover:scale-[1.01] 
+        md:h-[520px] md:w-[550px] md:py-[30px] md:px-[0px]   md:rounded-[40px] md:drop-shadow-[0px_0px_10px_rgba(0,0,0,1)] md:gap-4  
+        ml:h-[650px] ml:w-[650px] ml:hover:drop-shadow-[0px_0px_15px_rgba(0,0,0,1)] 
+        "
         >
           <div className=" overflow-hidden bg-zinc-700 rounded-[35px] w-[90%] md:rounded-[30px]  ">
             <img src={currentSong.cover} alt="song-cover" className="object-center" />
@@ -526,8 +528,9 @@ function App() {
           </div>
         </div>
         <div
-          className="flex-col justify-start items-center relative bg-zinc-900 flex h-[350px] w-[350px]  rounded-[35px] drop-shadow-[0px_0px_10px_rgba(0,0,0,1)]          
-        md:h-[550px] md:w-[550px] md:py-[30px] md:px-[0px]
+          className="flex-col justify-start items-center relative bg-zinc-900 flex h-[350px] w-[350px]  rounded-[35px] drop-shadow-[0px_0px_10px_rgba(0,0,0,1)]  transition-all hover:scale-[1.01]  
+        md:h-[550px] md:w-[550px] md:py-[30px] md:px-[0px] md:drop-shadow-[0px_0px_10px_rgba(0,0,0,1)] 
+        ml:h-[650px] ml:w-[550px] ml:hover:drop-shadow-[0px_0px_15px_rgba(0,0,0,1)] 
         "
         >
           <h2 className="text-[24px] flex mr-auto items-center font-bold m-5 h-min">

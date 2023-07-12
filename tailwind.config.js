@@ -6,7 +6,7 @@ export default {
     screens: {
       md: "601px",
       // => @media (min-width: 601px) { ... }
-      lg: "1081px",
+      ml: "1081px",
       // => @media (min-width: 1081px) { ... }
     },
   },
