@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import Loader from "./Loader.tsx";
-import "./App.css";
 import { data } from "./data.tsx";
+import "./App.css";
 
-function App() {
+export default function App() {
   // const [isLiked, setLiked] = useState(false);
   // const [isDisliked, setDisliked] = useState(false);
   const [isPlaying, setPlaying] = useState(false);
@@ -20,13 +20,6 @@ function App() {
   const [volume, setVolume] = useState(1);
   const [isVolumeDisplay, setIsVolumeDisplay] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    // Simulate an asynchronous loading process
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 3500);
-  }, []);
 
   // Created refs to have the current information of each object 👺
 
@@ -163,6 +156,37 @@ function App() {
     }
   }, [isPlaying, currentAudioRef.current?.paused]);
 
+  //Controls scroll position depending of current index song 👺
+
+  useEffect(() => {
+    const scrollRange = 427;
+    const maxElem = currentPlaylist.length - 1;
+    const calSection = scrollRange / maxElem;
+
+    const handleScroll = () => {
+      const targetScrollPosition = calSection * currentIndexSong;
+      scrollElementRef.current?.scrollTo(0, targetScrollPosition);
+    };
+
+    handleScroll();
+  }, [currentIndexSong]);
+
+  // Simulate an asynchronous loading process 👺
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 3500);
+  }, []);
+
+  //Controls volume of audio 👺
+
+  useEffect(() => {
+    currentAudioRef.current?.addEventListener("loadedmetadata", handleVolume);
+    return () => {
+      currentAudioRef.current?.removeEventListener("loadedmetadata", handleVolume);
+    };
+  }, [currentAudioRef.current]);
+
   const handlePlayClick = () => {
     if (currentAudioRef.current?.paused) {
       setPlaying(true);
@@ -293,8 +317,6 @@ function App() {
     });
   };
 
-  //Controls volume of audio 👺
-
   const handleVolume = (event: React.ChangeEvent<HTMLInputElement> | any) => {
     if (currentAudioRef.current) {
       const newVolume = parseFloat(event.target.value);
@@ -305,13 +327,6 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    currentAudioRef.current?.addEventListener("loadedmetadata", handleVolume);
-    return () => {
-      currentAudioRef.current?.removeEventListener("loadedmetadata", handleVolume);
-    };
-  }, [currentAudioRef.current]);
-
   const handleMouseEnter = () => {
     isMouseEnteredRef.current = true;
     setIsVolumeDisplay(true);
@@ -320,21 +335,6 @@ function App() {
   const handleMouseLeave = () => {
     setIsVolumeDisplay(false);
   };
-
-  //Controls scroll position depending of current index song 👺
-
-  useEffect(() => {
-    const scrollRange = 427;
-    const maxElem = currentPlaylist.length - 1;
-    const calSection = scrollRange / maxElem;
-
-    const handleScroll = () => {
-      const targetScrollPosition = calSection * currentIndexSong;
-      scrollElementRef.current?.scrollTo(0, targetScrollPosition);
-    };
-
-    handleScroll();
-  }, [currentIndexSong]);
 
   //maybe later 🥲
   //
@@ -530,24 +530,20 @@ function App() {
         <div
           className="flex-col justify-start items-center relative bg-zinc-900 flex h-[350px] w-[350px] rounded-[35px] drop-shadow-[0px_0px_10px_rgba(0,0,0,1)]  transition-all hover:scale-[1.01]  
         md:h-[550px] md:w-[550px]  md:rounded-[40px] md:drop-shadow-[0px_0px_10px_rgba(0,0,0,1)] 
-        ml:h-[650px] ml:w-[550px] ml:hover:drop-shadow-[0px_0px_15px_rgba(0,0,0,1)] 
-        "
+        ml:h-[650px] ml:w-[550px] ml:hover:drop-shadow-[0px_0px_15px_rgba(0,0,0,1)] "
         >
           <h2
             className="text-[24px] flex mr-auto items-center font-bold m-5 h-min 
-          
-          md:mb-[30px] md:mt-[30px]
-          "
+          md:mb-[30px] md:mt-[30px] "
           >
-            <i className="fa-solid fa-music mx-[15px] text-[24px]    "></i>
+            <i className="fa-solid fa-music mx-[15px] text-[24px] "></i>
             Now Playing
           </h2>
-          <hr className="w-[90%] h-[0px] rounded  border-t-[1px]     "></hr>
+          <hr className="w-[90%] h-[0px] rounded  border-t-[1px] "></hr>
           <div
             ref={scrollElementRef}
             className="custom-scrollbar overflow-y-scroll items-center  flex flex-col w-[95%] mb-[20px] mt-[20px] rounded-[35px]  
-            md:mb-[30px] md:mt-[30px] md:rounded-[40px]
-            "
+            md:mb-[30px] md:mt-[30px] md:rounded-[40px] "
           >
             {currentPlaylist.map((elem) => {
               return (
@@ -560,13 +556,10 @@ function App() {
                       : "cursor-pointer h-[70px] w-[95%] hover:bg-zinc-600/[.5] bg-zinc-800/[.5] py-[10px] px-[10px] rounded-[15px] flex flex-row  mt-[10px] justify-start items-center"
                   }
                 >
-                  <img
-                    src={elem.cover}
-                    className="h-[50px] object-contain rounded-[10px]     "
-                  ></img>
-                  <div className="pl-[10px] text-[12px] font-regular   ">
-                    <h3 className="text-[20px] font-semibold    ">{elem.song}</h3>
-                    <h4 className="text-[12px] font-regular   ">{elem.artist}</h4>
+                  <img src={elem.cover} className="h-[50px] object-contain rounded-[10px]  "></img>
+                  <div className="pl-[10px] text-[12px] font-regular  ">
+                    <h3 className="text-[20px] font-semibold  ">{elem.song}</h3>
+                    <h4 className="text-[12px] font-regular  ">{elem.artist}</h4>
                   </div>
                   <div
                     onClick={handlePlayClick}
@@ -599,5 +592,3 @@ function App() {
     </>
   );
 }
-
-export default App;
