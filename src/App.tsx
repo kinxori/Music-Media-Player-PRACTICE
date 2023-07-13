@@ -528,18 +528,26 @@ function App() {
           </div>
         </div>
         <div
-          className="flex-col justify-start items-center relative bg-zinc-900 flex h-[350px] w-[350px]  rounded-[35px] drop-shadow-[0px_0px_10px_rgba(0,0,0,1)]  transition-all hover:scale-[1.01]  
-        md:h-[550px] md:w-[550px] md:py-[30px] md:px-[0px] md:drop-shadow-[0px_0px_10px_rgba(0,0,0,1)] 
+          className="flex-col justify-start items-center relative bg-zinc-900 flex h-[350px] w-[350px] rounded-[35px] drop-shadow-[0px_0px_10px_rgba(0,0,0,1)]  transition-all hover:scale-[1.01]  
+        md:h-[550px] md:w-[550px]  md:rounded-[40px] md:drop-shadow-[0px_0px_10px_rgba(0,0,0,1)] 
         ml:h-[650px] ml:w-[550px] ml:hover:drop-shadow-[0px_0px_15px_rgba(0,0,0,1)] 
         "
         >
-          <h2 className="text-[24px] flex mr-auto items-center font-bold m-5 h-min">
-            <i className="fa-solid fa-music  mx-[15px] text-[24px]"></i>Now Playing
+          <h2
+            className="text-[24px] flex mr-auto items-center font-bold m-5 h-min 
+          
+          md:mb-[30px] md:mt-[30px]
+          "
+          >
+            <i className="fa-solid fa-music mx-[15px] text-[24px]    "></i>
+            Now Playing
           </h2>
           <hr className="w-[90%] h-[0px] rounded  border-t-[1px]     "></hr>
           <div
             ref={scrollElementRef}
-            className="custom-scrollbar overflow-y-scroll flex flex-col h-auto w-[95%] mb-[30px] mt-[20px] items-center      "
+            className="custom-scrollbar overflow-y-scroll items-center  flex flex-col w-[95%] mb-[20px] mt-[20px] rounded-[35px]  
+            md:mb-[30px] md:mt-[30px] md:rounded-[40px]
+            "
           >
             {currentPlaylist.map((elem) => {
               return (
