@@ -175,7 +175,7 @@ export default function App() {
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
-    }, 3500);
+    }, 2000);
   }, []);
 
   //Controls volume of audio 👺
@@ -359,7 +359,7 @@ export default function App() {
   return (
     <>
       {isLoading && <Loader />}
-      <section className=" relative bg-orange-200 h-screen w-screen flex flex-col gap-[10px] justify-center items-center m-[10% auto] md:gap-[20px] ml:flex-row">
+      <section className=" relative bg-orange-200 w-screen flex flex-col gap-[10px] justify-center items-center overflow-y-scroll box-border p-10 mx-auto md:gap-[20px] ml:flex-row">
         <div
           className=" h-[420px] w-[350px] bg-zinc-900 gap-2 flex flex-col justify-between items-center py-[20px] px-[0px] rounded-[35px] drop-shadow-[0px_0px_10px_rgba(0,0,0,1)]  transition-all hover:scale-[1.01] 
         md:h-[520px] md:w-[550px] md:py-[30px] md:px-[0px]   md:rounded-[40px] md:drop-shadow-[0px_0px_10px_rgba(0,0,0,1)] md:gap-4  
