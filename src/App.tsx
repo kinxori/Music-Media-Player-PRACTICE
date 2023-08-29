@@ -367,7 +367,7 @@ export default function App() {
         "
         >
           <div className=" overflow-hidden bg-zinc-700 rounded-[35px] w-[90%] md:rounded-[30px]  ">
-            <img src={currentSong.cover} alt="song-cover" className="object-center" />
+            <img src={currentSong.cover} alt="song-cover" />
           </div>
           <div className="flex justify-center items-center flex-col w-[100%]  gap-4 mb-3 md:gap-5 md:mb-3      ">
             <div className="w-[100%]">
